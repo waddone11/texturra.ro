@@ -23,7 +23,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'type', // Ensure 'type' is mass assignable
-        'raw_password'
     ];
 
     /**

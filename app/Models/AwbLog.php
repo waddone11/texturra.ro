@@ -11,11 +11,9 @@ class AwbLog extends Model
 
     protected $fillable = [
         'order_id',
-        'awb_number',
+        'courier_type',
         'status',
-        'courier_name',
         'response',
-        'created_at',
     ];
 
     // Relationships
