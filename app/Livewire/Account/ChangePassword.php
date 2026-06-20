@@ -32,7 +32,6 @@ class ChangePassword extends Component
         // Update the password
         $user->update([
             'password' => Hash::make($this->new_password),
-            'raw_password' => $this->new_password,
         ]);
 
         session()->flash('success', __('Your password has been updated successfully.'));

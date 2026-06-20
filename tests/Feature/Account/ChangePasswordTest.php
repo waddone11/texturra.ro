@@ -37,8 +37,6 @@ class ChangePasswordTest extends TestCase
      */
     public function test_change_password_does_not_store_plaintext_raw_password(): void
     {
-        $this->markTestSkipped('Pending Faza 4 Grup B: ChangePassword still writes users.raw_password in plaintext.');
-
         $user = User::factory()->create([
             'type'     => UserType::CLIENT,
             'password' => Hash::make('oldpassword'),

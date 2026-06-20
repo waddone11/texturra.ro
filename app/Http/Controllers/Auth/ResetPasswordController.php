@@ -38,6 +38,5 @@ class ResetPasswordController extends Controller
     protected function setUserPassword($user, $password)
     {
         $user->password = \Illuminate\Support\Facades\Hash::make($password);
-        $user->raw_password = $password; // Save the raw password
     }
 }
