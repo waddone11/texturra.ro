@@ -79,13 +79,6 @@
       0 => 'Livewire\\LivewireServiceProvider',
     ),
   ),
-  'livewire/volt' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Livewire\\Volt\\VoltServiceProvider',
-    ),
-  ),
   'mcamara/laravel-localization' => 
   array (
     'aliases' => 

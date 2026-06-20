@@ -13,7 +13,6 @@ use App\Http\Controllers\{
 };
 use App\Http\Middleware\CheckRole;
 use App\Livewire\Pages\Auth\{Login, Register, ForgotPassword, ResetPassword, VerifyEmail, ConfirmPassword};
-use Livewire\Volt\Volt;
 use Illuminate\Support\Facades\Mail;
 use App\Livewire\Layout\NewsletterSubscription;
 

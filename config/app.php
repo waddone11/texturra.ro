@@ -4,8 +4,6 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
     'tel'  => env('APP_TEL', '+491744552303'),
-    'open_api_Key' => env('OPENAI_API_KEY', ''),
-    'secret_key' => env('APP_SECRET_KEY', ''),
     'shipping_cost' => env('SHIPPING_COST'),
     'free_shipping_min' => env('FREE_SHIPPING_MIN'),
 
