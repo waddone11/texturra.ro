@@ -9,19 +9,18 @@
         "barryvdh/laravel-dompdf": "^3.0",
         "guzzlehttp/guzzle": "^7.9",
         "intervention/image": "^3.9",
-        "laravel/framework": "^11.9",
+        "laravel/framework": "^12.62.0",
         "laravel/horizon": "^5.29",
         "laravel/socialite": "^5.16",
         "laravel/tinker": "^2.9",
         "laravel/ui": "^4.5",
-        "livewire/livewire": "^3.5",
-        "livewire/volt": "^1.0",
-        "mcamara/laravel-localization": "^2.0",
+        "livewire/livewire": "^3.8",
+        "livewire/volt": "^1.10",
+        "mcamara/laravel-localization": "^2.4",
         "phpoffice/phpspreadsheet": "^4.1",
         "spatie/laravel-cookie-consent": "^3.3"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "^3.14",
         "fakerphp/faker": "^1.23",
         "laravel/breeze": "^2.2",
         "laravel/pint": "^1.13",
@@ -65,6 +64,9 @@
         }
     },
     "config": {
+        "platform": {
+            "php": "8.3.31"
+        },
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true,
