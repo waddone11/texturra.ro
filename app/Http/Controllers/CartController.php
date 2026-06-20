@@ -48,29 +48,32 @@ class CartController extends Controller
 
         $product = Product::findOrFail($validated['product_id']);
 
-        $conditions = auth()->check()
-            ? ['user_id' => auth()->id(), 'product_id' => $product->id]
-            : ['session_id' => session()->getId(), 'product_id' => $product->id];
+        $owner = auth()->check()
+            ? ['user_id' => auth()->id()]
+            : ['session_id' => session()->getId()];
 
-        // Ensure required optional fields are filled with NULL or default
-        $defaults = [
-            'length'   => null,
-            'height'   => null,
-            'manopera' => null,
-            'pieces'   => 1,
-            'price'    => $product->price(),
-        ];
-
-        // Try to find an existing row
-        $existing = Cart::where($conditions)->first();
+        // A standard line is identified by product_id + NULL dimensions, so we
+        // never match (and clobber) a custom row of the same product.
+        $existing = Cart::where($owner)
+            ->where('product_id', $product->id)
+            ->whereNull('length')
+            ->whereNull('height')
+            ->whereNull('manufactoring_type_id')
+            ->first();
 
         if ($existing) {
             $existing->increment('quantity', $validated['quantity']);
-            $existing->update($defaults); // update price in case it changed
+            $existing->update(['price' => $product->price()]); // refresh price only
         } else {
-            Cart::create(array_merge($conditions, [
-                'quantity' => $validated['quantity'],
-            ], $defaults));
+            Cart::create(array_merge($owner, [
+                'product_id'            => $product->id,
+                'quantity'              => $validated['quantity'],
+                'length'                => null,
+                'height'                => null,
+                'manufactoring_type_id' => null,
+                'pieces'                => 1,
+                'price'                 => $product->price(),
+            ]));
         }
 
         return back()->with('flashMessage', [
