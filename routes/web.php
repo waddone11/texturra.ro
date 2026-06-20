@@ -4,9 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     SocialAuthController,
     Auth\VerifyEmailController,
-    CommandController,
-    EmagMarketplaceController,
-    EmagProductsMarketplaceController,
     ProductController,
     CartController,
     CheckoutController,
@@ -14,10 +11,7 @@ use App\Http\Controllers\{
     AttributeController
 
 };
-use App\Http\Middleware\{
-    CheckRole,
-    VerifySecretKey
-};
+use App\Http\Middleware\CheckRole;
 use Livewire\Volt\Volt;
 use Illuminate\Support\Facades\Mail;
 use App\Livewire\Layout\NewsletterSubscription;
@@ -25,23 +19,9 @@ use App\Livewire\Layout\NewsletterSubscription;
 
 
 // ------------------------------------------------------
-// Utility Routes (Development Helpers)
+// Utility Routes (admin/employee only)
 // ------------------------------------------------------
-Route::middleware(VerifySecretKey::class)->prefix('commands')->group(function () {
-    Route::get('/start-queue-worker/{queue?}', [CommandController::class, 'startQueueWorker']);
-    Route::get('/trigger-queue/{queue?}', [CommandController::class, 'triggerQueue']);
-    Route::get('/generate-prompts', [CommandController::class, 'generatePrompts']);
-    Route::get('/generate-images', [CommandController::class, 'generateImages']);
-    Route::get('/send-booking-reminders', [CommandController::class, 'sendBookingReminders']);
-    Route::get('/send-created-booking-reminders', [CommandController::class, 'sendCreatedBookingReminders']);
-    Route::get('/clear-cache', [CommandController::class, 'clearCache']);
-    Route::get('/create-storage-link', [CommandController::class, 'createStorageLink']);
-
-    //Route::get('/populate-description-plain', [CommandController::class, 'populateDescriptionPlain'])->name('commands.populateDescriptionPlain');
-});
-
-
-Route::prefix('utilities')->group(function () {
+Route::prefix('utilities')->middleware(['auth', CheckRole::class . ':admin,employee'])->group(function () {
     Route::get('/generate-invoice/{orderId}', function ($orderId) {
         $order = App\Models\Order::find($orderId);
         if (!$order) {
@@ -229,25 +209,4 @@ Route::prefix('admin')->middleware(['auth', CheckRole::class . ':admin,employee'
 
     // Account Settings
     Route::get('/change-password', \App\Livewire\Account\ChangePassword::class)->name('admin.change-password');
-});
-
-
-// ------------------------------------------------------
-// Emag Marketplace Routes
-// ------------------------------------------------------
-Route::prefix('emag')->middleware(['web'])->group(function () {
-    Route::get('/categories', [EmagMarketplaceController::class, 'getCategories']);
-    Route::get('/fix-category-parents', [EmagMarketplaceController::class, 'fixCategoryParents'])->name('fixCategoryParents');
-    Route::get('/fetch-all', [EmagMarketplaceController::class, 'fetchAllProducts'])->name('fetchAllProducts');
-    Route::get('/product/{id}', [EmagProductsMarketplaceController::class, 'fetchSingleProduct'])->name('fetchSingleProduct');
-    //Route::get('/info-product/{id}', [EmagProductsMarketplaceController::class, 'infoSingleProduct'])->name('fetchSingleProduct');
-    Route::get('/process-all-products', [EmagProductsMarketplaceController::class, 'processAllProducts'])->name('processAllProducts');
-    Route::get('/product/check/{id}', [EmagProductsMarketplaceController::class, 'checkProductMatch'])->name('checkProductMatch');
-    Route::get('/product/save/{id}', [EmagProductsMarketplaceController::class, 'refetchImagesForProductId'])->name('refetchImagesForProductId');
-    Route::get('/refetch-images', [EmagProductsMarketplaceController::class, 'refetchImagesForProducts']);
-    Route::get('/update-vat-rates', [EmagProductsMarketplaceController::class, 'updateProductVatRates']);
-    Route::get('/sync-categories', [EmagMarketplaceController::class, 'syncCategoriesFromApi']);
-    Route::get('/categories-tree', [EmagMarketplaceController::class, 'categoriesTree']);
-    Route::get('/activate-categories', [EmagMarketplaceController::class, 'activateCategoriesFromProducts']);
-
 });

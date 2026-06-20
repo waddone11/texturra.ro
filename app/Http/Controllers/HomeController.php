@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\EmagCategory;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use Carbon\Carbon;
@@ -95,40 +94,6 @@ class HomeController extends Controller
     }
 
 
-    /**
-     * Recursively build the category tree.
-     */
-    private function buildCategoryTree($categories, $parentId)
-    {
-        $tree = [];
-        foreach ($categories as $category) {
-            if ($category->emag_parent_id == $parentId) {
-                $children = $this->buildCategoryTree($categories, $category->emag_id);
-                $tree[] = [
-                    'id' => $category->id,
-                    'name' => $category->name,
-                    'slug' => $category->slug,
-                    'children' => $children,
-                ];
-            }
-        }
-        return $tree;
-    }
-
-    /**
-     * Recursively fetch all descendant category IDs.
-     */
-    private function getAllDescendantCategoryIds($emagCategoryId)
-    {
-        $categoryIds = [$emagCategoryId];
-        $childCategories = EmagCategory::where('emag_parent_id', $emagCategoryId)->get();
-
-        foreach ($childCategories as $childCategory) {
-            $categoryIds = array_merge($categoryIds, $this->getAllDescendantCategoryIds($childCategory->emag_id));
-        }
-
-        return $categoryIds;
-    }
 
     public function about()
     {

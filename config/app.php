@@ -6,10 +6,6 @@ return [
     'tel'  => env('APP_TEL', '+491744552303'),
     'open_api_Key' => env('OPENAI_API_KEY', ''),
     'secret_key' => env('APP_SECRET_KEY', ''),
-    'emag_api_key' => env('EMAG_API_KEY'),
-    'emag_api_url' => env('EMAG_API_URL'),
-    'emag_username' => env('EMAG_USERNAME'),
-    'emag_password' => env('EMAG_PASSWORD'),
     'shipping_cost' => env('SHIPPING_COST'),
     'free_shipping_min' => env('FREE_SHIPPING_MIN'),
 
