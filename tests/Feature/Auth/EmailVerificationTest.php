@@ -7,7 +7,8 @@ use App\Models\User;
 use App\Notifications\CustomVerifyEmail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
-use Livewire\Volt\Volt;
+use App\Livewire\Pages\Auth\VerifyEmail;
+use Livewire\Livewire;
 use Tests\TestCase;
 
 /**
@@ -24,7 +25,7 @@ class EmailVerificationTest extends TestCase
         $user = User::factory()->unverified()->create(['type' => UserType::CLIENT]);
         $this->actingAs($user);
 
-        Volt::test('pages.auth.verify-email')
+        Livewire::test(VerifyEmail::class)
             ->call('sendVerification');
 
         Notification::assertSentTo($user, CustomVerifyEmail::class);
@@ -35,7 +36,7 @@ class EmailVerificationTest extends TestCase
         $user = User::factory()->unverified()->create(['type' => UserType::CLIENT]);
         $this->actingAs($user);
 
-        Volt::test('pages.auth.verify-email')
+        Livewire::test(VerifyEmail::class)
             ->call('logout')
             ->assertRedirect('/');
 

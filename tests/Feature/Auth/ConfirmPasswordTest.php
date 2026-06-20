@@ -5,7 +5,8 @@ namespace Tests\Feature\Auth;
 use App\Enums\UserType;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Livewire\Volt\Volt;
+use App\Livewire\Pages\Auth\ConfirmPassword;
+use Livewire\Livewire;
 use Tests\TestCase;
 
 /**
@@ -25,7 +26,7 @@ class ConfirmPasswordTest extends TestCase
         $user = User::factory()->create(['type' => UserType::CLIENT]); // factory password = 'password'
         $this->actingAs($user);
 
-        Volt::test('pages.auth.confirm-password')
+        Livewire::test(ConfirmPassword::class)
             ->set('password', 'password')
             ->call('confirmPassword')
             ->assertHasNoErrors()
@@ -39,7 +40,7 @@ class ConfirmPasswordTest extends TestCase
         $user = User::factory()->create(['type' => UserType::CLIENT]);
         $this->actingAs($user);
 
-        Volt::test('pages.auth.confirm-password')
+        Livewire::test(ConfirmPassword::class)
             ->set('password', 'wrong-password')
             ->call('confirmPassword')
             ->assertHasErrors(['password']);

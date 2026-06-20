@@ -3,11 +3,12 @@
 namespace Tests\Feature\Auth;
 
 use App\Enums\UserType;
+use App\Livewire\Pages\Auth\ForgotPassword;
 use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
-use Livewire\Volt\Volt;
+use Livewire\Livewire;
 use Tests\TestCase;
 
 /**
@@ -28,7 +29,7 @@ class ForgotPasswordTest extends TestCase
         Notification::fake();
         $user = User::factory()->create(['type' => UserType::CLIENT]);
 
-        Volt::test('pages.auth.forgot-password')
+        Livewire::test(ForgotPassword::class)
             ->set('email', $user->email)
             ->call('sendPasswordResetLink')
             ->assertHasNoErrors();
@@ -38,7 +39,7 @@ class ForgotPasswordTest extends TestCase
 
     public function test_validation_error_for_invalid_email(): void
     {
-        Volt::test('pages.auth.forgot-password')
+        Livewire::test(ForgotPassword::class)
             ->set('email', 'not-an-email')
             ->call('sendPasswordResetLink')
             ->assertHasErrors(['email']);

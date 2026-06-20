@@ -7,7 +7,8 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
-use Livewire\Volt\Volt;
+use App\Livewire\Pages\Auth\ResetPassword;
+use Livewire\Livewire;
 use Tests\TestCase;
 
 /**
@@ -22,7 +23,7 @@ class ResetPasswordTest extends TestCase
         $user  = User::factory()->create(['type' => UserType::CLIENT]);
         $token = Password::createToken($user);
 
-        Volt::test('pages.auth.reset-password', ['token' => $token])
+        Livewire::test(ResetPassword::class, ['token' => $token])
             ->set('email', $user->email)
             ->set('password', 'newpassword1')
             ->set('password_confirmation', 'newpassword1')
@@ -38,7 +39,7 @@ class ResetPasswordTest extends TestCase
         $user  = User::factory()->create(['type' => UserType::CLIENT]);
         $token = Password::createToken($user);
 
-        Volt::test('pages.auth.reset-password', ['token' => $token])
+        Livewire::test(ResetPassword::class, ['token' => $token])
             ->set('email', $user->email)
             ->set('password', 'newpassword1')
             ->set('password_confirmation', 'mismatch')

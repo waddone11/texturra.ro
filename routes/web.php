@@ -12,6 +12,7 @@ use App\Http\Controllers\{
 
 };
 use App\Http\Middleware\CheckRole;
+use App\Livewire\Pages\Auth\{ForgotPassword, ResetPassword, VerifyEmail, ConfirmPassword};
 use Livewire\Volt\Volt;
 use Illuminate\Support\Facades\Mail;
 use App\Livewire\Layout\NewsletterSubscription;
@@ -131,8 +132,8 @@ Route::middleware('guest', 'web')->group(function () {
     Volt::route('register', 'pages.auth.register')->name('register');
 
     // Password Reset
-    Volt::route('forgot-password', 'pages.auth.forgot-password')->name('password.request');
-    Volt::route('reset-password/{token}', 'pages.auth.reset-password')->name('password.reset');
+    Route::get('forgot-password', ForgotPassword::class)->name('password.request');
+    Route::get('reset-password/{token}', ResetPassword::class)->name('password.reset');
     Route::post('/reset-password', [\App\Http\Controllers\Auth\ResetPasswordController::class, 'reset'])->name('password.update');
 
     // Social Authentication
@@ -145,11 +146,11 @@ Route::middleware('guest', 'web')->group(function () {
 // ------------------------------------------------------
 Route::middleware(['auth', 'verified', 'web'])->group(function () {
     // Email Verification
-    Volt::route('verify-email', 'pages.auth.verify-email')->name('verification.notice');
+    Route::get('verify-email', VerifyEmail::class)->name('verification.notice');
     Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)
         ->middleware(['signed', 'throttle:6,1'])
         ->name('verification.verify');
-    Volt::route('confirm-password', 'pages.auth.confirm-password')->name('password.confirm');
+    Route::get('confirm-password', ConfirmPassword::class)->name('password.confirm');
 
     // Checkout
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');

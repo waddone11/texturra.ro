@@ -5,7 +5,8 @@ namespace Tests\Feature\Profile;
 use App\Enums\UserType;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Livewire\Volt\Volt;
+use App\Livewire\Profile\UpdateProfileInformationForm;
+use Livewire\Livewire;
 use Tests\TestCase;
 
 /**
@@ -20,7 +21,7 @@ class UpdateProfileInformationTest extends TestCase
         $user = User::factory()->create(['type' => UserType::CLIENT]);
         $this->actingAs($user);
 
-        Volt::test('profile.update-profile-information-form')
+        Livewire::test(UpdateProfileInformationForm::class)
             ->set('name', 'New Name')
             ->set('email', 'new-email@example.com')
             ->call('updateProfileInformation')
@@ -37,7 +38,7 @@ class UpdateProfileInformationTest extends TestCase
         $this->assertNotNull($user->email_verified_at);
         $this->actingAs($user);
 
-        Volt::test('profile.update-profile-information-form')
+        Livewire::test(UpdateProfileInformationForm::class)
             ->set('name', $user->name)
             ->set('email', 'changed@example.com')
             ->call('updateProfileInformation')
@@ -51,7 +52,7 @@ class UpdateProfileInformationTest extends TestCase
         $user = User::factory()->create(['type' => UserType::CLIENT]);
         $this->actingAs($user);
 
-        Volt::test('profile.update-profile-information-form')
+        Livewire::test(UpdateProfileInformationForm::class)
             ->set('name', 'Renamed')
             ->set('email', $user->email)
             ->call('updateProfileInformation')

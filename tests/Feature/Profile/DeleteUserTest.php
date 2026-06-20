@@ -5,7 +5,8 @@ namespace Tests\Feature\Profile;
 use App\Enums\UserType;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Livewire\Volt\Volt;
+use App\Livewire\Profile\DeleteUserForm;
+use Livewire\Livewire;
 use Tests\TestCase;
 
 /**
@@ -20,7 +21,7 @@ class DeleteUserTest extends TestCase
         $user = User::factory()->create(['type' => UserType::CLIENT]); // factory password = 'password'
         $this->actingAs($user);
 
-        Volt::test('profile.delete-user-form')
+        Livewire::test(DeleteUserForm::class)
             ->set('password', 'password')
             ->call('deleteUser')
             ->assertRedirect('/');
@@ -34,7 +35,7 @@ class DeleteUserTest extends TestCase
         $user = User::factory()->create(['type' => UserType::CLIENT]);
         $this->actingAs($user);
 
-        Volt::test('profile.delete-user-form')
+        Livewire::test(DeleteUserForm::class)
             ->set('password', 'wrong-password')
             ->call('deleteUser')
             ->assertHasErrors(['password']);

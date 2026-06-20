@@ -6,7 +6,8 @@ use App\Enums\UserType;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
-use Livewire\Volt\Volt;
+use App\Livewire\Profile\UpdatePasswordForm;
+use Livewire\Livewire;
 use Tests\TestCase;
 
 /**
@@ -25,7 +26,7 @@ class UpdatePasswordFormTest extends TestCase
         ]);
         $this->actingAs($user);
 
-        Volt::test('profile.update-password-form')
+        Livewire::test(UpdatePasswordForm::class)
             ->set('current_password', 'oldpassword')
             ->set('password', 'newpassword1')
             ->set('password_confirmation', 'newpassword1')
@@ -43,7 +44,7 @@ class UpdatePasswordFormTest extends TestCase
         ]);
         $this->actingAs($user);
 
-        Volt::test('profile.update-password-form')
+        Livewire::test(UpdatePasswordForm::class)
             ->set('current_password', 'wrong')
             ->set('password', 'newpassword1')
             ->set('password_confirmation', 'newpassword1')
