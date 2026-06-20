@@ -82,7 +82,7 @@ class LoginTest extends TestCase
         // Guest session cart, with custom curtain dimensions on item A.
         Cart::create([
             'session_id' => $sessionId, 'product_id' => $productA->id,
-            'quantity' => 2, 'price' => 50.00, 'length' => 1.50, 'height' => 2.00, 'pieces' => 3,
+            'quantity' => 2, 'price' => 50.00, 'length' => 1.50, 'height' => 2.00, 'pieces' => 2,
         ]);
         Cart::create([
             'session_id' => $sessionId, 'product_id' => $productB->id,
@@ -105,11 +105,11 @@ class LoginTest extends TestCase
         // Session cart items consumed (no duplicates / leftovers).
         $this->assertDatabaseMissing('carts', ['session_id' => $sessionId]);
 
-        // KNOWN CURRENT BEHAVIOUR (documented, not endorsed): the merge copies only
-        // quantity + price, so custom dimensions (length/height/pieces) are LOST.
+        // Custom curtain dimensions must be PRESERVED through the merge.
         $merged = Cart::where('user_id', $user->id)->where('product_id', $productA->id)->first();
-        $this->assertNull($merged->length, 'merge currently drops length (data-loss flagged for separate fix)');
-        $this->assertNull($merged->height);
+        $this->assertEqualsWithDelta(1.50, (float) $merged->length, 0.001);
+        $this->assertEqualsWithDelta(2.00, (float) $merged->height, 0.001);
+        $this->assertEquals(2, (int) $merged->pieces);
     }
 
     public function test_login_without_session_cart_does_not_break(): void
