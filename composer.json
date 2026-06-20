@@ -17,7 +17,7 @@
         "livewire/livewire": "^3.8",
         "livewire/volt": "^1.10",
         "mcamara/laravel-localization": "^2.4",
-        "phpoffice/phpspreadsheet": "^4.1",
+        "phpoffice/phpspreadsheet": "^5.0",
         "spatie/laravel-cookie-consent": "^3.3"
     },
     "require-dev": {
