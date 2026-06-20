@@ -12,7 +12,7 @@ use App\Http\Controllers\{
 
 };
 use App\Http\Middleware\CheckRole;
-use App\Livewire\Pages\Auth\{ForgotPassword, ResetPassword, VerifyEmail, ConfirmPassword};
+use App\Livewire\Pages\Auth\{Login, Register, ForgotPassword, ResetPassword, VerifyEmail, ConfirmPassword};
 use Livewire\Volt\Volt;
 use Illuminate\Support\Facades\Mail;
 use App\Livewire\Layout\NewsletterSubscription;
@@ -128,8 +128,8 @@ Route::middleware(['web'])->group(function () {
 // ------------------------------------------------------
 Route::middleware('guest', 'web')->group(function () {
     // Login & Register
-    Volt::route('login', 'pages.auth.login')->name('login');
-    Volt::route('register', 'pages.auth.register')->name('register');
+    Route::get('login', Login::class)->name('login');
+    Route::get('register', Register::class)->name('register');
 
     // Password Reset
     Route::get('forgot-password', ForgotPassword::class)->name('password.request');
