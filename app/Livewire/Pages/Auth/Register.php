@@ -33,36 +33,13 @@ class Register extends Component
 
         // Check for cart transfer flag
         if (session('eligible_to_transfer_cart')) {
-            $this->mergeCartWithUserCart($oldSessionId);
+            Cart::mergeSessionIntoUser($oldSessionId, auth()->id());
             session()->forget('eligible_to_transfer_cart');
             $this->redirect(route('checkout.index'));
             return;
         }
 
         $this->redirect(session('url.intended', route('home')));
-    }
-
-    /**
-     * Merge cart items from the old session into the authenticated user's cart.
-     */
-    protected function mergeCartWithUserCart(string $oldSessionId): void
-    {
-        $sessionCartItems = Cart::where('session_id', $oldSessionId)->get();
-
-        foreach ($sessionCartItems as $item) {
-            Cart::updateOrCreate(
-                [
-                    'user_id' => auth()->id(),
-                    'product_id' => $item->product_id,
-                ],
-                [
-                    'quantity' => $item->quantity,
-                    'price' => $item->price,
-                ]
-            );
-
-            $item->delete();
-        }
     }
 
     public function render()

@@ -23,7 +23,7 @@ class Login extends Component
 
         // Check for cart transfer flag
         if (session('eligible_to_transfer_cart')) {
-            $this->mergeCartWithUserCart($oldSessionId);
+            Cart::mergeSessionIntoUser($oldSessionId, auth()->id());
             session()->forget('eligible_to_transfer_cart');
 
             $this->redirect(route('checkout.index'));
@@ -34,27 +34,6 @@ class Login extends Component
 
         //$this->redirectIntended(route('home'));
     }
-
-    protected function mergeCartWithUserCart(string $oldSessionId): void
-    {
-        $sessionCartItems = Cart::where('session_id', $oldSessionId)->get();
-
-        foreach ($sessionCartItems as $item) {
-            Cart::updateOrCreate(
-                [
-                    'user_id' => auth()->id(),
-                    'product_id' => $item->product_id,
-                ],
-                [
-                    'quantity' => $item->quantity,
-                    'price' => $item->price,
-                ]
-            );
-
-            $item->delete();
-        }
-    }
-
 
     public function render()
     {
