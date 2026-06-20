@@ -45,6 +45,8 @@ class Product extends Model
         'is_synced',
         'height',
         'type',
+        'source_link',
+        'acquisition_price',
     ];
 
     protected static function boot()
