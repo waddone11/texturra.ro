@@ -1,0 +1,33 @@
+# === Laravel standard ===
+/vendor
+/node_modules
+/public/build
+/public/hot
+/public/storage
+/storage/*.key
+/storage/pail
+/bootstrap/ssr
+/.phpunit.cache
+.phpunit.result.cache
+
+# === Secrets / env ===
+.env
+.env.*
+!.env.example
+
+# === Logs ===
+npm-debug.log
+yarn-error.log
+
+# === macOS ===
+.DS_Store
+
+# === Project-specific (carry-over din prod cPanel) ===
+*.sql
+/__MACOSX
+/cgi-bin
+/public/.htaccess2
+
+# === Docs moștenite din alt proiect (NIRAPH / scratch notes) — conțin secrete sau descriu alt proiect, nu texturra ===
+/info.md
+/use.md

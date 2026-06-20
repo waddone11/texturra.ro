@@ -1,0 +1,72 @@
+services:
+    texturra:
+        build:
+            context: ./vendor/laravel/sail/runtimes/8.2
+            dockerfile: Dockerfile
+            args:
+                WWWGROUP: '${WWWGROUP}'
+                NODE_VERSION: '18' # You can change this to the Node.js version you prefer
+        image: sail-8.2/app
+        extra_hosts:
+            - 'host.docker.internal:host-gateway'
+        ports:
+            - '${APP_PORT:-80}:80'
+        environment:
+            WWWUSER: '${WWWUSER:-1000}'
+            WWWGROUP: '${WWWGROUP:-1000}'
+            LARAVEL_SAIL: 1
+            XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
+            XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
+        volumes:
+            - '${SOURCE_CODE:-.}:/var/www/html'
+        networks:
+            - texturra_network
+        depends_on:
+            - mysql
+            - redis
+    mysql:
+        image: 'mysql/mysql-server:8.0'
+        ports:
+            - '${FORWARD_DB_PORT:-3306}:3306'
+        environment:
+            MYSQL_ROOT_PASSWORD: 'changeme'
+            MYSQL_ROOT_HOST: "%"
+            MYSQL_DATABASE: 'texturra_baza'
+            MYSQL_USER: 'texturra_user'
+            MYSQL_PASSWORD: 'changeme'
+            MYSQL_ALLOW_EMPTY_PASSWORD: 1
+        volumes:
+            - 'texturramysql:/var/lib/mysql'
+        networks:
+            - texturra_network
+        healthcheck:
+            test: ["CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}"]
+            retries: 3
+            timeout: 5s
+    redis:
+        image: 'redis:alpine'
+        ports:
+            - '${FORWARD_REDIS_PORT:-6379}:6379'
+        volumes:
+            - 'texturraredis:/data'
+        networks:
+            - texturra_network
+        healthcheck:
+            test: ["CMD", "redis-cli", "ping"]
+            retries: 3
+            timeout: 5s
+    mailhog:
+        image: 'jcalonso/mailhog:latest'
+        ports:
+            - '${FORWARD_MAILHOG_PORT:-1025}:1025'
+            - '${FORWARD_MAILHOG_DASHBOARD_PORT:-8025}:8025'
+        networks:
+            - texturra_network
+networks:
+    texturra_network:
+        driver: bridge
+volumes:
+    texturramysql:
+        driver: local
+    texturraredis:
+        driver: local
