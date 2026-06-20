@@ -236,11 +236,6 @@ class Product extends Model
         return $this->stock;
     }
 
-    public function safirExcels()
-    {
-        return $this->hasMany(SafirExcel::class);
-    }
-
     public function getPivotMeta($key = null)
     {
         $meta = json_decode($this->pivot->meta ?? '{}', true);

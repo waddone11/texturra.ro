@@ -1,15 +1,4 @@
 <?php return array (
-  'barryvdh/laravel-debugbar' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Barryvdh\\Debugbar\\ServiceProvider',
-    ),
-    'aliases' => 
-    array (
-      'Debugbar' => 'Barryvdh\\Debugbar\\Facades\\Debugbar',
-    ),
-  ),
   'barryvdh/laravel-dompdf' => 
   array (
     'aliases' => 
@@ -31,13 +20,13 @@
   ),
   'laravel/horizon' => 
   array (
-    'providers' => 
-    array (
-      0 => 'Laravel\\Horizon\\HorizonServiceProvider',
-    ),
     'aliases' => 
     array (
       'Horizon' => 'Laravel\\Horizon\\Horizon',
+    ),
+    'providers' => 
+    array (
+      0 => 'Laravel\\Horizon\\HorizonServiceProvider',
     ),
   ),
   'laravel/sail' => 
@@ -47,15 +36,22 @@
       0 => 'Laravel\\Sail\\SailServiceProvider',
     ),
   ),
-  'laravel/socialite' => 
+  'laravel/sentinel' => 
   array (
     'providers' => 
     array (
-      0 => 'Laravel\\Socialite\\SocialiteServiceProvider',
+      0 => 'Laravel\\Sentinel\\SentinelServiceProvider',
     ),
+  ),
+  'laravel/socialite' => 
+  array (
     'aliases' => 
     array (
       'Socialite' => 'Laravel\\Socialite\\Facades\\Socialite',
+    ),
+    'providers' => 
+    array (
+      0 => 'Laravel\\Socialite\\SocialiteServiceProvider',
     ),
   ),
   'laravel/tinker' => 
@@ -74,13 +70,13 @@
   ),
   'livewire/livewire' => 
   array (
-    'providers' => 
-    array (
-      0 => 'Livewire\\LivewireServiceProvider',
-    ),
     'aliases' => 
     array (
       'Livewire' => 'Livewire\\Livewire',
+    ),
+    'providers' => 
+    array (
+      0 => 'Livewire\\LivewireServiceProvider',
     ),
   ),
   'livewire/volt' => 
@@ -92,13 +88,13 @@
   ),
   'mcamara/laravel-localization' => 
   array (
-    'providers' => 
-    array (
-      0 => 'Mcamara\\LaravelLocalization\\LaravelLocalizationServiceProvider',
-    ),
     'aliases' => 
     array (
       'LaravelLocalization' => 'Mcamara\\LaravelLocalization\\Facades\\LaravelLocalization',
+    ),
+    'providers' => 
+    array (
+      0 => 'Mcamara\\LaravelLocalization\\LaravelLocalizationServiceProvider',
     ),
   ),
   'nesbot/carbon' => 
