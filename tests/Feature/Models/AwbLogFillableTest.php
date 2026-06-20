@@ -26,8 +26,6 @@ class AwbLogFillableTest extends TestCase
 
     public function test_awb_log_real_columns_are_mass_assignable(): void
     {
-        $this->markTestSkipped('Pending Faza 4 Grup A.2: AwbLog $fillable lists awb_number/courier_name (non-existent); real column is courier_type.');
-
         $user = User::factory()->create(['type' => UserType::CLIENT]);
 
         $addr = Address::create([

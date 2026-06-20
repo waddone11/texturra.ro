@@ -21,8 +21,6 @@ class ColorFillableTest extends TestCase
 
     public function test_color_cod_css_is_mass_assignable(): void
     {
-        $this->markTestSkipped('Pending Faza 4 Grup A.1: Color $fillable uses css_code; real column is cod_css.');
-
         $group = ColorGroup::create(['name' => 'Rosii', 'image_path' => 'colors/rosii.png']);
 
         $color = Color::create([

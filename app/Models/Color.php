@@ -9,7 +9,7 @@ class Color extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['color_group_id', 'name', 'css_code'];
+    protected $fillable = ['color_group_id', 'name', 'cod_css'];
 
     public function group()
     {
