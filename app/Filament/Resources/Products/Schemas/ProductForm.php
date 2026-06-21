@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Products\Schemas;
 
 use App\Models\Product;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -12,7 +13,8 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\HtmlString;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProductForm
 {
@@ -60,26 +62,35 @@ class ProductForm
                             ->numeric()
                             ->prefix('RON'),
 
-                        Select::make('vat_id')
-                            ->label('TVA')
-                            ->relationship('vat', 'rate')
-                            ->getOptionLabelFromRecordUsing(fn ($record): string => $record->rate . '%'),
+                        // TVA: nu se alege din form — toate produsele textile sunt 21%
+                        // (cota standard RO din 2025-08-01), aplicat automat la create/save.
 
                         Toggle::make('status')
                             ->label('Activ')
                             ->default(true),
 
+                        // Auto-generated (TEX-…) on create — read-only, like old admin.
                         TextInput::make('product_code')
                             ->label('Cod produs')
-                            ->maxLength(255),
+                            ->disabled()
+                            ->dehydrated(false)
+                            ->placeholder('Auto-generat (TEX-…) la salvare'),
 
+                        // EAN: opțional (produse non-eMAG nu se blochează). Dacă e
+                        // completat → unic; gol → NULL (mai multe NULL permise).
                         TextInput::make('ean')
                             ->label('EAN')
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->unique(ignoreRecord: true)
+                            ->dehydrateStateUsing(fn (?string $state): ?string => filled($state) ? $state : null)
+                            ->helperText('Opțional. Dacă îl completezi, trebuie să fie unic.'),
 
+                        // description column is NOT NULL without a default → coerce
+                        // empty to '' so a product can be created without a description.
                         Textarea::make('description')
                             ->label('Descriere')
                             ->rows(4)
+                            ->dehydrateStateUsing(fn (?string $state): string => $state ?? '')
                             ->columnSpanFull(),
                     ]),
 
@@ -89,11 +100,16 @@ class ProductForm
                     ->description('Doar pentru produse custom. „Înălțime max" = plafonul din configuratorul frontend.')
                     ->visible(fn (Get $get): bool => $get('type') === 'custom')
                     ->schema([
+                        // Coloana e decimal(4,2) → max 99.99. Înălțimea e în METRI
+                        // (ex. 2.80), nu cm — validăm 0.5–10 ca să nu depășească precizia.
                         TextInput::make('height')
-                            ->label('Înălțime max (m)')
+                            ->label('Înălțime maximă (metri)')
                             ->numeric()
+                            ->suffix('m')
                             ->step(0.01)
-                            ->helperText('Decimal, ex. 3.00. Plafon pentru configuratorul de pe site.'),
+                            ->minValue(0.5)
+                            ->maxValue(10)
+                            ->helperText('În METRI (ex. 2.80, nu 280). Plafonul de înălțime din configuratorul de pe site.'),
                     ]),
 
                 Section::make('Stoc & paletar')
@@ -102,38 +118,52 @@ class ProductForm
                         // atașate (suma din product_color, recalculată de relation
                         // manager); editabil direct când NU are paletar.
                         TextInput::make('general_stock')
-                            ->label('Stoc general')
+                            ->label('Stoc')
                             ->numeric()
                             ->default(0)
                             ->disabled(fn (?Product $record): bool => (bool) $record?->colors()->exists())
                             ->dehydrated(fn (?Product $record): bool => ! (bool) $record?->colors()->exists())
                             ->helperText(fn (?Product $record): string => $record?->colors()->exists()
-                                ? 'Derivat = suma stocurilor pe culori (gestionat în „Culori", read-only).'
-                                : 'Editabil direct (fără paletar). Când atașezi culori, devine derivat.'),
+                                ? 'Acest produs are culori, deci stocul se pune per culoare (în secțiunea „Culori"). Aici se vede totalul, calculat automat.'
+                                : 'Stocul total al produsului. Dacă adaugi culori în secțiunea „Culori", stocul se va pune pe fiecare culoare în parte.'),
 
                         Placeholder::make('colors_hint')
                             ->label('')
-                            ->content('Culorile + stocul per culoare se gestionează în secțiunea „Culori" de mai jos (la editare).'),
+                            ->content('Pentru un produs cu mai multe culori, adaugă culorile în secțiunea „Culori" (mai jos, la editare) și pune stocul pe fiecare. Totalul se adună singur aici.'),
                     ]),
 
-                // Read-only: nu rescriem stocarea imaginilor (JSON /storage/...) și
-                // nici materialul (prin variații legacy) în această fază — vezi raport.
-                Section::make('Imagini & material (read-only)')
+                Section::make('Imagini')
+                    ->schema([
+                        // Stored exactly like the old admin: files on the public disk
+                        // under images/uploads/products, JSON array of "/storage/..."
+                        // paths (frontend reads these directly). The format closures
+                        // bridge FileUpload's disk-relative paths to that convention.
+                        FileUpload::make('images')
+                            ->label('Imagini produs')
+                            ->multiple()
+                            ->image()
+                            ->reorderable()
+                            ->appendFiles()
+                            ->disk('public')
+                            ->directory('images/uploads/products')
+                            ->visibility('public')
+                            ->maxSize(10240)
+                            ->getUploadedFileNameForStorageUsing(fn ($file): string => Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))
+                                . '-' . substr(md5(uniqid()), 0, 6) . '.' . $file->getClientOriginalExtension())
+                            ->formatStateUsing(fn (?array $state): array => collect($state ?? [])
+                                ->map(fn ($p) => Str::startsWith((string) $p, '/storage/') ? Str::after($p, '/storage/') : $p)
+                                ->values()->all())
+                            ->dehydrateStateUsing(fn (?array $state): array => collect($state ?? [])
+                                ->map(fn ($p) => Str::startsWith((string) $p, '/storage/') ? $p : '/storage/' . ltrim((string) $p, '/'))
+                                ->values()->all())
+                            ->deleteUploadedFileUsing(fn (string $file) => Storage::disk('public')
+                                ->delete(Str::startsWith($file, '/storage/') ? Str::after($file, '/storage/') : $file))
+                            ->columnSpanFull(),
+                    ]),
+
+                Section::make('Material (read-only)')
                     ->collapsed()
                     ->schema([
-                        Placeholder::make('images_preview')
-                            ->label('Imagini curente')
-                            ->content(function (?Product $record): HtmlString {
-                                $imgs = $record?->images ?: [];
-                                if (! $imgs) {
-                                    return new HtmlString('<span>— fără imagini —</span>');
-                                }
-
-                                return new HtmlString(collect($imgs)
-                                    ->map(fn ($p) => '<img src="' . e($p) . '" style="height:56px;display:inline-block;margin:2px;border-radius:6px;border:1px solid #e5e7eb">')
-                                    ->implode(''));
-                            }),
-
                         Placeholder::make('material_current')
                             ->label('Material (prin variații legacy)')
                             ->content(function (?Product $record): string {
