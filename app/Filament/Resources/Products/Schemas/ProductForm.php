@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Products\Schemas;
 
 use App\Models\Product;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -12,7 +13,8 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\HtmlString;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProductForm
 {
@@ -69,13 +71,19 @@ class ProductForm
                             ->label('Activ')
                             ->default(true),
 
+                        // Auto-generated (TEX-…) on create — read-only, like old admin.
                         TextInput::make('product_code')
                             ->label('Cod produs')
-                            ->maxLength(255),
+                            ->disabled()
+                            ->dehydrated(false)
+                            ->placeholder('Auto-generat (TEX-…) la salvare'),
 
+                        // EAN: required on create + unique (eMAG integrity guard, as in old admin).
                         TextInput::make('ean')
                             ->label('EAN')
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->required(fn (string $operation): bool => $operation === 'create')
+                            ->unique(ignoreRecord: true),
 
                         Textarea::make('description')
                             ->label('Descriere')
@@ -116,24 +124,38 @@ class ProductForm
                             ->content('Culorile + stocul per culoare se gestionează în secțiunea „Culori" de mai jos (la editare).'),
                     ]),
 
-                // Read-only: nu rescriem stocarea imaginilor (JSON /storage/...) și
-                // nici materialul (prin variații legacy) în această fază — vezi raport.
-                Section::make('Imagini & material (read-only)')
+                Section::make('Imagini')
+                    ->schema([
+                        // Stored exactly like the old admin: files on the public disk
+                        // under images/uploads/products, JSON array of "/storage/..."
+                        // paths (frontend reads these directly). The format closures
+                        // bridge FileUpload's disk-relative paths to that convention.
+                        FileUpload::make('images')
+                            ->label('Imagini produs')
+                            ->multiple()
+                            ->image()
+                            ->reorderable()
+                            ->appendFiles()
+                            ->disk('public')
+                            ->directory('images/uploads/products')
+                            ->visibility('public')
+                            ->maxSize(10240)
+                            ->getUploadedFileNameForStorageUsing(fn ($file): string => Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))
+                                . '-' . substr(md5(uniqid()), 0, 6) . '.' . $file->getClientOriginalExtension())
+                            ->formatStateUsing(fn (?array $state): array => collect($state ?? [])
+                                ->map(fn ($p) => Str::startsWith((string) $p, '/storage/') ? Str::after($p, '/storage/') : $p)
+                                ->values()->all())
+                            ->dehydrateStateUsing(fn (?array $state): array => collect($state ?? [])
+                                ->map(fn ($p) => Str::startsWith((string) $p, '/storage/') ? $p : '/storage/' . ltrim((string) $p, '/'))
+                                ->values()->all())
+                            ->deleteUploadedFileUsing(fn (string $file) => Storage::disk('public')
+                                ->delete(Str::startsWith($file, '/storage/') ? Str::after($file, '/storage/') : $file))
+                            ->columnSpanFull(),
+                    ]),
+
+                Section::make('Material (read-only)')
                     ->collapsed()
                     ->schema([
-                        Placeholder::make('images_preview')
-                            ->label('Imagini curente')
-                            ->content(function (?Product $record): HtmlString {
-                                $imgs = $record?->images ?: [];
-                                if (! $imgs) {
-                                    return new HtmlString('<span>— fără imagini —</span>');
-                                }
-
-                                return new HtmlString(collect($imgs)
-                                    ->map(fn ($p) => '<img src="' . e($p) . '" style="height:56px;display:inline-block;margin:2px;border-radius:6px;border:1px solid #e5e7eb">')
-                                    ->implode(''));
-                            }),
-
                         Placeholder::make('material_current')
                             ->label('Material (prin variații legacy)')
                             ->content(function (?Product $record): string {
