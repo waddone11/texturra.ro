@@ -44,4 +44,11 @@ class Voucher extends Model
             : $this->discount_percentage . '%';
     }
 
+    /**
+     * Usage history (read-only in admin) — who redeemed this voucher, on which order.
+     */
+    public function usages()
+    {
+        return $this->hasMany(VoucherUsage::class);
+    }
 }
