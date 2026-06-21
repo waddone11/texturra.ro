@@ -151,6 +151,36 @@
 
                 </div>
 
+                {{-- Același model, alte dimensiuni (produse-frați). Pur afișare/navigare —
+                     nu atinge coșul, prețul sau configuratorul. --}}
+                @php $siblings = $product->siblings()->get(); @endphp
+                @if ($siblings->isNotEmpty())
+                    <div class="mt-6 border-t pt-4">
+                        <h3 class="text-base font-bold mb-3">Același model, alte dimensiuni</h3>
+                        <div class="flex flex-col gap-2">
+                            @foreach ($siblings as $sibling)
+                                @php $sibImg = is_array($sibling->images) ? ($sibling->images[0] ?? null) : null; @endphp
+                                <a href="{{ route('product.show', ['slug' => $sibling->slug]) }}"
+                                   class="flex items-center gap-3 p-2 rounded-lg border border-gray-200 hover:border-black transition">
+                                    @if ($sibImg)
+                                        <img src="{{ $sibImg }}" alt="{{ strip_tags($sibling->name) }}"
+                                             class="w-12 h-12 object-cover rounded flex-shrink-0">
+                                    @endif
+                                    <div class="flex-1 min-w-0">
+                                        <div class="text-sm font-medium truncate">{{ strip_tags($sibling->name) }}</div>
+                                        @if ($sibling->height)
+                                            <div class="text-xs text-gray-500">Înălțime: {{ $sibling->height }} m</div>
+                                        @endif
+                                    </div>
+                                    <div class="text-sm font-semibold whitespace-nowrap">
+                                        {{ number_format($sibling->price(), 2) }} lei
+                                    </div>
+                                </a>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+
                 <!-- Size Guide Modal -->
                 <div id="sizeGuideModal"
                      class="fixed inset-y-0 right-0 w-full md:w-1/3 lg:w-1/4 bg-white shadow-lg transform translate-x-full transition-transform duration-300 overflow-y-auto z-50">
