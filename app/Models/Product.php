@@ -244,6 +244,15 @@ class Product extends Model
     }
 
     /**
+     * Materials this product is made of, from the clean materials table.
+     * Replaces the legacy "Material" attribute/variation tagging.
+     */
+    public function materials()
+    {
+        return $this->belongsToMany(Material::class, 'product_material')->withTimestamps();
+    }
+
+    /**
      * Sibling products = the same model in other dimensions (shared model_group_id),
      * excluding self. Returns a query (ordered by price) — empty when ungrouped.
      * Admin/model only; the storefront display is a later phase.
