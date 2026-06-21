@@ -40,6 +40,15 @@ class Order extends Model
     }
 
     /**
+     * Read-only access to order lines incl. the pivot `meta` (custom dimensions).
+     * products() belongsToMany only loads quantity+price; this exposes meta.
+     */
+    public function orderProducts()
+    {
+        return $this->hasMany(OrderProduct::class);
+    }
+
+    /**
      * Relationship: Belongs to Shipping Address
      */
     public function shippingAddress()
