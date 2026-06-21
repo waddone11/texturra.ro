@@ -30,8 +30,12 @@ class ColorsTable
                     ->sortable()
                     ->placeholder('—'),
 
-                TextColumn::make('cod_css')
+                // distinct key from the ColorColumn swatch above — two columns
+                // can't share name 'cod_css' (Filament keys columns by name,
+                // the second silently overwrites the first → swatch vanished)
+                TextColumn::make('hex')
                     ->label('Cod CSS')
+                    ->state(fn (\App\Models\Color $record): string => $record->cod_css)
                     ->badge()
                     ->toggleable(),
             ])

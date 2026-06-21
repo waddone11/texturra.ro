@@ -49,8 +49,11 @@ class ColorsRelationManager extends RelationManager
                     ->searchable()
                     ->sortable(),
 
-                TextColumn::make('cod_css')
+                // distinct key from the ColorColumn swatch above (same-name
+                // columns collide — second overwrites the first)
+                TextColumn::make('hex')
                     ->label('Cod CSS')
+                    ->state(fn (\App\Models\Color $record): string => $record->cod_css)
                     ->badge(),
             ])
             ->defaultSort('name')

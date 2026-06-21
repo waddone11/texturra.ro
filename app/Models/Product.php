@@ -226,6 +226,17 @@ class Product extends Model
         return $this->hasMany(ProductVariation::class);
     }
 
+    /**
+     * Colors this product is offered in, from the shared palette, with
+     * per-color stock on the pivot. Price stays uniform on the product.
+     */
+    public function colors()
+    {
+        return $this->belongsToMany(Color::class, 'product_color')
+            ->withPivot('stock')
+            ->withTimestamps();
+    }
+
     public function discount()
     {
         return $this->hasMany(Discount::class);
