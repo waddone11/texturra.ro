@@ -222,11 +222,6 @@ class Product extends Model
 
 
 
-    public function variations()
-    {
-        return $this->hasMany(ProductVariation::class);
-    }
-
     /**
      * Colors this product is offered in, from the shared palette, with
      * per-color stock on the pivot. Price stays uniform on the product.
@@ -293,7 +288,6 @@ class Product extends Model
     // Stock calculation
     public function stock()
     {
-        //return $this->variations()->sum('stock');
         return $this->stock;
     }
 

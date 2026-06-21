@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Clean material entity (mirror of Color) — replaces the legacy "Material"
- * Attribute/AttributeValue + ProductVariation tagging.
+ * Clean material entity (mirror of Color) — replaced the now-retired legacy
+ * "Material" attribute/variation tagging.
  */
 class Material extends Model
 {
