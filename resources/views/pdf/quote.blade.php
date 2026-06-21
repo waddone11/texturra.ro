@@ -1,108 +1,147 @@
 <!DOCTYPE html>
 <html lang="ro">
+@php
+    // Contact + social shown in the footer. No logo asset / social config exists yet —
+    // replace these placeholders (or move to config) when the real assets are provided.
+    $brand = [
+        'website' => 'www.texturra.ro',
+        'email' => $company['support'] ?: 'contact@texturra.ro',
+        'facebook' => 'facebook.com/texturra',
+        'instagram' => 'instagram.com/texturra',
+    ];
+@endphp
 <head>
     <meta charset="UTF-8">
     <style>
-        /* DejaVu Sans is bundled with dompdf and supports Romanian diacritics (ă â î ș ț). */
+        /* DejaVu Sans is bundled with dompdf and renders Romanian diacritics (ă â î ș ț). */
         * { font-family: 'DejaVu Sans', sans-serif; }
-        @page { margin: 28px 34px; }
-        body { color: #2e2a22; font-size: 11px; }
+        @page { margin: 26px 32px; }
+        body { color: #2b2b2b; font-size: 10.5px; }
 
-        .brand-bar { background-color: #b8860b; height: 6px; }
-        .header-table { width: 100%; margin-top: 14px; }
-        .monogram {
-            font-size: 26px; font-weight: bold; color: #8a6d1b; letter-spacing: 1px;
-        }
-        .monogram small { display: block; font-size: 9px; letter-spacing: 3px; color: #b8860b; font-weight: normal; }
-        .company { font-size: 9.5px; color: #5a5345; line-height: 1.5; text-align: right; }
-        .company strong { color: #2e2a22; }
+        /* ---- header ---- */
+        .top { width: 100%; border-collapse: collapse; }
+        .wordmark { font-size: 23px; font-weight: bold; color: #1f2a44; letter-spacing: 0.5px; }
+        .wordmark .accent { color: #b8860b; }
+        .wordmark small { display: block; font-size: 8px; letter-spacing: 3px; color: #9a8550; font-weight: normal; margin-top: 2px; }
+        .co { font-size: 9px; color: #555; line-height: 1.55; text-align: right; }
+        .co .co-name { font-size: 11px; font-weight: bold; color: #1f2a44; }
+        .rule { height: 2px; background-color: #1f2a44; margin: 10px 0 0; }
+        .rule-gold { height: 2px; background-color: #b8860b; }
 
-        .title-row { margin-top: 18px; }
-        .doc-title { font-size: 18px; font-weight: bold; color: #8a6d1b; }
-        .doc-meta { text-align: right; font-size: 10px; color: #5a5345; }
-        .doc-meta .num { font-size: 13px; font-weight: bold; color: #2e2a22; }
+        /* ---- title + meta ---- */
+        .band { width: 100%; border-collapse: collapse; margin-top: 16px; }
+        .doc-title { font-size: 17px; font-weight: bold; color: #1f2a44; letter-spacing: 0.5px; }
+        .doc-title .sub { display: block; font-size: 8.5px; color: #9a8550; letter-spacing: 2px; font-weight: normal; }
+        .meta { border: 1px solid #d8d2c4; border-collapse: collapse; }
+        .meta td { padding: 4px 10px; font-size: 9.5px; border-bottom: 1px solid #eee6d6; }
+        .meta td.k { color: #777; background-color: #faf7f0; }
+        .meta td.v { font-weight: bold; color: #1f2a44; }
 
-        .client-box {
-            margin-top: 16px; background-color: #faf6ee; border: 1px solid #ead9b5;
-            border-radius: 6px; padding: 10px 14px; line-height: 1.5;
-        }
-        .client-box .label { color: #b8860b; font-size: 9px; text-transform: uppercase; letter-spacing: 1px; }
-        .client-box .name { font-size: 13px; font-weight: bold; }
+        /* ---- client ---- */
+        .client { margin-top: 14px; border: 1px solid #d8d2c4; border-left: 3px solid #b8860b; border-radius: 4px; padding: 9px 13px; line-height: 1.5; }
+        .client .label { color: #b8860b; font-size: 8px; text-transform: uppercase; letter-spacing: 1.5px; }
+        .client .name { font-size: 12.5px; font-weight: bold; color: #1f2a44; }
+        .client .row { font-size: 9.5px; color: #555; }
 
-        table.lines { width: 100%; border-collapse: collapse; margin-top: 18px; }
+        /* ---- lines table (fixed layout → no column overlap / "b1uc") ---- */
+        table.lines { width: 100%; border-collapse: collapse; margin-top: 16px; table-layout: fixed; }
         table.lines th {
-            background-color: #b8860b; color: #fff; font-size: 9.5px; text-align: left;
-            padding: 7px 8px; text-transform: uppercase; letter-spacing: 0.5px;
+            background-color: #1f2a44; color: #fff; font-size: 8.5px; text-align: left;
+            padding: 7px 7px; text-transform: uppercase; letter-spacing: 0.4px;
+            border-right: 1px solid #33405f;
         }
-        table.lines td { padding: 7px 8px; border-bottom: 1px solid #eee3cc; font-size: 10.5px; vertical-align: top; }
-        table.lines tr:nth-child(even) td { background-color: #fdfaf3; }
-        .r { text-align: right; }
-        .c { text-align: center; }
-        .muted { color: #8a8472; font-size: 9px; }
-
-        .totals { width: 46%; margin-top: 14px; margin-left: 54%; border-collapse: collapse; }
-        .totals td { padding: 6px 10px; font-size: 11px; }
-        .totals .lbl { color: #5a5345; }
-        .totals .grand td {
-            background-color: #b8860b; color: #fff; font-size: 13px; font-weight: bold; border-radius: 4px;
+        table.lines td {
+            padding: 7px 7px; border-bottom: 1px solid #e7e2d6; border-right: 1px solid #efeadf;
+            font-size: 10px; vertical-align: top; word-wrap: break-word; overflow: hidden;
         }
+        table.lines tr:nth-child(even) td { background-color: #faf8f3; }
+        table.lines .r { text-align: right; }
+        table.lines .c { text-align: center; }
+        table.lines td.tot { font-weight: bold; color: #1f2a44; }
 
-        .notes { margin-top: 18px; background-color: #faf6ee; border-left: 3px solid #b8860b; padding: 8px 12px; font-size: 10px; color: #5a5345; }
+        /* ---- totals ---- */
+        .totals { width: 44%; margin-left: 56%; margin-top: 12px; border-collapse: collapse; }
+        .totals td { padding: 6px 11px; font-size: 10.5px; border-bottom: 1px solid #eee6d6; }
+        .totals .k { color: #555; }
+        .totals .v { text-align: right; font-weight: bold; color: #1f2a44; }
+        .totals .grand td { background-color: #b8860b; color: #fff; font-size: 13px; font-weight: bold; border: none; }
 
-        .footer { margin-top: 26px; border-top: 1px solid #ead9b5; padding-top: 12px; }
-        .footer .thanks { color: #8a6d1b; font-size: 13px; font-weight: bold; }
-        .footer .contact { color: #5a5345; font-size: 9.5px; line-height: 1.6; margin-top: 4px; }
+        .notes { margin-top: 16px; background-color: #faf7f0; border: 1px solid #e7e2d6; border-radius: 4px; padding: 8px 12px; font-size: 9.5px; color: #555; }
+
+        /* ---- footer ---- */
+        .footer { margin-top: 22px; }
+        .footer .bar { height: 2px; background-color: #b8860b; }
+        .ftab { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .ftab .fbrand { font-size: 13px; font-weight: bold; color: #1f2a44; }
+        .ftab .fbrand .accent { color: #b8860b; }
+        .ftab .fcontact { font-size: 8.5px; color: #666; line-height: 1.7; text-align: right; }
+        .thanks { margin-top: 8px; text-align: center; color: #9a8550; font-size: 11px; font-weight: bold; }
+        .terms { text-align: center; color: #888; font-size: 8px; margin-top: 2px; }
     </style>
 </head>
 <body>
-    <div class="brand-bar"></div>
-
-    <table class="header-table">
+    {{-- ===== HEADER ===== --}}
+    <table class="top">
         <tr>
-            <td style="width:50%;" class="monogram">
-                TEXTURRA <span style="color:#b8860b;">HOME</span>
-                <small>HOME &amp; TEXTIL</small>
+            <td style="width:50%; vertical-align:top;">
+                {{-- No logo asset yet → stylized wordmark (swap for an <img> when available). --}}
+                <div class="wordmark">TEXTURRA <span class="accent">HOME</span><small>HOME &amp; TEXTIL</small></div>
             </td>
-            <td class="company">
-                <strong>{{ $company['name'] ?? 'TEXTURRA HOME SRL' }}</strong><br>
+            <td style="width:50%;" class="co">
+                <span class="co-name">{{ $company['name'] ?? 'TEXTURRA HOME SRL' }}</span><br>
                 {{ $company['legal_address'] ?? '' }}<br>
                 CIF: {{ $company['unique_code'] ?? '' }} &nbsp;·&nbsp; Reg. Com.: {{ $company['registration_number'] ?? '' }}<br>
-                Tel: {{ $company['phone'] ?? '' }}
-                @if(!empty($company['iban']))<br>IBAN: {{ $company['iban'] }} ({{ $company['bank'] ?? '' }})@endif
+                Tel: {{ $company['phone'] ?? '' }}@if(!empty($company['iban'])) &nbsp;·&nbsp; IBAN: {{ $company['iban'] }}@endif
             </td>
         </tr>
     </table>
+    <div class="rule"></div>
+    <div class="rule-gold" style="width:160px;"></div>
 
-    <table class="title-row" style="width:100%;">
+    {{-- ===== TITLE + META ===== --}}
+    <table class="band">
         <tr>
-            <td style="width:50%;"><span class="doc-title">Ofertă de preț</span></td>
-            <td class="doc-meta">
-                <span class="num">{{ $quote->quote_number }}</span><br>
-                Data: {{ $quote->created_at?->format('d.m.Y') ?? now()->format('d.m.Y') }}
+            <td style="vertical-align:bottom;">
+                <span class="doc-title">OFERTĂ DE PREȚ<span class="sub">PROFORMĂ / DEVIZ ESTIMATIV</span></span>
+            </td>
+            <td style="width:240px;">
+                <table class="meta" style="width:100%;">
+                    <tr><td class="k">Număr</td><td class="v">{{ $quote->quote_number }}</td></tr>
+                    <tr><td class="k">Data</td><td class="v">{{ $quote->created_at?->format('d.m.Y') ?? now()->format('d.m.Y') }}</td></tr>
+                    <tr><td class="k">Valabilitate</td><td class="v">30 zile</td></tr>
+                </table>
             </td>
         </tr>
     </table>
 
-    <div class="client-box">
-        <span class="label">Client</span>
+    {{-- ===== CLIENT ===== --}}
+    <div class="client">
+        <span class="label">Către / Client</span>
         <div class="name">{{ $quote->client_name }}</div>
-        @if($quote->client_cif)CIF/CUI: {{ $quote->client_cif }}<br>@endif
-        @if($quote->client_address){{ $quote->client_address }}<br>@endif
-        @if($quote->client_email){{ $quote->client_email }}@endif
-        @if($quote->client_phone) &nbsp;·&nbsp; {{ $quote->client_phone }}@endif
+        <div class="row">
+            @if($quote->client_cif)CIF/CUI: {{ $quote->client_cif }}@endif
+            @if($quote->client_address) &nbsp;·&nbsp; {{ $quote->client_address }}@endif
+        </div>
+        @if($quote->client_email || $quote->client_phone)
+            <div class="row">
+                @if($quote->client_email){{ $quote->client_email }}@endif
+                @if($quote->client_phone) &nbsp;·&nbsp; {{ $quote->client_phone }}@endif
+            </div>
+        @endif
     </div>
 
+    {{-- ===== LINES ===== --}}
     <table class="lines">
         <thead>
             <tr>
                 <th style="width:4%;" class="c">#</th>
-                <th style="width:30%;">Denumire</th>
+                <th style="width:34%;">Denumire</th>
                 <th style="width:7%;" class="c">UM</th>
-                <th style="width:8%;" class="r">Cant.</th>
-                <th style="width:12%;" class="r">Preț unitar</th>
-                <th style="width:12%;" class="r">Valoare net</th>
-                <th style="width:12%;" class="r">TVA 21%</th>
-                <th style="width:15%;" class="r">Total</th>
+                <th style="width:9%;" class="r">Cant.</th>
+                <th style="width:14%;" class="r">Preț unitar</th>
+                <th style="width:13%;" class="r">Valoare net</th>
+                <th style="width:9%;" class="r">TVA 21%</th>
+                <th style="width:10%; border-right:none;" class="r">Total</th>
             </tr>
         </thead>
         <tbody>
@@ -115,38 +154,39 @@
                     <td class="r">{{ number_format($line->unit_price, 2) }}</td>
                     <td class="r">{{ number_format($line->line_net, 2) }}</td>
                     <td class="r">{{ number_format($line->line_vat, 2) }}</td>
-                    <td class="r"><strong>{{ number_format($line->line_total, 2) }}</strong></td>
+                    <td class="r tot" style="border-right:none;">{{ number_format($line->line_total, 2) }}</td>
                 </tr>
             @endforeach
         </tbody>
     </table>
 
+    {{-- ===== TOTALS ===== --}}
     <table class="totals">
-        <tr>
-            <td class="lbl">Total fără TVA</td>
-            <td class="r">{{ number_format($quote->total_net, 2) }} RON</td>
-        </tr>
-        <tr>
-            <td class="lbl">TVA (21%)</td>
-            <td class="r">{{ number_format($quote->total_vat, 2) }} RON</td>
-        </tr>
-        <tr class="grand">
-            <td>Total de plată</td>
-            <td class="r">{{ number_format($quote->total_gross, 2) }} RON</td>
-        </tr>
+        <tr><td class="k">Total fără TVA</td><td class="v">{{ number_format($quote->total_net, 2) }} RON</td></tr>
+        <tr><td class="k">TVA (21%)</td><td class="v">{{ number_format($quote->total_vat, 2) }} RON</td></tr>
+        <tr class="grand"><td>TOTAL DE PLATĂ</td><td style="text-align:right;">{{ number_format($quote->total_gross, 2) }} RON</td></tr>
     </table>
 
     @if($quote->notes)
         <div class="notes"><strong>Observații:</strong> {{ $quote->notes }}</div>
     @endif
 
+    {{-- ===== FOOTER ===== --}}
     <div class="footer">
+        <div class="bar"></div>
+        <table class="ftab">
+            <tr>
+                <td style="width:40%; vertical-align:middle;">
+                    <span class="fbrand">TEXTURRA <span class="accent">HOME</span></span>
+                </td>
+                <td class="fcontact">
+                    Tel: {{ $company['phone'] ?? '' }} &nbsp;·&nbsp; {{ $brand['email'] }} &nbsp;·&nbsp; {{ $brand['website'] }}<br>
+                    {{ $brand['facebook'] }} &nbsp;·&nbsp; {{ $brand['instagram'] }}
+                </td>
+            </tr>
+        </table>
         <div class="thanks">Vă mulțumim pentru încredere!</div>
-        <div class="contact">
-            Ofertă valabilă 30 de zile de la data emiterii. Prețurile sunt exprimate în RON.<br>
-            {{ $company['name'] ?? 'TEXTURRA HOME SRL' }} &nbsp;·&nbsp; Tel: {{ $company['phone'] ?? '' }}
-            &nbsp;·&nbsp; www.texturra.ro &nbsp;·&nbsp; [facebook] &nbsp;·&nbsp; [instagram]
-        </div>
+        <div class="terms">Ofertă valabilă 30 de zile de la data emiterii. Prețurile sunt exprimate în RON și includ TVA 21% acolo unde este indicat.</div>
     </div>
 </body>
 </html>
