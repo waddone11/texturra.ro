@@ -192,3 +192,8 @@ Route::middleware(['auth', 'verified', 'web'])->group(function () {
 // SWAP (Filament-9): the legacy Livewire admin was replaced by the Filament panel on
 // /admin. Admin password change is now /admin/profile (Filament). The client-facing
 // /account/change-password (same ChangePassword component) is unaffected — see below.
+
+// Quote PDF download (admin/employee only). Linked from the Filament QuoteResource table.
+Route::get('/quotes/{quote}/pdf', [\App\Http\Controllers\QuoteController::class, 'pdf'])
+    ->middleware(['auth', CheckRole::class . ':admin,employee'])
+    ->name('quote.pdf');
