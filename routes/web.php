@@ -189,24 +189,11 @@ Route::middleware(['auth', 'verified', 'web'])->group(function () {
 // Admin and Role-Specific Routes
 // ------------------------------------------------------
 
-Route::prefix('admin')->middleware(['auth', CheckRole::class . ':admin,employee'])->group(function () {
-    Route::get('/', \App\Livewire\AdminDashboardController::class)->name('admin.dashboard');
+// SWAP (Filament-9): the legacy Livewire admin was replaced by the Filament panel on
+// /admin. Admin password change is now /admin/profile (Filament). The client-facing
+// /account/change-password (same ChangePassword component) is unaffected — see below.
 
-    // Categories
-    Route::get('/categories', \App\Livewire\Categories\Crud::class)->name('admin.categories');
-
-    // Product Management with Separate Components
-    Route::get('/products', \App\Livewire\Products\ProductList::class)->name('admin.products');
-    Route::get('/products-emga', \App\Livewire\Products\ProductListEmag::class)->name('admin.products.emag');
-    Route::get('/products/create', \App\Livewire\Products\ProductCreate::class)->name('admin.products.create');
-    Route::get('/products/{id}/edit', \App\Livewire\Products\ProductEdit::class)->name('admin.products.edit');
-
-    // Filtering Page for Admin Products
-    Route::get('/products/filter', \App\Livewire\Products\ProductFilter::class)->name('admin.products.filter');
-
-    // Orders
-    Route::get('/orders', \App\Livewire\Orders\Crud::class)->name('admin.orders');
-
-    // Account Settings
-    Route::get('/change-password', \App\Livewire\Account\ChangePassword::class)->name('admin.change-password');
-});
+// Quote PDF download (admin/employee only). Linked from the Filament QuoteResource table.
+Route::get('/quotes/{quote}/pdf', [\App\Http\Controllers\QuoteController::class, 'pdf'])
+    ->middleware(['auth', CheckRole::class . ':admin,employee'])
+    ->name('quote.pdf');

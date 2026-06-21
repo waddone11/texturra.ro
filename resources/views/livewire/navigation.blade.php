@@ -90,7 +90,7 @@
                             </x-slot>
                             <x-slot name="content">
                                 @can('admin')
-                                    <x-dropdown-link :href="route('admin.dashboard')" class="text-black hover:text-gray-700">
+                                    <x-dropdown-link :href="route('filament.admin.pages.dashboard')" class="text-black hover:text-gray-700">
                                         Admin dashboard
                                     </x-dropdown-link>
                                 @endcan
