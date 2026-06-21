@@ -23,7 +23,7 @@
                     </div>
 
                     <!-- Pagination -->
-                    <div class="swiper-pagination !bottom-4 absolute left-0 w-full z-20"></div>
+                    <div class="swiper-pagination bottom-4! absolute left-0 w-full z-20"></div>
                 </div>
 
                 <script>
@@ -536,7 +536,7 @@
                         ✕
                     </button>
                     <div id="zoomImageWrapper"
-                         class="max-h-[100vh] w-auto overflow-hidden transition-all duration-300">
+                         class="max-h-screen w-auto overflow-hidden transition-all duration-300">
                         <img id="zoomGalleryImage"
                              src="{{ asset($product->images[0]) }}"
                              alt="Zoomed {{ $product->name }}"
@@ -585,7 +585,7 @@
 
                 if (zoomedIn) {
                     // Expand wrapper and enable scrolling
-                    wrapper.classList.remove('max-h-[100vh]', 'w-auto', 'overflow-hidden');
+                    wrapper.classList.remove('max-h-screen', 'w-auto', 'overflow-hidden');
                     wrapper.classList.add('w-full', 'h-full', 'overflow-scroll');
 
                     // Zoom in
@@ -594,7 +594,7 @@
                 } else {
                     // Reset wrapper
                     wrapper.classList.remove('w-full', 'h-full', 'overflow-scroll');
-                    wrapper.classList.add('max-h-[100vh]', 'w-auto', 'overflow-hidden');
+                    wrapper.classList.add('max-h-screen', 'w-auto', 'overflow-hidden');
 
                     // Zoom out
                     zoomImage.style.transform = 'scale(1)';

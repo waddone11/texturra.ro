@@ -96,7 +96,7 @@
         <div class="container mx-auto">
             <div class="flex gap-4 overflow-x-scroll md:hidden pb-8 relative" style="scroll-snap-type: x mandatory;">
                 @foreach($portfolios as $portfolio)
-                    <a href="{{ route('portfolio.show', $portfolio->id) }}" class="relative flex-shrink-0 w-[40%] scroll-snap-align: start group">
+                    <a href="{{ route('portfolio.show', $portfolio->id) }}" class="relative shrink-0 w-[40%] scroll-snap-align: start group">
                         <img src="{{ asset('storage/' . $portfolio->main_image) }}" alt="{{ $portfolio->description }}" class="w-full h-full object-cover rounded-2xl">
 
                         <!-- Artist Name Badge -->

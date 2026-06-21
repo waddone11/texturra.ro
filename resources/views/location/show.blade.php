@@ -138,7 +138,7 @@
                     <!-- Location on Map (Right Side) -->
                     <div class="lg:w-3/4 flex flex-col h-full">
                         <h2 class="text-3xl font-semibold text-gray-800 mb-6">{{ __('location.location_on_map') }}</h2>
-                        <div class="w-full h-[400px] lg:h-full bg-gray-100 overflow-hidden shadow-lg flex-grow">
+                        <div class="w-full h-[400px] lg:h-full bg-gray-100 overflow-hidden shadow-lg grow">
                             <iframe
                                 src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCKU-CXwjABLay2_idjQ1Ydgedk4-7bPI4&q={{ urlencode($location->address) }}"
                                 width="100%"
@@ -164,7 +164,7 @@
 
                             <!-- Modal for Image Gallery -->
                             <template x-teleport="body">
-                                <div x-show="modalOpen" class="fixed top-0 left-0 z-[99] flex items-center justify-center w-screen h-screen" x-cloak>
+                                <div x-show="modalOpen" class="fixed top-0 left-0 z-99 flex items-center justify-center w-screen h-screen" x-cloak>
                                     <div x-show="modalOpen"
                                          x-transition:enter="ease-out duration-300"
                                          x-transition:enter-start="opacity-0"

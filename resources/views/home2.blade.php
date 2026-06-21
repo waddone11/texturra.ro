@@ -391,7 +391,7 @@
 {{--        <div class="swiper-container w-full h-auto md:h-full">--}}
 {{--            <div class="swiper-wrapper">--}}
 {{--                <!-- SLIDE 1: Perdele -->--}}
-{{--                <div class="swiper-slide flex-shrink-0 w-full h-auto md:h-[500px] ">--}}
+{{--                <div class="swiper-slide shrink-0 w-full h-auto md:h-[500px] ">--}}
 {{--                    <div class="max-w-7xl mx-auto flex flex-wrap md:flex-nowrap h-auto md:h-full">--}}
 {{--                        <!-- LEFT Section: Title, description, CTA -->--}}
 {{--                        <div class="w-full md:w-3/5 md:pt-12 flex flex-col justify-top mb-16 md:mb-0 px-6 md:px-0">--}}
@@ -421,7 +421,7 @@
 {{--                </div>--}}
 
 {{--                <!-- SLIDE 2: Draperii -->--}}
-{{--                <div class="swiper-slide flex-shrink-0 w-full h-[700px] md:h-[500px] ">--}}
+{{--                <div class="swiper-slide shrink-0 w-full h-[700px] md:h-[500px] ">--}}
 {{--                    <div class="max-w-7xl mx-auto flex flex-wrap md:flex-nowrap h-auto md:h-full">--}}
 {{--                        <!-- LEFT Section -->--}}
 {{--                        <div class="w-full md:w-3/5 pt-0 md:pt-12 flex flex-col justify-top mb-16 md:mb-0 pl-6">--}}
@@ -451,7 +451,7 @@
 {{--                </div>--}}
 
 {{--                <!-- SLIDE 3: Lenjerii de pat -->--}}
-{{--                <div class="swiper-slide flex-shrink-0 w-full h-[700px] md:h-[500px] ">--}}
+{{--                <div class="swiper-slide shrink-0 w-full h-[700px] md:h-[500px] ">--}}
 {{--                    <div class="max-w-7xl mx-auto flex flex-wrap md:flex-nowrap h-auto md:h-full">--}}
 {{--                        <!-- LEFT Section -->--}}
 {{--                        <div class="w-full md:w-3/5 pt-12 flex flex-col justify-top mb-16 md:mb-0 pl-6">--}}
@@ -498,7 +498,7 @@
 
 
     <!-- SLIDE 1: Perdele Personalizate -->
-{{--    <div class="swiper-slide flex-shrink-0 w-full h-auto md:h-[500px] bg-white">--}}
+{{--    <div class="swiper-slide shrink-0 w-full h-auto md:h-[500px] bg-white">--}}
 {{--        <div class="max-w-7xl mx-auto flex flex-wrap md:flex-nowrap h-auto md:h-full">--}}
 {{--            <!-- LEFT Section: Text + CTA -->--}}
 {{--            <div class="w-full md:w-3/5 md:pt-12 flex flex-col justify-top mb-16 md:mb-0 px-6 md:px-0">--}}

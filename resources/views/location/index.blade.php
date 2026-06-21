@@ -17,7 +17,7 @@
                     <!-- Background Image with Gradient Overlay -->
                     <div class="relative h-48">
                         <img src="{{ asset('storage/'.$location->background_image) }}" alt="{{ $location->name }}" class="w-full h-full object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black opacity-60"></div>
+                        <div class="absolute inset-0 bg-linear-to-t from-black opacity-60"></div>
                     </div>
 
                     <!-- Profile Image -->

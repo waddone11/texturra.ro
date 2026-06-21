@@ -49,7 +49,7 @@
         <section class="bg-black">
             <div class="container mx-auto flex flex-col sm:flex-row">
 
-                <div class="w-full sm:w-1/2 h-[350px] sm:h-auto min-h-[350px] sm:min-h-0 flex-shrink-0">
+                <div class="w-full sm:w-1/2 h-[350px] sm:h-auto min-h-[350px] sm:min-h-0 shrink-0">
                     <img src="{{ asset('images/machine_mb.png') }}" alt="Tattoo Shop" class="object-cover">
                 </div>
 
@@ -103,7 +103,7 @@
             <div class="container mx-auto px-6">
                 <div class="flex gap-4 overflow-x-scroll md:hidden pb-8 relative" style="scroll-snap-type: x mandatory;">
                     @foreach($portfolios as $portfolio)
-                        <a href="{{ route('portfolio.show', $portfolio->id) }}" class="relative flex-shrink-0 w-[40%] scroll-snap-align: start group">
+                        <a href="{{ route('portfolio.show', $portfolio->id) }}" class="relative shrink-0 w-[40%] scroll-snap-align: start group">
                             <img src="{{ asset('storage/' . $portfolio->main_image) }}" alt="{{ $portfolio->description }}" class="w-full h-full object-cover rounded-2xl">
 
                             <!-- Artist Name Badge -->
@@ -299,7 +299,7 @@
                         <!-- Location on Map (Right Side) -->
                         <div class="lg:w-3/4 flex flex-col h-full">
                             <h2 class="text-3xl font-semibold text-gray-800 mb-6">{{ __('location.location_on_map') }}</h2>
-                            <div class="w-full h-[400px] lg:h-full bg-gray-100 border border-black overflow-hidden shadow-lg flex-grow">
+                            <div class="w-full h-[400px] lg:h-full bg-gray-100 border border-black overflow-hidden shadow-lg grow">
                                 <iframe
                                     src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCKU-CXwjABLay2_idjQ1Ydgedk4-7bPI4&q={{ urlencode($location->address) }}"
                                     width="100%"
@@ -325,7 +325,7 @@
 
                                 <!-- Modal for Image Gallery -->
                                 <template x-teleport="body">
-                                    <div x-show="modalOpen" class="fixed top-0 left-0 z-[99] flex items-center justify-center w-screen h-screen" x-cloak>
+                                    <div x-show="modalOpen" class="fixed top-0 left-0 z-99 flex items-center justify-center w-screen h-screen" x-cloak>
                                         <div x-show="modalOpen"
                                              x-transition:enter="ease-out duration-300"
                                              x-transition:enter-start="opacity-0"
