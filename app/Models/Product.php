@@ -261,6 +261,15 @@ class Product extends Model
     }
 
     /**
+     * Eloquent relationship over the shared model_group_id (includes self) — used
+     * by the Filament siblings relation manager (which excludes self in its query).
+     */
+    public function modelGroupMembers()
+    {
+        return $this->hasMany(Product::class, 'model_group_id', 'model_group_id');
+    }
+
+    /**
      * Whether this product belongs to a model group with at least one other member.
      */
     public function hasSiblings(): bool
