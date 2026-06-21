@@ -6,6 +6,7 @@ use App\Filament\Resources\Products\Tables\ProductsTable;
 use App\Models\Category;
 use App\Models\Color;
 use App\Models\ColorGroup;
+use App\Models\Material;
 use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -25,6 +26,9 @@ class DuplicateProductTest extends TestCase
         $group = ColorGroup::create(['name' => 'Roșu', 'image_path' => 'x']);
         $color = Color::create(['color_group_id' => $group->id, 'name' => 'Roșu', 'cod_css' => '#FF0000']);
         $product->colors()->attach($color->id, ['stock' => 5]);
+
+        $material = Material::create(['name' => 'Catifea', 'slug' => 'catifea']);
+        $product->materials()->attach($material->id);
 
         return $product;
     }
@@ -63,6 +67,10 @@ class DuplicateProductTest extends TestCase
 
         $this->assertSame(1, $copy->colors()->count());
         $this->assertSame(0, (int) $copy->colors()->first()->pivot->stock); // source had 5, copy starts 0
+
+        // material is copied too (from the clean product_material pivot)
+        $this->assertSame(1, $copy->materials()->count());
+        $this->assertSame('Catifea', $copy->materials()->first()->name);
     }
 
     public function test_duplicate_of_grouped_product_joins_same_group(): void

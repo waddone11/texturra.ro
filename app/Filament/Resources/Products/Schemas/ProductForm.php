@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Products\Schemas;
 
 use App\Models\Product;
+use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
@@ -12,7 +13,6 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -157,26 +157,14 @@ class ProductForm
                             ->columnSpanFull(),
                     ]),
 
-                Section::make('Material (read-only)')
-                    ->collapsed()
+                Section::make('Material')
                     ->schema([
-                        Placeholder::make('material_current')
-                            ->label('Material (prin variații legacy)')
-                            ->content(function (?Product $record): string {
-                                if (! $record) {
-                                    return '—';
-                                }
-
-                                $val = DB::table('product_variation_attribute_values as piv')
-                                    ->join('attribute_values as av', 'piv.attribute_value_id', '=', 'av.id')
-                                    ->join('attributes as a', 'av.attribute_id', '=', 'a.id')
-                                    ->join('product_variations as pv', 'piv.product_variation_id', '=', 'pv.id')
-                                    ->where('a.name', 'Material')
-                                    ->where('pv.product_id', $record->id)
-                                    ->value('av.value');
-
-                                return $val ?: '— nesetat —';
-                            }),
+                        // Editable now (writes to product_material pivot, like the colour
+                        // palette). The legacy variation tagging is left untouched.
+                        CheckboxList::make('materials')
+                            ->label('Materiale')
+                            ->relationship('materials', 'name')
+                            ->columns(3),
                     ]),
             ]);
     }

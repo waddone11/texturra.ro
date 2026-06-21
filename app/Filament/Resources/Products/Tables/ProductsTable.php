@@ -175,6 +175,11 @@ class ProductsTable
             $copy->colors()->attach($color->id, ['stock' => 0]);
         }
 
+        // Inherit materials (same model → same materials) from the clean pivot.
+        if ($source->materials->isNotEmpty()) {
+            $copy->materials()->attach($source->materials->pluck('id')->all());
+        }
+
         return $copy;
     }
 }
