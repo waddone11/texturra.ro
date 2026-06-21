@@ -39,8 +39,8 @@
                                 <td class="p-2">
                                     <span
                                         class="px-2 py-1 rounded-full text-white
-                                        {{ $order->status === 'completed' ? 'bg-green-500' : ($order->status === 'pending' ? 'bg-yellow-500' : 'bg-red-500') }}">
-                                        {{ ucfirst($order->status) }}
+                                        {{ $order->status?->value === 'completed' ? 'bg-green-500' : ($order->status?->value === 'pending' ? 'bg-yellow-500' : 'bg-red-500') }}">
+                                        {{ ucfirst($order->status?->value ?? '') }}
                                     </span>
                                 </td>
                                 <td class="p-2 text-right">

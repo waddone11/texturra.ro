@@ -109,8 +109,8 @@
                 <p class="text-sm text-gray-500 md:mt-2 md:mt-0 mb-1 md:mb-2">Categorie: <span class="font-semibold text-black">{{ $product->category->name ?? 'N/A' }}</span></p>
                 <p class="text-sm text-gray-500 mb-1 md:mb-2">Cod produs: <span class="font-semibold text-black">TXT-{{ $product->id }}</span></p>
                 @php
-                    // Color/material from the product_color + product_material pivots
-                    // (not legacy variations). Same shape: each value carries a ->value.
+                    // Color/material from the product_color + product_material pivots.
+                    // Same shape: each value carries a ->value.
                     $attributes = collect([
                         'Material' => $product->materials->map(fn($m) => (object) ['value' => $m->name]),
                         'Culoare' => $product->colors->map(fn($c) => (object) ['value' => $c->name]),

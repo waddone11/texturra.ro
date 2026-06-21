@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Orders\Tables;
 
-use App\Filament\Resources\Orders\Schemas\OrderForm;
+use App\Enums\OrderStatus;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -32,15 +32,7 @@ class OrdersTable
 
                 TextColumn::make('status')
                     ->label('Status')
-                    ->badge()
-                    ->formatStateUsing(fn (string $state): string => OrderForm::STATUSES[$state] ?? $state)
-                    ->color(fn (string $state): string => match ($state) {
-                        'completed' => 'success',
-                        'canceled' => 'danger',
-                        'processing' => 'info',
-                        'pending' => 'warning',
-                        default => 'gray',
-                    }),
+                    ->badge(),
 
                 TextColumn::make('created_at')
                     ->label('Data')
@@ -51,7 +43,7 @@ class OrdersTable
             ->filters([
                 SelectFilter::make('status')
                     ->label('Status')
-                    ->options(OrderForm::STATUSES),
+                    ->options(OrderStatus::class),
             ])
             ->recordActions([
                 EditAction::make()->label('Vezi / editează'),

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Orders\Schemas;
 
+use App\Enums\OrderStatus;
 use App\Models\Order;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
@@ -12,15 +13,6 @@ use Illuminate\Support\HtmlString;
 
 class OrderForm
 {
-    /** Documented order lifecycle (status column is a free string; data is all "placed"). */
-    public const STATUSES = [
-        'pending' => 'În așteptare',
-        'placed' => 'Plasată',
-        'processing' => 'În procesare',
-        'completed' => 'Finalizată',
-        'canceled' => 'Anulată',
-    ];
-
     public static function configure(Schema $schema): Schema
     {
         $addr = fn ($a): string => $a
@@ -43,7 +35,7 @@ class OrderForm
                         // The ONE editable thing (+ notes). No side-effects in code.
                         Select::make('status')
                             ->label('Status')
-                            ->options(self::STATUSES)
+                            ->options(OrderStatus::class)
                             ->required()
                             ->native(false),
 
