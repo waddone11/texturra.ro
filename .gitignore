@@ -31,3 +31,6 @@ yarn-error.log
 # === Docs moștenite din alt proiect (NIRAPH / scratch notes) — conțin secrete sau descriu alt proiect, nu texturra ===
 /info.md
 /use.md
+
+# AI redesign mockup package (source/reference only — large binary PNGs, kept on disk)
+/texturra-homepage-redesign/
