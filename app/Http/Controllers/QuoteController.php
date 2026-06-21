@@ -12,7 +12,7 @@ class QuoteController extends Controller
      */
     public function pdf(Quote $quote)
     {
-        $quote->load(['lines' => fn ($q) => $q->orderBy('position')]);
+        $quote->load(['lines' => fn ($q) => $q->orderBy('position'), 'lines.product']);
 
         $pdf = Pdf::loadView('pdf.quote', [
             'quote' => $quote,
