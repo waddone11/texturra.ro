@@ -8,8 +8,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 /**
- * Admin access is gated by auth + CheckRole:admin,employee on the /admin group.
- * These tests pin that guard so the cleanup in Faza 4 cannot silently break it.
+ * Since the Filament swap, /admin is the Filament panel, gated by FilamentUser::
+ * canAccessPanel (type in {ADMIN, EMPLOYEE}). These tests pin that guard.
  */
 class AdminAccessTest extends TestCase
 {
@@ -26,11 +26,12 @@ class AdminAccessTest extends TestCase
     {
         $client = User::factory()->create(['type' => UserType::CLIENT]);
 
-        $this->actingAs($client)->get('/admin')->assertRedirect(route('home'));
+        // Filament forbids non-panel users (canAccessPanel = false).
+        $this->actingAs($client)->get('/admin')->assertForbidden();
     }
 
-    public function test_guest_is_redirected_to_login(): void
+    public function test_guest_is_redirected_to_filament_login(): void
     {
-        $this->get('/admin')->assertRedirect('/login');
+        $this->get('/admin')->assertRedirect('/admin/login');
     }
 }

@@ -5,16 +5,6 @@
             @can('client')
                 <livewire:sidebar-account />
             @endcan
-
-            @can('admin')
-                <livewire:sidebar-stats />
-            @endcan
-            @can('manager')
-                <livewire:sidebar-stats />
-            @endcan
-            @can('employee')
-                <livewire:sidebar-stats />
-            @endcan
         </aside>
 
         <!-- Main Content (4/5) -->
