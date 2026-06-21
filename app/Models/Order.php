@@ -2,12 +2,17 @@
 
 namespace App\Models;
 
+use App\Enums\OrderStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
     use HasFactory;
+
+    protected $casts = [
+        'status' => OrderStatus::class,
+    ];
 
     protected $fillable = [
         'user_id',
@@ -93,7 +98,7 @@ class Order extends Model
      */
     public function isRefundable()
     {
-        return $this->status === 'completed';
+        return $this->status === OrderStatus::Completed;
     }
 
     /**

@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Products\RelationManagers;
 use App\Models\Product;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
+use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
@@ -57,6 +58,22 @@ class SiblingsRelationManager extends RelationManager
                     ])
                     ->action(function (array $data): void {
                         $owner = $this->getOwnerRecord();
+                        $sibling = Product::with('category')->find($data['product_id']);
+
+                        // Siblings are meant to be the same model in another dimension, so
+                        // a cross-category link is usually a mistake — WARN (don't block).
+                        // The single admin decides; the attach still goes through.
+                        if ($sibling && $owner->category_id !== $sibling->category_id) {
+                            $ownerCat = $owner->category?->name ?? '—';
+                            $siblingCat = $sibling->category?->name ?? '—';
+                            Notification::make()
+                                ->warning()
+                                ->title('Atenție: categorii diferite')
+                                ->body("Produsele sunt din categorii diferite ({$ownerCat} vs {$siblingCat}). Le-am legat ca frați — verifică dacă e intenționat.")
+                                ->persistent()
+                                ->send();
+                        }
+
                         if (empty($owner->model_group_id)) {
                             $owner->model_group_id = (string) Str::uuid();
                             $owner->save();
