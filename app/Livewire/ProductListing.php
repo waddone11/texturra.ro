@@ -207,11 +207,8 @@ class ProductListing extends Component
 
     public function render()
     {
-        $colorMap = Color::all()
-            ->mapWithKeys(fn($color) => [Helpers::normalize($color->name) => $color->cod_css])
-            ->toArray();
-
-        $query = Product::with('variations.attributeValues.attribute') // eager load!
+        // 'variations' still eager-loaded — the attribute filters below query it.
+        $query = Product::with(['variations.attributeValues.attribute', 'colors'])
         ->whereIn('category_id', $this->categoryIds);
 
         if ($this->selectedOferte) {
@@ -250,21 +247,12 @@ class ProductListing extends Component
 
         $products = $query->orderBy('id', 'desc')->paginate(16);
 
-        // Attach color CSS swatches
-        $products->getCollection()->each(function ($product) use ($colorMap) {
-            $colorValues = collect($product->variations)
-                ->flatMap(fn($v) => $v->attributeValues)
-                ->filter(fn($av) => optional($av->attribute)->name === 'Culoare')
-                ->pluck('value')
-                ->unique();
-
-            $product->colors_with_css = $colorValues->map(function ($colorName) use ($colorMap) {
-                $normalized = Helpers::normalize($colorName);
-                return [
-                    'name' => $colorName,
-                    'css' => $colorMap[$normalized] ?? '#999',
-                ];
-            });
+        // Attach color CSS swatches from the product_color pivot (name + cod_css
+        // straight from Color) — same {name, css} shape the view consumes.
+        $products->getCollection()->each(function ($product) {
+            $product->colors_with_css = $product->colors
+                ->map(fn ($color) => ['name' => $color->name, 'css' => $color->cod_css])
+                ->values();
         });
 
         return view('livewire.product-listing', [

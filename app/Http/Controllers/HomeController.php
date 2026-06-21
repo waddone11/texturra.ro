@@ -27,41 +27,25 @@ class HomeController extends Controller
             ->orderBy('id', 'asc')
             ->get();
 
-        // Build color name → css_code map
-        $colorMap = Color::all()
-            ->mapWithKeys(fn($color) => [Helpers::normalize($color->name) => $color->cod_css])
-            ->toArray();
-
         foreach ($parentCategories as $parentId) {
             // Get all descendant category IDs for the parent, plus the parent itself
             $descendantIds = $this->getDescendantCategoryIds($parentId);
             $descendantIds[] = $parentId;
 
             // Get random products for this category tree
-            $someProds = Product::with([
-                'variations.attributeValues.attribute'
-            ])
+            $someProds = Product::with(['colors'])
                 ->whereIn('category_id', $descendantIds)
                 ->whereNotIn('id', $productIds)
                 ->inRandomOrder()
                 ->take(6)
                 ->get();
 
-            // Enrich each product with colors_with_css
-            $someProds->each(function ($product) use ($colorMap) {
-                $colorValues = collect($product->variations)
-                    ->flatMap(fn($variation) => $variation->attributeValues)
-                    ->filter(fn($av) => optional($av->attribute)->name === 'Culoare')
-                    ->pluck('value')
-                    ->unique();
-
-                $product->colors_with_css = $colorValues->map(function ($colorName) use ($colorMap) {
-                    $normalized = Helpers::normalize($colorName);
-                    return [
-                        'name' => $colorName,
-                        'css' => $colorMap[$normalized] ?? '#999',
-                    ];
-                });
+            // Color swatches from the product_color pivot (name + cod_css straight
+            // from Color) — same {name, css} shape the views consume, no name-map lookup.
+            $someProds->each(function ($product) {
+                $product->colors_with_css = $product->colors
+                    ->map(fn ($color) => ['name' => $color->name, 'css' => $color->cod_css])
+                    ->values();
             });
 
             // Track used product IDs
