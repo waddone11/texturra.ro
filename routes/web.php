@@ -7,9 +7,7 @@ use App\Http\Controllers\{
     ProductController,
     CartController,
     CheckoutController,
-    OrderController,
-    AttributeController
-
+    OrderController
 };
 use App\Http\Middleware\CheckRole;
 use App\Livewire\Pages\Auth\{Login, Register, ForgotPassword, ResetPassword, VerifyEmail, ConfirmPassword};
@@ -91,9 +89,6 @@ Route::middleware(['web'])->group(function () {
 
     Route::get('/sitemap.xml', [\App\Http\Controllers\HomeController::class, 'sitemap'])->name('sitemap');
     Route::post('/newsletter/subscribe', [NewsletterSubscription::class, 'subscribe'])->name('newsletter.subscribe');
-//    Route::get('/api/attributes/{id}/values', [AttributeController::class, 'getValues']);
-//    Route::post('/api/attributes', [AttributeController::class, 'store']);
-//    Route::post('/api/attributes/{id}/values', [AttributeController::class, 'addValue']);
 
 });
 
@@ -118,7 +113,6 @@ Route::middleware(['web'])->group(function () {
     // Products
     Route::get('/produse/{slug}', [ProductController::class, 'showByCategory'])->name('products.category');
     Route::get('/produs/{slug}', [ProductController::class, 'show'])->name('product.show');
-    Route::get('/api/get-filters', [ProductController::class, 'getAvailableFilters'])->name('api.getFilters');
 
 });
 

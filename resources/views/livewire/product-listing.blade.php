@@ -173,21 +173,12 @@
                                     {{ strip_tags($product->name) }}
                                 </a>
                                 <div class="text-xs mt-2">
-                                    @php
-                                        $attributes = $product->variations
-                                            ->pluck('attributeValues')
-                                            ->flatten()
-                                            ->unique('id')
-                                            ->filter(fn($attr) => $attr->attribute)
-                                            ->groupBy(fn($attr) => $attr->attribute->name);
-                                    @endphp
-
-                                        <!-- Display Material and Color -->
+                                        <!-- Display Material and Color (from clean pivots) -->
                                     <div class="text-xs mt-4 space-y-1">
-                                        @if ($attributes->has('Material'))
+                                        @if ($product->materials->isNotEmpty())
                                             <div>
                                                 <span class="font-semibold text-gray-700">Material:</span>
-                                                {{ $attributes['Material']->pluck('value')->implode(', ') }}
+                                                {{ $product->materials->pluck('name')->implode(', ') }}
                                             </div>
                                         @endif
 

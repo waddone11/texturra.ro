@@ -33,7 +33,7 @@ class HomeController extends Controller
             $descendantIds[] = $parentId;
 
             // Get random products for this category tree
-            $someProds = Product::with(['colors'])
+            $someProds = Product::with(['colors', 'materials'])
                 ->whereIn('category_id', $descendantIds)
                 ->whereNotIn('id', $productIds)
                 ->inRandomOrder()
