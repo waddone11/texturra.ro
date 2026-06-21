@@ -139,15 +139,18 @@ class MigrateProductColors extends Command
         }
 
         // ---- EXECUTE (only with --execute) ----
+        // Decision: stock = 0 on every row (legacy variation.stock is an
+        // artificial general_stock/2 split — junk seed data). Real per-color
+        // stock is entered in Filament afterwards.
         DB::transaction(function () use ($mapped) {
             foreach ($mapped as $r) {
                 DB::table('product_color')->updateOrInsert(
                     ['product_id' => $r['product_id'], 'color_id' => $r['color_id']],
-                    ['stock' => $r['stock'], 'updated_at' => now(), 'created_at' => now()]
+                    ['stock' => 0, 'updated_at' => now(), 'created_at' => now()]
                 );
             }
         });
-        $this->info('WROTE ' . count($mapped) . ' rows to product_color.');
+        $this->info('WROTE ' . count($mapped) . ' rows to product_color (stock=0).');
 
         return self::SUCCESS;
     }
