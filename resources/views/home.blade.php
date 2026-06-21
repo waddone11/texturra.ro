@@ -95,7 +95,7 @@
                 <!-- Scrollable Container -->
                 <div id="category-scroll" class="flex flex-nowrap gap-4 overflow-x-auto scroll-smooth pb-4 custom-scrollbar px-0">
                     @foreach ($topCategories as $category)
-                        <div class="flex-shrink-0 w-24 md:w-36 flex flex-col items-center text-center gap-4 transition duration-200 group">
+                        <div class="shrink-0 w-24 md:w-36 flex flex-col items-center text-center gap-4 transition duration-200 group">
                             <a href="{{ route('products.category', ['slug' => $category->slug]) }}">
                                 <img
                                     src="{{ $categoryIcons[$category->name] ?? $defaultIcon }}"
@@ -309,7 +309,7 @@
                                     </video>
 
                                     <!-- Overlay Text -->
-                                    <div class="absolute inset-x-0 top-0 p-4 bg-gradient-to-t from-transparent to-black/80 text-white">
+                                    <div class="absolute inset-x-0 top-0 p-4 bg-linear-to-t from-transparent to-black/80 text-white">
                                         <h2 class="text-lg sm:text-xl font-bold">Lumina verii. Textură diafană.</h2>
                                         <p class="text-sm sm:text-base mt-1">Lasă razele să danseze prin perdelele noii colecții.
                                             Urmărește clipul nostru exclusiv – delicatețea prinde viață în mișcare.</p>
@@ -325,7 +325,7 @@
                                     </video>
 
                                     <!-- Overlay Text -->
-                                    <div class="absolute inset-x-0 top-0 p-4 bg-gradient-to-t from-transparent to-black/80 text-white">
+                                    <div class="absolute inset-x-0 top-0 p-4 bg-linear-to-t from-transparent to-black/80 text-white">
                                         <h2 class="text-lg sm:text-xl font-bold">Vibrația verii în mișcare</h2>
                                         <p class="text-sm sm:text-base mt-1">Urmărește colecția prinde viață în clipul nostru exclusiv.</p>
                                     </div>

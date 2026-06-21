@@ -29,15 +29,15 @@
             <!-- Main Section: Image and Employee Details -->
             <div class="flex flex-col md:flex-row items-stretch gap-8 pb-6">
                 <!-- Employee Profile Image (Left, 1/4 width) -->
-                <div class="w-full md:w-1/4 pt-1 flex-grow md:h-full ">
+                <div class="w-full md:w-1/4 pt-1 grow md:h-full ">
                     <img src="{{ asset('storage/' . $employee->profile_image) }}" alt="{{ $employee->name }}" class="rounded-lg shadow-md border border-gray-300 w-full max-h-[300px] md:h-full object-cover">
                 </div>
 
                 <!-- Employee Details (Center, 1/2 width) -->
-                <div class="w-full md:w-1/2 text-center md:text-left flex-grow h-full flex flex-col">
+                <div class="w-full md:w-1/2 text-center md:text-left grow h-full flex flex-col">
                     <h1 class="text-5xl font-extrabold text-black mb-4 -mt-2 SkModernist uppercase">{{ $employee->name }}</h1>
                     <p class="text-gray-600 text-lg mt-8 underline">{{ $employee->specialty }}</p>
-                    <p class="text-gray-600 text-sm mt-8 flex-grow">
+                    <p class="text-gray-600 text-sm mt-8 grow">
                         <span class="font-extrabold text-red-500">{{ __('team.artist_title_' . $employee->id) }}</span>
                         <br/>
                         {!! __('team.artist_desc_' . $employee->id) !!}
@@ -45,7 +45,7 @@
                 </div>
 
                 <!-- Services (Right, 1/4 width) -->
-                <div class="w-full md:w-1/4 text-center md:text-right border-l pb-4 border-black flex-grow h-full flex flex-col">
+                <div class="w-full md:w-1/4 text-center md:text-right border-l pb-4 border-black grow h-full flex flex-col">
                     <h3 class="text-4xl font-bold mb-4 uppercase">{{ __('home.services') }}</h3>
 
                     @if($employee->services->isNotEmpty())
@@ -84,7 +84,7 @@
 
             <div class="flex flex-col md:flex-row items-stretch gap-8 pb-6">
                 <!-- Employee Profile Image (Left, 1/4 width) -->
-                <div class="w-full md:w-1/4 pt-1 flex-grow h-full">
+                <div class="w-full md:w-1/4 pt-1 grow h-full">
 
 
                     @switch($employee->specialty)
@@ -145,7 +145,7 @@
 
                                 <!-- Modal for Image Preview -->
                                 <template x-teleport="body">
-                                    <div x-show="modalOpen" class="fixed top-0 left-0 z-[99] flex items-center justify-center w-screen h-screen" x-cloak>
+                                    <div x-show="modalOpen" class="fixed top-0 left-0 z-99 flex items-center justify-center w-screen h-screen" x-cloak>
                                         <!-- Modal Background -->
                                         <div x-show="modalOpen"
                                              x-transition:enter="ease-out duration-300"
