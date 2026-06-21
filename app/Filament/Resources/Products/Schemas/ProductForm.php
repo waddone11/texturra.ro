@@ -69,12 +69,8 @@ class ProductForm
                             ->label('Activ')
                             ->default(true),
 
-                        // Auto-generated (TEX-…) on create — read-only, like old admin.
-                        TextInput::make('product_code')
-                            ->label('Cod produs')
-                            ->disabled()
-                            ->dehydrated(false)
-                            ->placeholder('Auto-generat (TEX-…) la salvare'),
+                        // product_code: nu apare în formular — se auto-generează
+                        // (TEX-…) la create (CreateProduct::mutateFormDataBeforeCreate).
 
                         // EAN: opțional (produse non-eMAG nu se blochează). Dacă e
                         // completat → unic; gol → NULL (mai multe NULL permise).

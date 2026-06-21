@@ -47,6 +47,7 @@ class Product extends Model
         'type',
         'source_link',
         'acquisition_price',
+        'model_group_id',
     ];
 
     protected static function boot()
@@ -240,6 +241,35 @@ class Product extends Model
     public function discount()
     {
         return $this->hasMany(Discount::class);
+    }
+
+    /**
+     * Sibling products = the same model in other dimensions (shared model_group_id),
+     * excluding self. Returns a query (ordered by price) — empty when ungrouped.
+     * Admin/model only; the storefront display is a later phase.
+     */
+    public function siblings()
+    {
+        if (empty($this->model_group_id)) {
+            return static::query()->whereRaw('1 = 0');
+        }
+
+        return static::query()
+            ->where('model_group_id', $this->model_group_id)
+            ->where('id', '!=', $this->getKey())
+            ->orderBy('price');
+    }
+
+    /**
+     * Whether this product belongs to a model group with at least one other member.
+     */
+    public function hasSiblings(): bool
+    {
+        return ! empty($this->model_group_id)
+            && static::query()
+                ->where('model_group_id', $this->model_group_id)
+                ->where('id', '!=', $this->getKey())
+                ->exists();
     }
 
     // Stock calculation
