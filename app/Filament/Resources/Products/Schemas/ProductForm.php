@@ -62,10 +62,8 @@ class ProductForm
                             ->numeric()
                             ->prefix('RON'),
 
-                        Select::make('vat_id')
-                            ->label('TVA')
-                            ->relationship('vat', 'rate')
-                            ->getOptionLabelFromRecordUsing(fn ($record): string => $record->rate . '%'),
+                        // TVA: nu se alege din form — toate produsele textile sunt 21%
+                        // (cota standard RO din 2025-08-01), aplicat automat la create/save.
 
                         Toggle::make('status')
                             ->label('Activ')
@@ -78,16 +76,21 @@ class ProductForm
                             ->dehydrated(false)
                             ->placeholder('Auto-generat (TEX-…) la salvare'),
 
-                        // EAN: required on create + unique (eMAG integrity guard, as in old admin).
+                        // EAN: opțional (produse non-eMAG nu se blochează). Dacă e
+                        // completat → unic; gol → NULL (mai multe NULL permise).
                         TextInput::make('ean')
                             ->label('EAN')
                             ->maxLength(255)
-                            ->required(fn (string $operation): bool => $operation === 'create')
-                            ->unique(ignoreRecord: true),
+                            ->unique(ignoreRecord: true)
+                            ->dehydrateStateUsing(fn (?string $state): ?string => filled($state) ? $state : null)
+                            ->helperText('Opțional. Dacă îl completezi, trebuie să fie unic.'),
 
+                        // description column is NOT NULL without a default → coerce
+                        // empty to '' so a product can be created without a description.
                         Textarea::make('description')
                             ->label('Descriere')
                             ->rows(4)
+                            ->dehydrateStateUsing(fn (?string $state): string => $state ?? '')
                             ->columnSpanFull(),
                     ]),
 
@@ -97,11 +100,16 @@ class ProductForm
                     ->description('Doar pentru produse custom. „Înălțime max" = plafonul din configuratorul frontend.')
                     ->visible(fn (Get $get): bool => $get('type') === 'custom')
                     ->schema([
+                        // Coloana e decimal(4,2) → max 99.99. Înălțimea e în METRI
+                        // (ex. 2.80), nu cm — validăm 0.5–10 ca să nu depășească precizia.
                         TextInput::make('height')
-                            ->label('Înălțime max (m)')
+                            ->label('Înălțime maximă (metri)')
                             ->numeric()
+                            ->suffix('m')
                             ->step(0.01)
-                            ->helperText('Decimal, ex. 3.00. Plafon pentru configuratorul de pe site.'),
+                            ->minValue(0.5)
+                            ->maxValue(10)
+                            ->helperText('În METRI (ex. 2.80, nu 280). Plafonul de înălțime din configuratorul de pe site.'),
                     ]),
 
                 Section::make('Stoc & paletar')
@@ -110,18 +118,18 @@ class ProductForm
                         // atașate (suma din product_color, recalculată de relation
                         // manager); editabil direct când NU are paletar.
                         TextInput::make('general_stock')
-                            ->label('Stoc general')
+                            ->label('Stoc')
                             ->numeric()
                             ->default(0)
                             ->disabled(fn (?Product $record): bool => (bool) $record?->colors()->exists())
                             ->dehydrated(fn (?Product $record): bool => ! (bool) $record?->colors()->exists())
                             ->helperText(fn (?Product $record): string => $record?->colors()->exists()
-                                ? 'Derivat = suma stocurilor pe culori (gestionat în „Culori", read-only).'
-                                : 'Editabil direct (fără paletar). Când atașezi culori, devine derivat.'),
+                                ? 'Acest produs are culori, deci stocul se pune per culoare (în secțiunea „Culori"). Aici se vede totalul, calculat automat.'
+                                : 'Stocul total al produsului. Dacă adaugi culori în secțiunea „Culori", stocul se va pune pe fiecare culoare în parte.'),
 
                         Placeholder::make('colors_hint')
                             ->label('')
-                            ->content('Culorile + stocul per culoare se gestionează în secțiunea „Culori" de mai jos (la editare).'),
+                            ->content('Pentru un produs cu mai multe culori, adaugă culorile în secțiunea „Culori" (mai jos, la editare) și pune stocul pe fiecare. Totalul se adună singur aici.'),
                     ]),
 
                 Section::make('Imagini')
