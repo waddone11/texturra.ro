@@ -30,7 +30,7 @@ class ProductController extends Controller
      */
     public function show($slug)
     {
-        $product = Product::where('slug', $slug)->with(['category', 'variations.attributeValues.attribute'])->firstOrFail();
+        $product = Product::where('slug', $slug)->with(['category', 'variations.attributeValues.attribute', 'colors', 'materials'])->firstOrFail();
         $sizeAttributeId = Attribute::where('name', 'Mărime')->value('id');
         $colorAttributeId = Attribute::where('name', 'Culoare')->value('id');
         $materialAttributeId = Attribute::where('name', 'Material')->value('id');
