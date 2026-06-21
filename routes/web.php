@@ -118,7 +118,6 @@ Route::middleware(['web'])->group(function () {
     // Products
     Route::get('/produse/{slug}', [ProductController::class, 'showByCategory'])->name('products.category');
     Route::get('/produs/{slug}', [ProductController::class, 'show'])->name('product.show');
-    Route::get('/api/get-filters', [ProductController::class, 'getAvailableFilters'])->name('api.getFilters');
 
 });
 

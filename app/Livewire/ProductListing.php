@@ -157,28 +157,25 @@ class ProductListing extends Component
             });
         }
 
-        // Dynamically apply each selected filter.
+        // Dynamically apply each selected filter (Culoare/Material → pivots).
         foreach ($this->selectedFilters as $attribute => $value) {
             if (!empty($value)) {
-                $query->whereHas('variations.attributeValues', function ($q) use ($attribute, $value) {
-                    $q->whereHas('attribute', function ($q2) use ($attribute) {
-                        $q2->where('name', $attribute);
-                    })->where('value', $value);
-                });
+                $this->applyAttributeFilter($query, $attribute, $value);
             }
         }
 
-        $filteredProducts = $query->get();
+        $filteredProducts = $query->with(['colors', 'materials'])->get();
         $this->totalProducts = $filteredProducts->count();
 
-        // Build available filters dynamically from the filtered products.
+        // Build available filters from the clean pivots (Culoare + Material are the
+        // only attributes that carry data; the dimensional keys are vestigial).
         $filters = [];
         foreach ($filteredProducts as $product) {
-            foreach ($product->variations as $variation) {
-                foreach ($variation->attributeValues as $attrValue) {
-                    $attrName = $attrValue->attribute->name;
-                    $filters[$attrName][] = $attrValue->value;
-                }
+            foreach ($product->materials as $material) {
+                $filters['Material'][] = $material->name;
+            }
+            foreach ($product->colors as $color) {
+                $filters['Culoare'][] = $color->name;
             }
         }
         // Remove duplicates and sort values for each attribute.
@@ -205,10 +202,31 @@ class ProductListing extends Component
         }
     }
 
+    /**
+     * Apply a single storefront filter to the product query. Only Culoare and
+     * Material carry data; both live on clean pivots now (no more variations).
+     * Unknown/vestigial attribute keys (old dimensional filters) are ignored.
+     */
+    private function applyAttributeFilter($query, $attribute, $value)
+    {
+        $relation = match ($attribute) {
+            'Culoare' => 'colors',
+            'Material' => 'materials',
+            default => null,
+        };
+
+        if ($relation === null) {
+            return;
+        }
+
+        $query->whereHas($relation, function ($q) use ($value) {
+            $q->where('name', $value);
+        });
+    }
+
     public function render()
     {
-        // 'variations' still eager-loaded — the attribute filters below query it.
-        $query = Product::with(['variations.attributeValues.attribute', 'colors'])
+        $query = Product::with(['colors', 'materials'])
         ->whereIn('category_id', $this->categoryIds);
 
         if ($this->selectedOferte) {
@@ -237,11 +255,7 @@ class ProductListing extends Component
 
         foreach ($this->selectedFilters as $attribute => $value) {
             if (!empty($value)) {
-                $query->whereHas('variations.attributeValues', function ($q) use ($attribute, $value) {
-                    $q->whereHas('attribute', function ($q2) use ($attribute) {
-                        $q2->where('name', $attribute);
-                    })->where('value', $value);
-                });
+                $this->applyAttributeFilter($query, $attribute, $value);
             }
         }
 
