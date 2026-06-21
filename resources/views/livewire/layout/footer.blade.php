@@ -1,6 +1,6 @@
 <div>
     <section class="bg-white mt-8">
-        <div class="max-w-screen-xl px-4 py-12 mx-auto space-y-8 overflow-hidden sm:px-6 lg:px-8">
+        <div class="max-w-(--breakpoint-xl) px-4 py-12 mx-auto space-y-8 overflow-hidden sm:px-6 lg:px-8">
             <nav class="flex flex-wrap justify-left md:justify-center -mx-5 -my-2">
                 <div class="px-5 py-2">
                     <script src="https://mny.ro/npId.js?p=143929" type="text/javascript" data-version="horizontal" data-contrast-color="#ffffff" ></script>

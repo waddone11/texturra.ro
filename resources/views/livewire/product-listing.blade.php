@@ -38,7 +38,7 @@
             <!-- Filter Selection -->
             <div id="filter-scroll" class="flex flex-nowrap gap-2 sm:gap-6 overflow-x-auto pb-2 p-0 sm:px-0 whitespace-nowrap scroll-smooth relative custom-scrollbar">
                 <!-- Oferte Filter (kept static) -->
-                <div class="relative flex-shrink-0">
+                <div class="relative shrink-0">
                     <button type="button" wire:click="$toggle('selectedOferte')"
                             class="border px-6 py-1 text-xs rounded-md transition w-40 relative
                         {{ $selectedOferte ? 'bg-black text-white border-black' : 'bg-white text-black border-gray-400' }}">
@@ -52,7 +52,7 @@
 
                 <!-- Dynamic Filters -->
                 @foreach ($availableFilters as $attribute => $values)
-                    <div class="relative flex-shrink-0 w-40">
+                    <div class="relative shrink-0 w-40">
                         <select wire:model.live="selectedFilters.{{ $attribute }}"
                                 class="border px-3 py-1 text-xs rounded-md transition w-full
                             {{ !empty($selectedFilters[$attribute]) ? 'bg-black text-white font-bold border-black' : 'bg-white text-black  font-bold border-gray-500' }}">
@@ -69,7 +69,7 @@
                 @endforeach
 
                 <!-- Reset Filters Button (for desktop) -->
-                <button type="button" wire:click="resetFilters" class="hidden md:block border border-black bg-gray-100 text-black text-xs font-bold px-4 py-1 rounded-md flex-shrink-0">
+                <button type="button" wire:click="resetFilters" class="hidden md:block border border-black bg-gray-100 text-black text-xs font-bold px-4 py-1 rounded-md shrink-0">
                     Reseteaza filtrele
                 </button>
             </div>
@@ -81,7 +81,7 @@
                 </a>
 
                 <!-- Scroll Indicator - aligned right -->
-                <div id="scroll-hint" class="flex-shrink-0">
+                <div id="scroll-hint" class="shrink-0">
                     <img src="{{ asset('storage/images/swipe.svg') }}" alt="Swipe left or right" class="w-8 h-8 opacity-80 animate-pulse">
                 </div>
             </div>

@@ -6,7 +6,7 @@
     <!-- Filter Selection -->
     <div id="filter-scroll" class="flex flex-nowrap gap-2 sm:gap-6 overflow-x-auto pb-2 px-2 sm:px-0 whitespace-nowrap scroll-smooth relative custom-scrollbar">
         <!-- Oferte Filter -->
-        <div class="relative flex-shrink-0">
+        <div class="relative shrink-0">
             <button type="button" wire:click="$toggle('selectedOferte')"
                     class="border px-6 py-1 text-xs rounded-md transition w-24 md:w-40 relative
                     {{ $selectedOferte ? 'bg-black text-white border-black' : 'bg-white text-black border-gray-300' }}">
@@ -19,7 +19,7 @@
 
         <!-- Size Filter -->
         @if (!empty($availableSizes))
-            <div class="relative flex-shrink-0 w-24 md:w-40">
+            <div class="relative shrink-0 w-24 md:w-40">
                 <select wire:model.live="selectedSize"
                         class="border px-3 py-1 text-xs rounded-md transition w-full
                         {{ $selectedSize ? 'bg-black text-white border-black' : 'bg-white text-black border-gray-300' }}">
@@ -37,7 +37,7 @@
 
         <!-- Color Filter -->
         @if (!empty($availableColors))
-            <div class="relative flex-shrink-0 w-24 md:w-40">
+            <div class="relative shrink-0 w-24 md:w-40">
                 <select wire:model.live="selectedColor"
                         class="border px-3 py-1 text-xs rounded-md transition w-full
                         {{ $selectedColor ? 'bg-black text-white border-black' : 'bg-white text-black border-gray-300' }}">
@@ -55,7 +55,7 @@
 
         <!-- Material Filter -->
         @if (!empty($availableMaterials))
-            <div class="relative flex-shrink-0 w-24 md:w-40">
+            <div class="relative shrink-0 w-24 md:w-40">
                 <select wire:model.live="selectedMaterial"
                         class="border px-3 py-1 text-xs rounded-md transition w-full
                         {{ $selectedMaterial ? 'bg-black text-white border-black' : 'bg-white text-black border-gray-300' }}">
@@ -72,7 +72,7 @@
         @endif
 
         <!-- Reset Filters Button -->
-        <button type="button" wire:click="resetFilters" class="hidden md:block border bg-black text-white text-xs font-bold px-4 py-1 rounded-md flex-shrink-0">
+        <button type="button" wire:click="resetFilters" class="hidden md:block border bg-black text-white text-xs font-bold px-4 py-1 rounded-md shrink-0">
             Reseteaza filtrele
         </button>
     </div>

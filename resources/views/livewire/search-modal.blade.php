@@ -28,7 +28,7 @@
                     @foreach ($results as $result)
                         <li class="py-4 flex items-center space-x-4">
                             <!-- Product Image -->
-                            <div class="flex-shrink-0">
+                            <div class="shrink-0">
                                 <img src="{{ asset($result->images[0] ?? '/storage/images/placeholder-images.webp') }}"
                                      alt="{{ $result->name }}"
                                      class="h-16 w-16 rounded object-cover border border-gray-200">

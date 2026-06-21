@@ -80,7 +80,7 @@
 
                                 <!-- Modal for Image Preview -->
                                     <template x-teleport="body">
-                                        <div x-show="modalOpen" class="fixed top-0 left-0 z-[99] flex items-center justify-center w-screen h-screen overflow-hidden" x-cloak>
+                                        <div x-show="modalOpen" class="fixed top-0 left-0 z-99 flex items-center justify-center w-screen h-screen overflow-hidden" x-cloak>
                                             <!-- Modal Background -->
                                             <div x-show="modalOpen"
                                                  x-transition:enter="ease-out duration-300"
