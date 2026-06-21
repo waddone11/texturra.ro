@@ -1,57 +1,65 @@
 <!DOCTYPE html>
 <html lang="ro">
 @php
-    // Contact + social shown in the footer. No logo asset / social config exists yet —
-    // replace these placeholders (or move to config) when the real assets are provided.
+    // Real brand logo (PNG). dompdf has enable_remote=false, so base64 data URIs are blocked —
+    // a local file path under base_path (chroot) is loaded fine, like the legacy invoices.
+    $logoPath = public_path('storage/images/logo_black.png');
+    $logo = is_file($logoPath) ? $logoPath : null;
+
+    // Contact + social shown in the footer (editable placeholders until real links provided).
     $brand = [
         'website' => 'www.texturra.ro',
         'email' => $company['support'] ?: 'contact@texturra.ro',
         'facebook' => 'facebook.com/texturra',
         'instagram' => 'instagram.com/texturra',
     ];
+
+    // Icons as local SVG files (dompdf renders SVG via php-svg-lib; inline <svg> is unreliable).
+    $iconDir = public_path('images/pdf-icons');
+    $icon = fn (string $name): string => is_file("{$iconDir}/{$name}.svg")
+        ? '<img src="' . $iconDir . '/' . $name . '.svg" style="height:9px; width:9px; vertical-align:middle;">'
+        : '';
 @endphp
 <head>
     <meta charset="UTF-8">
     <style>
-        /* DejaVu Sans is bundled with dompdf and renders Romanian diacritics (ă â î ș ț). */
         * { font-family: 'DejaVu Sans', sans-serif; }
-        @page { margin: 26px 32px; }
+        @page { margin: 28px 34px; }
         body { color: #2b2b2b; font-size: 10.5px; }
 
         /* ---- header ---- */
         .top { width: 100%; border-collapse: collapse; }
-        .wordmark { font-size: 23px; font-weight: bold; color: #1f2a44; letter-spacing: 0.5px; }
+        .wordmark { font-size: 22px; font-weight: bold; color: #1f2a44; }
         .wordmark .accent { color: #b8860b; }
         .wordmark small { display: block; font-size: 8px; letter-spacing: 3px; color: #9a8550; font-weight: normal; margin-top: 2px; }
-        .co { font-size: 9px; color: #555; line-height: 1.55; text-align: right; }
+        .co { font-size: 9px; color: #555; line-height: 1.6; text-align: right; }
         .co .co-name { font-size: 11px; font-weight: bold; color: #1f2a44; }
-        .rule { height: 2px; background-color: #1f2a44; margin: 10px 0 0; }
-        .rule-gold { height: 2px; background-color: #b8860b; }
+        .rule { height: 2px; background-color: #1f2a44; margin-top: 12px; }
+        .rule-gold { height: 2px; background-color: #b8860b; width: 150px; }
 
         /* ---- title + meta ---- */
-        .band { width: 100%; border-collapse: collapse; margin-top: 16px; }
-        .doc-title { font-size: 17px; font-weight: bold; color: #1f2a44; letter-spacing: 0.5px; }
-        .doc-title .sub { display: block; font-size: 8.5px; color: #9a8550; letter-spacing: 2px; font-weight: normal; }
+        .band { width: 100%; border-collapse: collapse; margin-top: 18px; }
+        .doc-title { font-size: 18px; font-weight: bold; color: #1f2a44; letter-spacing: 0.5px; }
+        .doc-title .sub { display: block; font-size: 8.5px; color: #9a8550; letter-spacing: 2px; font-weight: normal; margin-top: 2px; }
         .meta { border: 1px solid #d8d2c4; border-collapse: collapse; }
-        .meta td { padding: 4px 10px; font-size: 9.5px; border-bottom: 1px solid #eee6d6; }
+        .meta td { padding: 5px 11px; font-size: 9.5px; border-bottom: 1px solid #eee6d6; }
         .meta td.k { color: #777; background-color: #faf7f0; }
         .meta td.v { font-weight: bold; color: #1f2a44; }
 
         /* ---- client ---- */
-        .client { margin-top: 14px; border: 1px solid #d8d2c4; border-left: 3px solid #b8860b; border-radius: 4px; padding: 9px 13px; line-height: 1.5; }
+        .client { margin-top: 16px; border: 1px solid #d8d2c4; border-left: 3px solid #b8860b; border-radius: 4px; padding: 10px 14px; line-height: 1.55; }
         .client .label { color: #b8860b; font-size: 8px; text-transform: uppercase; letter-spacing: 1.5px; }
         .client .name { font-size: 12.5px; font-weight: bold; color: #1f2a44; }
         .client .row { font-size: 9.5px; color: #555; }
 
-        /* ---- lines table (fixed layout → no column overlap / "b1uc") ---- */
-        table.lines { width: 100%; border-collapse: collapse; margin-top: 16px; table-layout: fixed; }
+        /* ---- lines table (fixed layout → no overlap) ---- */
+        table.lines { width: 100%; border-collapse: collapse; margin-top: 18px; table-layout: fixed; }
         table.lines th {
             background-color: #1f2a44; color: #fff; font-size: 8.5px; text-align: left;
-            padding: 7px 7px; text-transform: uppercase; letter-spacing: 0.4px;
-            border-right: 1px solid #33405f;
+            padding: 8px 8px; text-transform: uppercase; letter-spacing: 0.4px; border-right: 1px solid #33405f;
         }
         table.lines td {
-            padding: 7px 7px; border-bottom: 1px solid #e7e2d6; border-right: 1px solid #efeadf;
+            padding: 8px 8px; border-bottom: 1px solid #e7e2d6; border-right: 1px solid #efeadf;
             font-size: 10px; vertical-align: top; word-wrap: break-word; overflow: hidden;
         }
         table.lines tr:nth-child(even) td { background-color: #faf8f3; }
@@ -60,34 +68,36 @@
         table.lines td.tot { font-weight: bold; color: #1f2a44; }
 
         /* ---- totals ---- */
-        .totals { width: 44%; margin-left: 56%; margin-top: 12px; border-collapse: collapse; }
-        .totals td { padding: 6px 11px; font-size: 10.5px; border-bottom: 1px solid #eee6d6; }
+        .totals { width: 44%; margin-left: 56%; margin-top: 14px; border-collapse: collapse; }
+        .totals td { padding: 7px 12px; font-size: 10.5px; border-bottom: 1px solid #eee6d6; }
         .totals .k { color: #555; }
         .totals .v { text-align: right; font-weight: bold; color: #1f2a44; }
         .totals .grand td { background-color: #b8860b; color: #fff; font-size: 13px; font-weight: bold; border: none; }
 
-        .notes { margin-top: 16px; background-color: #faf7f0; border: 1px solid #e7e2d6; border-radius: 4px; padding: 8px 12px; font-size: 9.5px; color: #555; }
+        .notes { margin-top: 18px; background-color: #faf7f0; border: 1px solid #e7e2d6; border-radius: 4px; padding: 9px 13px; font-size: 9.5px; color: #555; }
 
         /* ---- footer ---- */
-        .footer { margin-top: 22px; }
+        .footer { margin-top: 26px; }
         .footer .bar { height: 2px; background-color: #b8860b; }
-        .ftab { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .ftab .fbrand { font-size: 13px; font-weight: bold; color: #1f2a44; }
-        .ftab .fbrand .accent { color: #b8860b; }
-        .ftab .fcontact { font-size: 8.5px; color: #666; line-height: 1.7; text-align: right; }
-        .thanks { margin-top: 8px; text-align: center; color: #9a8550; font-size: 11px; font-weight: bold; }
-        .terms { text-align: center; color: #888; font-size: 8px; margin-top: 2px; }
+        .ftab { width: 100%; border-collapse: collapse; margin-top: 12px; }
+        .fcontact { font-size: 9px; color: #555; line-height: 1.9; text-align: right; }
+        .fcontact .sep { color: #c9b98a; }
+        .thanks { margin-top: 10px; text-align: center; color: #9a8550; font-size: 11.5px; font-weight: bold; }
+        .terms { text-align: center; color: #999; font-size: 8px; margin-top: 3px; }
     </style>
 </head>
 <body>
     {{-- ===== HEADER ===== --}}
     <table class="top">
         <tr>
-            <td style="width:50%; vertical-align:top;">
-                {{-- No logo asset yet → stylized wordmark (swap for an <img> when available). --}}
-                <div class="wordmark">TEXTURRA <span class="accent">HOME</span><small>HOME &amp; TEXTIL</small></div>
+            <td style="width:48%; vertical-align:middle;">
+                @if($logo)
+                    <img src="{{ $logo }}" alt="TEXTURRA HOME" style="height:74px;">
+                @else
+                    <div class="wordmark">TEXTURRA <span class="accent">HOME</span><small>HOME &amp; TEXTIL</small></div>
+                @endif
             </td>
-            <td style="width:50%;" class="co">
+            <td style="width:52%;" class="co">
                 <span class="co-name">{{ $company['name'] ?? 'TEXTURRA HOME SRL' }}</span><br>
                 {{ $company['legal_address'] ?? '' }}<br>
                 CIF: {{ $company['unique_code'] ?? '' }} &nbsp;·&nbsp; Reg. Com.: {{ $company['registration_number'] ?? '' }}<br>
@@ -96,7 +106,7 @@
         </tr>
     </table>
     <div class="rule"></div>
-    <div class="rule-gold" style="width:160px;"></div>
+    <div class="rule-gold"></div>
 
     {{-- ===== TITLE + META ===== --}}
     <table class="band">
@@ -176,12 +186,15 @@
         <div class="bar"></div>
         <table class="ftab">
             <tr>
-                <td style="width:40%; vertical-align:middle;">
-                    <span class="fbrand">TEXTURRA <span class="accent">HOME</span></span>
+                <td style="width:34%; vertical-align:middle;">
+                    @if($logo)<img src="{{ $logo }}" alt="TEXTURRA HOME" style="height:40px;">@endif
                 </td>
                 <td class="fcontact">
-                    Tel: {{ $company['phone'] ?? '' }} &nbsp;·&nbsp; {{ $brand['email'] }} &nbsp;·&nbsp; {{ $brand['website'] }}<br>
-                    {{ $brand['facebook'] }} &nbsp;·&nbsp; {{ $brand['instagram'] }}
+                    {!! $icon('phone') !!} {{ $company['phone'] ?? '' }}
+                    <span class="sep">&nbsp;·&nbsp;</span> {!! $icon('mail') !!} {{ $brand['email'] }}
+                    <span class="sep">&nbsp;·&nbsp;</span> {!! $icon('web') !!} {{ $brand['website'] }}<br>
+                    {!! $icon('facebook') !!} {{ $brand['facebook'] }}
+                    <span class="sep">&nbsp;·&nbsp;</span> {!! $icon('instagram') !!} {{ $brand['instagram'] }}
                 </td>
             </tr>
         </table>
