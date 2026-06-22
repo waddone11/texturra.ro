@@ -458,45 +458,37 @@
 
 
 
-    {{-- Color palette selector (section 5): the 11 REAL ColorGroups (not all 93 individual colors).
-         No public per-group color-filter route exists (only Filament admin + per-color-name query
-         filter on a category), so swatches link to the main category listing as a general fallback. --}}
+    {{-- Color palette (section 5, REDO): MINIMALIST full-width flat swatches — NO images, NO circles.
+         Flat color = first color's cod_css per ColorGroup. Layout mirrors the design package
+         ("Descoperă culorile"): title left, swatches fill the middle, CTA right. No public per-group
+         filter route exists → swatches + CTA link to the main category listing (general fallback). --}}
     @php
         $paletteListingSlug = optional($topCategories->first())->slug;
     @endphp
-    <section aria-label="Paletar de culori" class="w-full bg-[#FCFAF7] font-dm">
-        <div class="mx-auto max-w-[1180px] px-5 py-16 sm:px-8 md:py-24">
-            <div class="mb-12 text-center">
-                <p class="mb-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#B28D4E]">Paletar</p>
-                <h2 class="font-display text-3xl font-semibold leading-tight text-[#171411] md:text-[40px]">
-                    Descoperă culorile
-                </h2>
-                <p class="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-[#171411]/60">
-                    Peste 90 de nuanțe, organizate în 11 game cromatice — alege tonul perfect pentru spațiul tău.
-                </p>
-            </div>
-
-            <div class="grid grid-cols-3 gap-x-4 gap-y-7 sm:grid-cols-4 md:grid-cols-6 md:gap-x-5 lg:grid-cols-11">
-                @foreach ($colorGroups as $group)
-                    <a @if ($paletteListingSlug) href="{{ route('products.category', ['slug' => $paletteListingSlug]) }}" @else href="#" @endif
-                       class="group block text-center" title="{{ $group->name }}">
-                        <span class="mx-auto block aspect-square w-full overflow-hidden rounded-full border border-[#171411]/10 shadow-sm ring-1 ring-inset ring-white/40 transition-transform duration-300 group-hover:scale-105"
-                              style="background-color: {{ optional($group->colors->first())->cod_css ?? '#cccccc' }}; background-image: url('{{ asset($group->image_path) }}'); background-size: cover; background-position: center;"></span>
-                        <span class="mt-2.5 block text-[11px] font-medium leading-tight text-[#171411]/75 transition-colors group-hover:text-[#B28D4E]">
-                            {{ $group->name }}
-                        </span>
-                    </a>
-                @endforeach
-            </div>
-
-            @if ($paletteListingSlug)
-                <div class="mt-12 text-center">
-                    <a href="{{ route('products.category', ['slug' => $paletteListingSlug]) }}"
-                       class="inline-block border-b border-[#171411]/30 pb-1 text-[12px] font-semibold uppercase tracking-[0.14em] text-[#171411] transition-colors hover:border-[#B28D4E] hover:text-[#B28D4E]">
-                        Vezi toate produsele &rarr;
-                    </a>
+    <section aria-label="Paletar de culori" class="w-full border-y border-[#171411]/[0.08] bg-[#FCFAF7] font-dm">
+        <div class="mx-auto max-w-[1180px] px-5 py-12 sm:px-8 md:py-16">
+            <div class="flex flex-col gap-7 md:flex-row md:items-center md:gap-9">
+                <div class="md:w-[180px] md:shrink-0">
+                    <h2 class="font-display text-2xl font-semibold leading-none text-[#171411]">Descoperă culorile</h2>
+                    <p class="mt-2.5 text-xs leading-snug text-[#766d64]">Alege nuanța potrivită spațiului tău.</p>
                 </div>
-            @endif
+
+                <div class="flex flex-1 flex-wrap items-center gap-2.5 md:flex-nowrap md:justify-between md:gap-3">
+                    @foreach ($colorGroups as $group)
+                        <a @if ($paletteListingSlug) href="{{ route('products.category', ['slug' => $paletteListingSlug]) }}" @else href="#" @endif
+                           title="{{ $group->name }}" aria-label="{{ $group->name }}"
+                           class="aspect-square w-[clamp(30px,3vw,44px)] shrink-0 rounded-[4px] border border-[#3c2b1a]/20 shadow-[inset_0_0_0_3px_rgba(255,255,255,0.14)] transition-transform duration-200 hover:scale-110"
+                           style="background-color: {{ optional($group->colors->first())->cod_css ?? '#cccccc' }}"></a>
+                    @endforeach
+                </div>
+
+                @if ($paletteListingSlug)
+                    <a href="{{ route('products.category', ['slug' => $paletteListingSlug]) }}"
+                       class="inline-flex shrink-0 items-center gap-1.5 border-b border-[#171411]/30 pb-1 text-[12px] font-semibold uppercase tracking-[0.12em] text-[#171411] transition-colors hover:border-[#B28D4E] hover:text-[#B28D4E]">
+                        Vezi culorile <span aria-hidden="true">→</span>
+                    </a>
+                @endif
+            </div>
         </div>
     </section>
 
