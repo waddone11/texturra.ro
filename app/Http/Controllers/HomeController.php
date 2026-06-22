@@ -15,6 +15,28 @@ class HomeController extends Controller
 {
     public function index()
     {
+        // Render the configured homepage version: 'old' (live) or 'new' (redesign).
+        // Default is 'old' so visitors are unaffected until HOMEPAGE_VERSION=new.
+        $view = strtolower((string) config('homepage.version')) === 'new' ? 'home-new' : 'home-old';
+
+        return view($view, $this->homeData());
+    }
+
+    /**
+     * Always render the new homepage, regardless of HOMEPAGE_VERSION.
+     * Lets us preview the redesign while the old version stays live for visitors.
+     */
+    public function preview()
+    {
+        return view('home-new', $this->homeData());
+    }
+
+    /**
+     * Build the data shared by every homepage version
+     * (products with color swatches, top categories, color groups).
+     */
+    private function homeData(): array
+    {
         // Define parent category IDs
         $parentCategories = range(1, 36);
 
@@ -57,11 +79,11 @@ class HomeController extends Controller
 
         $colorGroups = ColorGroup::orderBy('name')->get();
 
-        return view('home', [
+        return [
             'products' => $products,
             'topCategories' => $topCategories,
             'colorGroups' => $colorGroups,
-        ]);
+        ];
     }
 
 

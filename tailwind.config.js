@@ -27,6 +27,9 @@ export default {
                     '"Segoe UI Symbol"',
                     '"Noto Color Emoji"',
                 ],
+                // Homepage redesign 2026: editorial serif headings + DM Sans UI.
+                display: ['"Playfair Display"', 'Georgia', 'serif'],
+                dm: ['"DM Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
             },
         },
     },
