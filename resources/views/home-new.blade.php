@@ -499,8 +499,8 @@
          "Confecție în atelier propriu" / "Montaj profesional" are UNVERIFIED, so replaced with
          confirmed ones. CTA → real store phone (no booking page exists). --}}
     <section aria-label="Confecție la comandă" class="w-full bg-[#FCFAF7] font-dm">
-        <div class="px-4 py-12 sm:px-6 md:py-20">
-            <div class="mx-auto grid max-w-[1180px] grid-cols-1 items-stretch overflow-hidden rounded-[20px] border border-[#e7ded3] bg-[#f6f0e7] md:min-h-[398px] md:grid-cols-[38%_62%] md:shadow-[0_20px_60px_rgba(43,32,19,0.10)]">
+        <div class="px-[clamp(20px,4.2vw,76px)] py-12 md:py-20">
+            <div class="mx-auto grid w-full max-w-[1440px] grid-cols-1 items-stretch overflow-hidden rounded-[20px] border border-[#e7ded3] bg-[#f6f0e7] md:min-h-[398px] md:grid-cols-[38%_62%] md:shadow-[0_20px_60px_rgba(43,32,19,0.10)]">
                 {{-- Text panel (38%) --}}
                 <div class="flex items-center p-8 sm:p-10 md:p-[clamp(35px,4vw,65px)]">
                     <div>
