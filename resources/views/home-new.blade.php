@@ -28,7 +28,7 @@
 
         {{-- Content, anchored to the lower-left half --}}
         <div class="relative z-[2] mx-auto flex min-h-[var(--hp-hero-h)] max-w-[1440px] items-end
-                    px-5 pb-16 pt-36 sm:px-8 md:px-[76px] md:pb-24 md:pt-48">
+                    px-5 pb-16 pt-36 md:px-[76px] md:pb-24 md:pt-48">
             <div class="w-full max-w-[548px] text-white">
                 <p class="mb-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#ead8b8]">
                     Textile care transformă
@@ -88,7 +88,7 @@
     @endphp
 
     <section aria-label="Categorii de produse" class="relative z-[3] font-dm">
-        <div class="mx-auto max-w-[1180px] px-5 sm:px-8">
+        <div class="mx-auto max-w-[1440px] px-[clamp(20px,4.2vw,76px)]">
             <nav class="hp-dock -mt-7 grid grid-cols-3 overflow-hidden rounded-[18px] border border-[#dad0c4]/90
                         bg-white/[0.96] shadow-[0_15px_45px_rgba(43,32,19,0.12)] backdrop-blur-md
                         md:-mt-[49px] md:grid-cols-6 md:rounded-[24px]">
@@ -126,7 +126,7 @@
     @endphp
 
     <section aria-label="De ce TEXTURRA" class="w-full bg-[#FCFAF7] font-dm">
-        <div class="mx-auto max-w-[1180px] px-5 py-14 sm:px-8 md:py-20">
+        <div class="mx-auto max-w-[1440px] px-[clamp(20px,4.2vw,76px)] py-14 md:py-20">
             <div class="grid grid-cols-2 gap-y-12 md:grid-cols-5 md:gap-y-0">
                 @foreach ($proofStats as $i => $stat)
                     <div class="flex flex-col items-center px-2 text-center
@@ -150,220 +150,10 @@
         </div>
     </section>
 
-    @php
-        // Map each parent category name to its corresponding icon URL.
-        $categoryIcons = [
-            'Perdele' => asset('storage/images/icons/perdele.png'),
-            'Draperii' => asset('storage/images/icons/draperii.png'),
-            'Covoare' => asset('storage/images/icons/covoare.png'),
-            'Lenjerii de pat' => asset('storage/images/icons/lenjerii.png'),
-            'Accesorii' => asset('storage/images/icons/accesorii.png'),
-            'Galerii & Sine' => asset('storage/images/icons/sine.png'),
-
-
-        ];
-
-        $defaultIcon = asset('storage/images/icons/default.png');
-    @endphp
-
-    <div class="max-w-7xl mx-auto mt-8 md:mt-16 mb-8 px-4 md:px-0 relative overflow-hidden">
-        <h2 class="text-3xl font-bold text-left textColor">
-            Cele mai rafinate textile și perdele pentru casa ta
-        </h2>
-        <p class="mt-4 mb-8 md:mb-16 text-left text-gray-600">
-            La <strong>TEXTURRA HOME SRL</strong> punem accent pe calitate, design și funcționalitate. Oferim o selecție atent aleasă de <strong>perdele, draperii și textile premium</strong> pentru casă, perfecte pentru a-ți transforma locuința într-un spațiu cald și elegant. Cu experiență în domeniu din 2017, venim în întâmpinarea clienților noștri cu produse moderne, la prețuri competitive și livrare rapidă.
-        </p>
-
-        <div class="max-w-7xl mx-auto px:0 md:px-4 py-2 pb-0 md:py-8 space-y-8">
-            <div class="w-full overflow-hidden">
-                <!-- Scrollable Container -->
-                <div id="category-scroll" class="flex flex-nowrap gap-4 overflow-x-auto scroll-smooth pb-4 custom-scrollbar px-0">
-                    @foreach ($topCategories as $category)
-                        <div class="shrink-0 w-24 md:w-36 flex flex-col items-center text-center gap-4 transition duration-200 group">
-                            <a href="{{ route('products.category', ['slug' => $category->slug]) }}">
-                                <img
-                                    src="{{ $categoryIcons[$category->name] ?? $defaultIcon }}"
-                                    alt="{{ $category->name }}"
-                                    class="w-24 md:w-36 p-6 object-cover mx-auto transition-transform duration-300 group-hover:scale-110 bg-gray-50 rounded-full shadow-md border border-gray-200"
-                                />
-                            </a>
-                            <h2 class="text-sm font-bold uppercase text-gray-800">
-                                <a href="{{ route('products.category', ['slug' => $category->slug]) }}" class="hover:underline">
-                                    {{ $category->name }}
-                                </a>
-                            </h2>
-                        </div>
-                    @endforeach
-                </div>
-
-                <!-- Scroll Hint for Mobile -->
-                <div class="flex justify-end mt-2 pr-4 md:hidden">
-                    <img src="{{ asset('storage/images/swipe.svg') }}" alt="Swipe right" class="w-8 h-8 opacity-80 animate-pulse" id="category-scroll-hint">
-                </div>
-            </div>
-
-            <style>
-                .custom-scrollbar::-webkit-scrollbar {
-                    display: none;
-                }
-                .custom-scrollbar {
-                    -ms-overflow-style: none;
-                    scrollbar-width: none;
-                }
-            </style>
-
-            <script>
-                document.addEventListener("DOMContentLoaded", function () {
-                    const scrollContainer = document.getElementById("category-scroll");
-                    const scrollHint = document.getElementById("category-scroll-hint");
-
-                    if (scrollContainer && scrollHint) {
-                        scrollContainer.addEventListener("scroll", function () {
-                            if (this.scrollLeft > 10) {
-                                scrollHint.style.opacity = "0";
-                            } else {
-                                scrollHint.style.opacity = "1";
-                            }
-                        });
-                    }
-                });
-            </script>
-
-        </div>
-    </div>
-
-
-    <!-- Swiper JS Initialization -->
-    <script>
-        var swiper = new Swiper('.swiper-container2', {
-            // Enable grid layout:
-            grid: {
-                rows: 1,             // 2 rows
-                fill: 'row',         // Fill items row by row
-            },
-            slidesPerView: 2,      // On mobile: 2 columns
-            spaceBetween: 10,
-            slidesPerGroup: 2,     // Move 2 slides at a time on mobile
-            breakpoints: {
-                768: {               // e.g., from tablet size upward
-                    slidesPerView: 48,  // 4 columns on desktop
-                    slidesPerGroup: 4, // Move 4 slides at a time
-                    spaceBetween: 20,
-                },
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-        });
-    </script>
-
-
-    <!-- Parallax Section -->
-    <div class="relative bg-fixed bg-cover bg-center bg-no-repeat" style="background-image: url('{{ asset('storage/images/bg.jpg') }}');min-height: 500px;">
-        <!-- Dark overlay -->
-        <div class="absolute inset-0 bg-black bg-opacity-40"></div>
-
-        <!-- Content Container -->
-        <div class="relative z-10 flex flex-col items-center justify-center text-center text-white px-4 py-12 md:py-24">
-            <h2 class="text-3xl md:text-5xl font-bold mb-2">
-                Intră în universul TEXTURRA
-            </h2>
-            <p class="text-white text-lg md:text-2xl mb-10">
-                Textile pentru casă create cu stil și pasiune.
-            </p>
-
-            <!-- Metrics Row -->
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-8 max-w-6xl mx-auto">
-                <!-- Ani de experiență -->
-                <div>
-                    <span class="block text-4xl md:text-5xl font-extrabold">11+</span>
-                    <span class="block text-sm md:text-base uppercase tracking-wide">Ani de experiență</span>
-                </div>
-
-                <!-- Produse vândute -->
-                <div>
-                    <span class="block text-4xl md:text-5xl font-extrabold">500.000+</span>
-                    <span class="block text-sm md:text-base uppercase tracking-wide">Produse vândute</span>
-                </div>
-
-                <!-- Consultanți -->
-                <div>
-                    <span class="block text-4xl md:text-5xl font-extrabold">10+</span>
-                    <span class="block text-sm md:text-base uppercase tracking-wide">Consultanți specializați</span>
-                </div>
-
-                <!-- Parteneri comerciali -->
-                <div>
-                    <span class="block text-4xl md:text-5xl font-extrabold">120+</span>
-                    <span class="block text-sm md:text-base uppercase tracking-wide">Parteneri comerciali</span>
-                </div>
-
-                <!-- Magazine fizice -->
-                <div>
-                    <span class="block text-4xl md:text-5xl font-extrabold">3</span>
-                    <span class="block text-sm md:text-base uppercase tracking-wide">Magazine fizice</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="max-w-7xl mx-auto px-4 md:px-0 py-8 md:mt-8">
-        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4">
-            <!-- Block Example -->
-            @php
-                $infoBlocks = [
-                    [
-                        'icon' => 'transport.svg',
-                        'title' => 'Transport gratuit',
-                        'text' => 'De la 500 lei',
-                        'alt' => 'Transport Gratuit'
-                    ],
-                    [
-                        'icon' => 'livrare.svg',
-                        'title' => 'Livrare rapidă',
-                        'text' => '24h, 48h la distanțe considerabile',
-                        'alt' => 'Livrare Rapidă'
-                    ],
-                    [
-                        'icon' => 'consultanta.svg',
-                        'title' => 'Consultanță pe produs',
-                        'text' => 'Vrei un detaliu? Sună-ne!',
-                        'alt' => 'Consultanță pe produs'
-                    ],
-                    [
-                        'icon' => 'sliders.svg',
-                        'title' => 'Personalizare produse',
-                        'text' => 'Online și gratuit',
-                        'alt' => 'Personalizare produse'
-                    ]
-                ];
-            @endphp
-
-            @foreach ($infoBlocks as $block)
-                <div class="flex flex-col md:flex-row items-center bg-gray-100 rounded-lg p-4 shadow-md text-center md:text-left">
-                    <img
-                        src="{{ asset('storage/images/icons/' . $block['icon']) }}"
-                        alt="{{ $block['alt'] }}"
-                        class="w-10 h-10 md:w-12 md:h-12 mb-2 md:mb-0 md:mr-4"
-                    />
-                    <div>
-                        <h3 class="text-sm md:text-base font-semibold text-gray-800">{{ $block['title'] }}</h3>
-                        <p class="text-xs md:text-sm text-gray-600">{{ $block['text'] }}</p>
-                    </div>
-                </div>
-            @endforeach
-        </div>
-    </div>
-
     {{-- Noutăți (section 4): newest REAL products. Replaces the GPT-invented "collections"
          (Colecția Diafan / sons-of-zeus / Pure Serenity) with real, latest catalogue items. --}}
     <section aria-label="Cele mai noi produse" class="w-full bg-[#FCFAF7] font-dm">
-        <div class="mx-auto max-w-[1180px] px-5 py-16 sm:px-8 md:py-24">
+        <div class="mx-auto max-w-[1440px] px-[clamp(20px,4.2vw,76px)] py-16 md:py-24">
             <div class="mb-10 flex items-end justify-between gap-4">
                 <div>
                     <p class="mb-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#B28D4E]">Noutăți</p>
@@ -423,7 +213,7 @@
          URLs — user can swap for exact pin URLs. No opening hours were provided, so omitted.
          Count (2) is consistent with the section-3 proof band. --}}
     <section aria-label="Magazine fizice" class="w-full bg-[#FCFAF7] font-dm">
-        <div class="mx-auto max-w-[1180px] px-5 py-16 sm:px-8 md:py-24">
+        <div class="mx-auto max-w-[1440px] px-[clamp(20px,4.2vw,76px)] py-16 md:py-24">
             <div class="mb-12 text-center">
                 <p class="mb-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#B28D4E]">Showroom-uri</p>
                 <h2 class="font-display text-3xl font-semibold leading-tight text-[#171411] md:text-[40px]">
@@ -495,9 +285,8 @@
     {{-- Confecție la comandă (section 6, REDO): implemented EXACTLY from the design package
          (texturra-homepage-redesign/index.html #la-comanda): 38/62 banner card, eyebrow,
          ✦ service points in circular badges, circular quality-seal over the image, dark button.
-         3 points: kept package VISUAL but adapted LABELS to CONFIRMED services — package's
-         "Confecție în atelier propriu" / "Montaj profesional" are UNVERIFIED, so replaced with
-         confirmed ones. CTA → real store phone (no booking page exists). --}}
+         3 points = package text (Materiale premium / Confecție în atelier propriu / Montaj
+         profesional) — user CONFIRMED own atelier + montaj. CTA → real store phone. --}}
     <section aria-label="Confecție la comandă" class="w-full bg-[#FCFAF7] font-dm">
         <div class="px-[clamp(20px,4.2vw,76px)] py-12 md:py-20">
             <div class="mx-auto grid w-full max-w-[1440px] grid-cols-1 items-stretch overflow-hidden rounded-[20px] border border-[#e7ded3] bg-[#f6f0e7] md:min-h-[398px] md:grid-cols-[38%_62%] md:shadow-[0_20px_60px_rgba(43,32,19,0.10)]">
@@ -512,7 +301,7 @@
                             Consultanță personalizată, măsurători exacte și confecții premium pentru un rezultat impecabil în fiecare cameră.
                         </p>
                         <div class="mb-[30px] flex flex-wrap gap-[14px]">
-                            @foreach (['Materiale premium', 'Consultanță personalizată', 'Confecție la comandă'] as $pt)
+                            @foreach (['Materiale premium', 'Confecție în atelier propriu', 'Montaj profesional'] as $pt)
                                 <span class="flex items-center gap-[7px] text-[11px] text-[#62584d]">
                                     <span class="grid h-6 w-6 place-items-center rounded-full border border-[#dbcdbb] text-[13px] leading-none text-[#936f35]">✦</span>
                                     {{ $pt }}
@@ -551,7 +340,7 @@
         ];
     @endphp
     <section aria-label="Inspirație pentru casă" class="w-full bg-[#FCFAF7] font-dm">
-        <div class="mx-auto max-w-[1180px] px-5 py-16 sm:px-8 md:py-24">
+        <div class="mx-auto max-w-[1440px] px-[clamp(20px,4.2vw,76px)] py-16 md:py-24">
             <div class="mb-12 text-center">
                 <p class="mb-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#B28D4E]">Inspirație</p>
                 <h2 class="font-display text-3xl font-semibold leading-tight text-[#171411] md:text-[40px]">
@@ -582,78 +371,4 @@
             </div>
         </div>
     </section>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('.before-after-slider').forEach(slider => {
-                const beforeImg = slider.querySelector('.before-img');
-                const handle = slider.querySelector('.handle');
-                let isDragging = false;
-
-                const updateSlider = (x) => {
-                    const rect = slider.getBoundingClientRect();
-                    const offsetX = Math.min(Math.max(0, x - rect.left), rect.width);
-                    const percent = (offsetX / rect.width) * 100;
-                    beforeImg.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
-                    handle.style.left = `${percent}%`;
-                };
-
-                handle.addEventListener('mousedown', () => isDragging = true);
-                document.addEventListener('mouseup', () => isDragging = false);
-                document.addEventListener('mousemove', e => isDragging && updateSlider(e.clientX));
-
-                handle.addEventListener('touchstart', () => isDragging = true);
-                document.addEventListener('touchend', () => isDragging = false);
-                document.addEventListener('touchmove', e => isDragging && updateSlider(e.touches[0].clientX));
-            });
-        });
-    </script>
-
-
-
-
-    <!-- Initialize Swiper -->
-    <script>
-        var swiper = new Swiper('.swiper-container', {
-            loop: true,
-            autoplay: {
-                delay: 100000, // 10s
-                disableOnInteraction: false,
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-            // optional: on slide change, reset & animate progress bar
-        });
-
-        function resetProgress() {
-            const progressBar = document.getElementById('progressBar');
-            progressBar.style.transition = 'none';
-            progressBar.style.width = '0%';
-        }
-
-        function animateProgress() {
-            const progressBar = document.getElementById('progressBar');
-            setTimeout(() => {
-                progressBar.style.transition = 'width 10s linear';
-                progressBar.style.width = '100%';
-            }, 50);
-        }
-
-        swiper.on('slideChangeTransitionStart', () => {
-            resetProgress();
-        });
-        swiper.on('slideChangeTransitionEnd', () => {
-            animateProgress();
-        });
-
-        // Initialize progress on first load
-        document.addEventListener("DOMContentLoaded", () => {
-            animateProgress();
-        });
-
-    </script>
-
-
 @endsection
