@@ -29,6 +29,9 @@ class ProductListing extends Component
     public $totalProducts = 0;
     public $appliedFilters = [];
 
+    // Sort order for the listing (recomandate | noutati | pret_asc | pret_desc).
+    public $sortBy = 'recomandate';
+
     /**
      * For query string persistence, we predefine the most common attributes.
      * For truly dynamic attributes, you can handle URL updates manually (as done in getCleanUrlWithParams)
@@ -44,6 +47,7 @@ class ProductListing extends Component
         'selectedFilters.Ambalare' => ['except' => null],
         'selectedFilters.Dimensiune bax (Lxlxh)' => ['except' => null],
         'selectedFilters.Domeniu' => ['except' => null],
+        'sortBy' => ['except' => 'recomandate'],
     ];
 
     public function mount($categorySlug)
@@ -73,7 +77,7 @@ class ProductListing extends Component
     public function updated($propertyName)
     {
         // Check if the updated property is either the offer flag or one of the dynamic selected filters.
-        if ($propertyName === 'selectedOferte' || str_starts_with($propertyName, 'selectedFilters')) {
+        if ($propertyName === 'selectedOferte' || $propertyName === 'sortBy' || str_starts_with($propertyName, 'selectedFilters')) {
             $this->resetPage();
             $this->applyFilters();
             $cleanData = $this->getCleanUrlWithParams();
@@ -90,6 +94,9 @@ class ProductListing extends Component
         $params = [];
         if ($this->selectedOferte) {
             $params['selectedOferte'] = $this->selectedOferte;
+        }
+        if ($this->sortBy && $this->sortBy !== 'recomandate') {
+            $params['sortBy'] = $this->sortBy;
         }
         foreach ($this->selectedFilters as $attribute => $value) {
             if (!empty($value)) {
@@ -259,7 +266,14 @@ class ProductListing extends Component
             }
         }
 
-        $products = $query->orderBy('id', 'desc')->paginate(16);
+        // Sort: 'price' is the raw column (discount-agnostic); id desc = newest/recommended.
+        [$sortCol, $sortDir] = match ($this->sortBy) {
+            'pret_asc'  => ['price', 'asc'],
+            'pret_desc' => ['price', 'desc'],
+            default     => ['id', 'desc'], // recomandate / noutati
+        };
+
+        $products = $query->orderBy($sortCol, $sortDir)->paginate(16);
 
         // Attach color CSS swatches from the product_color pivot (name + cod_css
         // straight from Color) — same {name, css} shape the view consumes.
