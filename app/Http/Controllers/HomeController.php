@@ -17,7 +17,7 @@ class HomeController extends Controller
     {
         // Render the configured homepage version: 'old' (live) or 'new' (redesign).
         // Default is 'old' so visitors are unaffected until HOMEPAGE_VERSION=new.
-        $view = config('homepage.version') === 'new' ? 'home-new' : 'home-old';
+        $view = strtolower((string) config('homepage.version')) === 'new' ? 'home-new' : 'home-old';
 
         return view($view, $this->homeData());
     }
