@@ -8,7 +8,7 @@
     {{-- Hero --}}
     <section class="pt-6">
         <div class="relative isolate min-h-[260px] overflow-hidden rounded-[18px] bg-[#47382e] md:min-h-[350px]">
-            <img src="{{ asset('storage/images/homepage/listing-hero.webp') }}" alt="{{ $categoryName }}"
+            <img src="{{ $categoryBanner }}" alt="{{ $categoryName }}"
                  class="absolute inset-0 -z-10 h-full w-full object-cover object-[center_56%]" />
             <div class="absolute inset-0 -z-[5] bg-gradient-to-r from-[#110e0c]/95 via-[#110e0c]/55 to-transparent"></div>
             <div class="w-[min(530px,80%)] px-8 py-12 text-white md:px-14 md:py-16">
