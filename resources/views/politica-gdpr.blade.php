@@ -1,12 +1,10 @@
 @extends('layouts.base')
 
 @section('content')
-    <div class="max-w-7xl mx-auto py-12 px-3 md:px-0">
-        <h1>Politica GDPR</h1>
+    <x-static-page title="Politica GDPR" eyebrow="Legal">
         <p>
             Respectăm drepturile dumneavoastră în conformitate cu Regulamentul General privind Protecția Datelor (GDPR). Această politică detaliază modul în care gestionăm datele dumneavoastră cu caracter personal.
         </p>
-        <br/>
         <p>
             <strong>Principii de bază</strong><br/>
             - Datele personale sunt procesate în mod legal, echitabil și transparent;<br/>
@@ -24,15 +22,15 @@
         <p>
             <strong>Scopurile procesării datelor</strong><br/>
             Utilizăm datele pentru:
+        </p>
         <ul>
             <li>Procesarea comenzilor;</li>
             <li>Furnizarea de informații despre produse și servicii;</li>
             <li>Respectarea obligațiilor legale.</li>
         </ul>
-        </p>
         <p>
             <strong>Plângeri și contact</strong><br/>
             În cazul în care considerați că drepturile dumneavoastră sunt încălcate, vă încurajăm să ne contactați la <a href="mailto:gdpr@example.com">gdpr@example.com</a>. De asemenea, aveți dreptul de a depune o plângere la Autoritatea Națională de Supraveghere a Prelucrării Datelor cu Caracter Personal.
         </p>
-    </div>
+    </x-static-page>
 @endsection

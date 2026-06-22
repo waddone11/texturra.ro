@@ -1,12 +1,10 @@
 @extends('layouts.base')
 
 @section('content')
-    <div class="max-w-7xl mx-auto py-12 px-3 md:px-0">
-        <h1>Politica de Confidențialitate</h1>
+    <x-static-page title="Politica de Confidențialitate" eyebrow="Legal">
         <p>
             Protejarea datelor dumneavoastră personale este o prioritate pentru noi. Această politică explică modul în care colectăm, utilizăm și protejăm informațiile pe care ni le furnizați atunci când utilizați site-ul nostru.
         </p>
-        <br/>
         <p>
             <strong>Ce date colectăm?</strong><br/>
             - Nume și prenume<br/>
@@ -18,13 +16,13 @@
         <p>
             <strong>Cum utilizăm datele dumneavoastră?</strong><br/>
             Datele colectate sunt utilizate pentru a:
+        </p>
         <ul>
             <li>Procesa comenzile și livra produsele solicitate;</li>
             <li>Oferi suport pentru clienți și asistență personalizată;</li>
             <li>Informa utilizatorii despre produse, oferte și promoții relevante;</li>
             <li>Îmbunătăți experiența utilizatorilor pe site-ul nostru.</li>
         </ul>
-        </p>
         <p>
             <strong>Protecția datelor</strong><br/>
             Implementăm măsuri de securitate stricte pentru a proteja datele personale împotriva accesului neautorizat, pierderii sau modificării acestora. Folosim protocoale SSL pentru a asigura o transmitere sigură a datelor.
@@ -37,5 +35,5 @@
             <strong>Contact</strong><br/>
             Pentru orice întrebări sau solicitări legate de politica noastră de confidențialitate, ne puteți contacta la <a href="mailto:support@example.com">support@example.com</a>.
         </p>
-    </div>
+    </x-static-page>
 @endsection
