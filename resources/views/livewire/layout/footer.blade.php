@@ -45,8 +45,8 @@
                     <ul>
                         <li><a href="https://anpc.ro/" target="_blank" class="custom-color">www.anpc.gov.ro</a></li>
                     </ul>
-                    <a href="https://ec.europa.eu/consumers/odr" target="_blank"><img alt="Soluționarea online a litigiilor" src="https://perdeleacasa.ro/images/SOL-min.png" class="h-12"></a>
-                    <a href="https://anpc.ro/ce-este-sal/" target="_blank"><img alt="Soluționarea alternativa a litigiilor" src="https://perdeleacasa.ro/images/anpc-min.png" class="h-12"></a>
+                    <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener"><img alt="Soluționarea online a litigiilor" src="{{ asset('storage/images/solutii.webp') }}" class="h-12"></a>
+                    <a href="https://anpc.ro/ce-este-sal/" target="_blank" rel="noopener"><img alt="Soluționarea alternativă a litigiilor" src="{{ asset('storage/images/anpc.webp') }}" class="h-12"></a>
                 </div>
                 <div class="px-5 py-2">
                     <h3 class="text-black font-bold">Contact</h3>

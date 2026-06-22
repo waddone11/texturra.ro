@@ -32,7 +32,7 @@
 
             {{-- Info --}}
             <div>
-                <div class="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4">
+                <div class="grid md:grid-cols-[minmax(0,1fr)_auto] items-start gap-4">
                     <div>
                         <p class="text-[11px] font-extrabold uppercase tracking-[0.09em] text-[#ad7c32]">{{ $product->category->name ?? 'TEXTURRA' }}</p>
                         <h1 class="mt-2 font-display text-3xl font-medium leading-[1.0] tracking-[-0.02em] text-[#171411] md:text-[42px]">
