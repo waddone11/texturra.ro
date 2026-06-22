@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
-    SocialAuthController,
     Auth\VerifyEmailController,
     ProductController,
     CartController,
@@ -131,10 +130,6 @@ Route::middleware('guest', 'web')->group(function () {
     Route::get('forgot-password', ForgotPassword::class)->name('password.request');
     Route::get('reset-password/{token}', ResetPassword::class)->name('password.reset');
     Route::post('/reset-password', [\App\Http\Controllers\Auth\ResetPasswordController::class, 'reset'])->name('password.update');
-
-    // Social Authentication
-    Route::get('/login/{provider}', [SocialAuthController::class, 'redirectToProvider'])->name('social.login');
-    Route::get('/login/{provider}/callback', [SocialAuthController::class, 'handleProviderCallback']);
 });
 
 // ------------------------------------------------------
@@ -150,7 +145,6 @@ Route::middleware(['auth', 'verified', 'web'])->group(function () {
 
     // Checkout
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
-    Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
 
     Route::post('/address', [CheckoutController::class, 'storeAddress'])->name('address.store');
     Route::post('/invoice-address', [CheckoutController::class, 'storeInvoiceAddress'])->name('invoice_address.store');
