@@ -1,12 +1,14 @@
 @extends('layouts.base')
 
 @section('content')
-    <div class="max-w-7xl mx-auto py-12 px-2 sm:px-0">
-        <h1 class="text-2xl font-bold mb-8">Finalizează comanda</h1>
+    <div class="w-full bg-[#FCFAF7] font-dm text-[#171411]">
+    <div class="max-w-[1180px] mx-auto py-12 px-4 sm:px-8">
+        <p class="mb-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#B58A43]">Checkout</p>
+        <h1 class="font-display text-3xl md:text-[40px] font-semibold mb-8">Finalizează comanda</h1>
 
         <!-- Shipping Address -->
-        <div class="border border-black shadow-xl px-4 py-2 rounded-2xl mb-6">
-            <h2 class="text-lg font-semibold mb-4">Adresa de livrare</h2>
+        <div class="border border-[#171411]/10 bg-white shadow-sm px-5 py-5 rounded-[16px] mb-6">
+            <h2 class="font-display text-xl font-semibold mb-4">Adresa de livrare</h2>
 
             <div class="mb-6">
                 @forelse ($addresses as $address)
@@ -22,7 +24,7 @@
                             <button
                                 type="button"
                                 data-id="{{ $address->id }}"
-                                class="w-auto bg-black text-white text-center py-1 rounded-lg font-semibold hover:bg-gray-900 transition text-xs px-2 border border-black edit-shipping-address">
+                                class="w-auto bg-[#171411] text-[#FCFAF7] text-center py-1 rounded-lg font-semibold hover:bg-[#B58A43] transition text-xs px-2 border border-[#171411]/25 edit-shipping-address">
                                 Modifică
                             </button>
 
@@ -32,7 +34,7 @@
                                 <button
                                     type="button"
                                     data-id="{{ $address->id }}"
-                                    class="w-auto bg-black text-white text-center py-1 rounded-lg font-semibold hover:bg-gray-900 transition text-xs px-2 border border-black" onclick="return confirm('Sigur doriți să ștergeți această adresă?')">
+                                    class="w-auto bg-[#171411] text-[#FCFAF7] text-center py-1 rounded-lg font-semibold hover:bg-[#B58A43] transition text-xs px-2 border border-[#171411]/25" onclick="return confirm('Sigur doriți să ștergeți această adresă?')">
                                     Șterge
                                 </button>
                             </form>
@@ -55,7 +57,7 @@
                 @endforelse
 
                 <button type="button" id="addShippingAddressBtn"
-                        class="w-auto bg-black text-white text-center py-2 rounded-lg font-semibold hover:bg-gray-900 transition text-xs px-4 border border-black">
+                        class="w-auto bg-[#171411] text-[#FCFAF7] text-center py-2 rounded-lg font-semibold hover:bg-[#B58A43] transition text-xs px-4 border border-[#171411]/25">
                     Adaugă adresă de livrare
                 </button>
             </div>
@@ -99,7 +101,7 @@
                 {{--                    Salvează Adresa de Livrare--}}
                 {{--                </button>--}}
                 <button type="submit"
-                        class="w-auto bg-black text-white text-center py-2 rounded-lg font-semibold hover:bg-gray-900 transition text-xs px-4 border border-black">
+                        class="w-auto bg-[#171411] text-[#FCFAF7] text-center py-2 rounded-lg font-semibold hover:bg-[#B58A43] transition text-xs px-4 border border-[#171411]/25">
                     Salvează Adresa de Livrare
                 </button>
             </form>
@@ -142,8 +144,8 @@
         </div>
 
         <!-- Billing Address -->
-        <div class="border border-black shadow-xl px-4 py-2 rounded-2xl mb-6">
-            <h2 class="text-lg font-semibold mb-4">Adresă de facturare</h2>
+        <div class="border border-[#171411]/10 bg-white shadow-sm px-5 py-5 rounded-[16px] mb-6">
+            <h2 class="font-display text-xl font-semibold mb-4">Adresă de facturare</h2>
 
             <div class="mb-6">
                 @forelse ($invoiceAddresses as $address)
@@ -159,7 +161,7 @@
                             <button
                                 type="button"
                                 data-id="{{ $address->id }}"
-                                class="w-auto bg-black text-white text-center py-1 rounded-lg font-semibold hover:bg-gray-900 transition text-xs px-2 border border-black edit-billing-address">
+                                class="w-auto bg-[#171411] text-[#FCFAF7] text-center py-1 rounded-lg font-semibold hover:bg-[#B58A43] transition text-xs px-2 border border-[#171411]/25 edit-billing-address">
                                 Modifică
                             </button>
 
@@ -169,7 +171,7 @@
                                 <button
                                     type="submit"
                                     data-id="{{ $address->id }}"
-                                    class="w-auto bg-black text-white text-center py-1 rounded-lg font-semibold hover:bg-gray-900 transition text-xs px-2 border border-black" onclick="return confirm('Sigur doriți să ștergeți această adresă?')">
+                                    class="w-auto bg-[#171411] text-[#FCFAF7] text-center py-1 rounded-lg font-semibold hover:bg-[#B58A43] transition text-xs px-2 border border-[#171411]/25" onclick="return confirm('Sigur doriți să ștergeți această adresă?')">
                                     Șterge
                                 </button>
                             </form>
@@ -191,7 +193,7 @@
                     <p class="text-sm text-gray-500 mb-2">Nu există adrese de facturare salvate.</p>
                     <a
                         href="#" id="useShippingAsBilling"
-                        class="w-auto bg-black text-white text-center py-2 rounded-lg font-semibold hover:bg-gray-900 transition text-xs px-4 border border-black">
+                        class="w-auto bg-[#171411] text-[#FCFAF7] text-center py-2 rounded-lg font-semibold hover:bg-[#B58A43] transition text-xs px-4 border border-[#171411]/25">
                         Folosește adresa primară de livrare
                     </a>
 
@@ -202,7 +204,7 @@
                 <button
                     type="button"
                     id="addBillingAddressBtn"
-                    class="w-auto bg-black text-white text-center py-2 rounded-lg font-semibold hover:bg-gray-900 transition text-xs px-4 border border-black mt-4">
+                    class="w-auto bg-[#171411] text-[#FCFAF7] text-center py-2 rounded-lg font-semibold hover:bg-[#B58A43] transition text-xs px-4 border border-[#171411]/25 mt-4">
                     Adaugă adresă de facturare
                 </button>
             </div>
@@ -244,7 +246,7 @@
 
                 <button
                     type="submit"
-                    class="w-auto bg-black text-white text-center py-2 rounded-lg font-semibold hover:bg-gray-900 transition text-xs px-4 border border-black">
+                    class="w-auto bg-[#171411] text-[#FCFAF7] text-center py-2 rounded-lg font-semibold hover:bg-[#B58A43] transition text-xs px-4 border border-[#171411]/25">
                     Salvează Adresa de Facturare
                 </button>
             </form>
@@ -289,8 +291,8 @@
         </div>
 
         <!-- Notes & Order review -->
-        <div class="border border-black shadow-xl px-4 py-2 rounded-2xl mb-6">
-            <h2 class="text-lg font-semibold mb-4">Produse comandate</h2>
+        <div class="border border-[#171411]/10 bg-white shadow-sm px-5 py-5 rounded-[16px] mb-6">
+            <h2 class="font-display text-xl font-semibold mb-4">Produse comandate</h2>
 
             <!-- Cart Items Summary -->
             <div class="p-4 space-y-4 bg-white rounded-lg">
@@ -409,7 +411,7 @@
                                 />
                                 <button
                                     type="submit"
-                                    class="bg-black text-white px-4 py-2 text-xs rounded-lg font-semibold border border-black hover:bg-gray-900 transition">
+                                    class="bg-[#171411] text-[#FCFAF7] px-4 py-2 text-xs rounded-lg font-semibold border border-[#171411]/25 hover:bg-[#B58A43] transition">
                                     Aplică
                                 </button>
                             </div>
@@ -438,14 +440,14 @@
 
 
         <!-- Payment -->
-{{--        <div class="border border-black shadow-xl px-4 py-2 rounded-2xl mb-6">--}}
-{{--            <h2 class="text-lg font-semibold mb-4">Metode de plată</h2>--}}
+{{--        <div class="border border-[#171411]/10 bg-white shadow-sm px-5 py-5 rounded-[16px] mb-6">--}}
+{{--            <h2 class="font-display text-xl font-semibold mb-4">Metode de plată</h2>--}}
 {{--            <div class="space-y-4 mb-2" id="payment-options">--}}
 {{--                <!-- Payment Accordion -->--}}
 {{--                <div data-payment="online" class="payment-option active">--}}
 {{--                    <label class="flex items-center space-x-2 cursor-pointer">--}}
 {{--                        <input type="radio" name="payment_method" value="online" class="hidden peer">--}}
-{{--                        <div class="w-5 h-5 border-2 border-black rounded-full flex justify-center items-center bg-black text-white">--}}
+{{--                        <div class="w-5 h-5 border-2 border-black rounded-full flex justify-center items-center bg-[#171411] text-[#FCFAF7]">--}}
 {{--                            <div class="w-5 h-5 bg-white rounded-full"></div>--}}
 {{--                        </div>--}}
 {{--                        <div class="flex items-center space-x-2 2">--}}
@@ -492,8 +494,8 @@
 {{--                </div>--}}
 {{--            </div>--}}
 {{--        </div>--}}
-        <div class="border border-black shadow-xl px-4 py-2 rounded-2xl mb-6">
-            <h2 class="text-lg font-semibold mb-4">Metode de plată</h2>
+        <div class="border border-[#171411]/10 bg-white shadow-sm px-5 py-5 rounded-[16px] mb-6">
+            <h2 class="font-display text-xl font-semibold mb-4">Metode de plată</h2>
 
             <div class="space-y-4 mb-2" id="payment-options">
                 {{-- LANSARE: DOAR ramburs (plata la livrare). Plata Online (card) și Transferul Bancar
@@ -536,7 +538,7 @@
         </div>
 
         <!-- Submit Button and collect all data-->
-        <div class="border border-black shadow-xl px-4 py-2 rounded-2xl mb-6">
+        <div class="border border-[#171411]/10 bg-white shadow-sm px-5 py-5 rounded-[16px] mb-6">
             <form action="{{ route('order.store') }}" method="POST">
                 @csrf
                 <input type="hidden" id="selected_shipping_address_id" name="shipping_address_id" value="{{ $addresses->firstWhere('is_default', true)->id ?? '' }}">
@@ -548,13 +550,14 @@
                 </div>
                 <button
                     type="submit"
-                    class="w-auto bg-black text-white text-center py-2 rounded-lg font-semibold hover:bg-gray-900 transition text-sm px-4 border border-black edit-shipping-address">
+                    class="w-auto bg-[#171411] text-[#FCFAF7] text-center py-2 rounded-lg font-semibold hover:bg-[#B58A43] transition text-sm px-4 border border-[#171411]/25 edit-shipping-address">
                     Finalizează Comanda
                 </button>
             </form>
 
         </div>
 
+    </div>
     </div>
 
 @endsection

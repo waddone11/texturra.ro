@@ -1,147 +1,132 @@
 @extends('layouts.base')
 
 @section('content')
-    <div class="max-w-7xl mx-auto py-12 px-2 sm:px-0">
-        <h1 class="text-2xl font-bold mb-8">Cosul tău de cumpărături</h1>
+    {{-- Cart — 2026 redesign (shell only). MONEY LOGIC UNTOUCHED: Cart::lineTotal(), update
+         forms (cart.update / cart.update.custom), delete (cart.remove), subtotal sum, checkout
+         + guest cart-transfer are identical. Old shell kept in cart/index-old.blade.php. --}}
+    <div class="w-full bg-[#FCFAF7] font-dm text-[#171411]">
+        <div class="mx-auto max-w-[1180px] px-4 py-12 sm:px-8 md:py-16">
 
-        <!-- Flash Message -->
-        @if (session('flashMessage'))
-            <div
-                class="p-4 mb-4 text-sm font-medium rounded-lg
-                       {{ session('flashMessage.type') === 'error' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700' }}">
-                {{ session('flashMessage.message') }}
-            </div>
-        @endif
+            <p class="mb-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#B58A43]">Coș</p>
+            <h1 class="font-display text-3xl font-semibold leading-tight text-[#171411] md:text-[40px]">Coșul tău</h1>
 
-        <div class="bg-white md:border md:border-black rounded-lg">
-            <div class="p1- space-x-1 md:p-6 md:space-y-6">
-                <!-- Cart Items -->
-                @forelse ($cartItems as $item)
-                    @php
-                        $isCustom = $item->length || $item->height || $item->manufactoring_type_id;
-                    @endphp
+            @if (session('flashMessage'))
+                <div class="mt-6 rounded-lg px-4 py-3 text-sm font-medium
+                            {{ session('flashMessage.type') === 'error' ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-[#B58A43]/10 text-[#8c6529] border border-[#B58A43]/30' }}">
+                    {{ session('flashMessage.message') }}
+                </div>
+            @endif
 
-                    <div class="flex flex-col md:flex-row justify-between border-b border-black md:pb-4 gap-4 mb-8">
-                        <!-- Product Info -->
-                        <div class="flex items-start gap-4 md:w-1/3">
-                            <img
-                                src="{{ $item->product->images[0] ?? '/placeholder-image.png' }}"
-                                alt="{{ $item->product->name }}"
-                                class="w-16 h-16 rounded object-cover"
-                            />
-                            <div class="space-y-1">
-                                <p class="text-base md:text-lg font-semibold">{{ $item->product->name }}</p>
-
-                                @if ($isCustom)
-                                    <ul class="text-xs text-gray-600 space-y-1">
-                                        <li>Lățime: {{ $item->length }} m</li>
-                                        <li>Înălțime: {{ $item->height }} m</li>
-                                        <li>Bucăți: {{ $item->pieces }}</li>
-                                        <li>Manoperă: {{ optional($item->manufactoringType)->name }}</li>
-                                    </ul>
-                                @endif
-                            </div>
-                        </div>
-
-                        <!-- Actions + Total + Delete -->
-                        <div class="grid grid-cols-1 md:grid-cols-8 gap-2 md:w-2/3 w-full">
-                            <!-- Update Form -->
-                            <div class="md:col-span-6">
-                                <div class="w-full md:max-w-xs md:ml-auto md:ml-0">
-                                    @if ($isCustom)
-                                        @include('cart.custom-update-form', [
-                                            'item' => $item,
-                                            'manufactoringTypes' => $manufactoringTypes
-                                        ])
-                                    @else
-                                        @include('cart.standard-update-form', ['item' => $item])
-                                    @endif
-                                </div>
-                            </div>
-
-                            <!-- Total and Delete -->
-                            <div class="md:col-span-2 w-full flex flex-col md:items-end md:justify-between pr-2 mt-2 bg-gray-50 md:bg-white p-2">
-                                <!-- Mobile layout: flex row between total and delete -->
-                                <div class="flex justify-between items-center w-full md:flex-col md:items-end md:justify-between gap-2">
-                                    <!-- Total -->
-                                    <div class="text-left md:text-right">
-                                        <p class="text-xs text-gray-500">Total</p>
-                                        <p class="text-sm font-bold">
-                                            {{ number_format($item->lineTotal(), 2) }} lei
-                                        </p>
-                                    </div>
-
-                                    <!-- Delete -->
-                                    <form action="{{ route('cart.remove', $item->id) }}" method="POST"
-                                          class="flex items-center gap-1 text-red-600 hover:text-red-800">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="flex items-center gap-1">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
-                                                 stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                      d="M6 18L18 6M6 6l12 12"/>
-                                            </svg>
-                                            <span class="text-xs font-semibold">Șterge</span>
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-
-                @empty
-                    <p class="text-gray-500">Cosul este gol.</p>
-                @endforelse
-
-            </div>
-
-            <!-- Summary -->
             @php
                 $calculatedSubtotal = $cartItems->sum(fn ($item) => $item->lineTotal());
-
-                $calculatedShipping = ($calculatedSubtotal > config('app.free_shipping_min'))
-                    ? 0
-                    : config('app.shipping_cost');
-
+                $calculatedShipping = ($calculatedSubtotal > config('app.free_shipping_min')) ? 0 : config('app.shipping_cost');
                 $calculatedTotal = $calculatedSubtotal + $calculatedShipping;
             @endphp
 
-            <div class="p-6 bg-gray-50 space-y-4 rounded-b-lg">
-                <div class="flex justify-between text-xs">
-                    <p>Subtotal</p>
-                    <p>{{ number_format($calculatedSubtotal, 2) }} lei</p>
+            @if ($cartItems->isEmpty())
+                {{-- Empty state --}}
+                <div class="mt-10 flex flex-col items-center rounded-[18px] border border-[#171411]/10 bg-white py-20 text-center">
+                    <span class="grid h-16 w-16 place-items-center rounded-full bg-[#B58A43]/10 text-[#8c6529]">
+                        <i class="fa-solid fa-cart-shopping fa-lg"></i>
+                    </span>
+                    <h2 class="mt-5 font-display text-2xl font-semibold">Coșul tău e gol</h2>
+                    <p class="mt-2 text-sm text-[#5f594f]">Descoperă perdelele, draperiile și textilele noastre premium.</p>
+                    <a href="{{ route('products.category', ['slug' => 'perdele']) }}"
+                       class="mt-6 inline-flex min-h-[46px] items-center rounded-md bg-[#171411] px-7 text-[13px] font-semibold uppercase tracking-[0.1em] text-[#FCFAF7] transition-colors hover:bg-[#B58A43]">
+                        Vezi produsele
+                    </a>
                 </div>
-                <div class="flex justify-between text-xs">
-                    <p>Transport</p>
-                    <p>{{ number_format($calculatedShipping, 2) }} lei</p>
-                </div>
-                <div class="flex justify-between text-sm font-bold">
-                    <p>Total</p>
-                    <p>{{ number_format($calculatedTotal, 2) }} lei</p>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="mt-8 text-right">
-            @if (auth()->check())
-                <a href="{{ route('checkout.index') }}"
-                   class="w-[150px] bg-black text-white text-center py-2 rounded-lg font-semibold hover:bg-gray-900 transition ml-4 text-xs px-4 border border-black">
-                    Confirma comanda
-                </a>
             @else
-                <a href="{{ route('login') }}"
-                   onclick="event.preventDefault(); document.getElementById('transfer-cart-form').submit();"
-                   class="w-[150px] bg-black text-white text-center py-2 rounded-lg font-semibold hover:bg-gray-900 transition ml-4 text-xs px-4 border border-black">
-                    Loghează-te pentru a finaliza comanda
-                </a>
-                <form id="transfer-cart-form" action="{{ route('set.cart.transfer') }}" method="POST" style="display: none;">
-                    @csrf
-                </form>
-                <p class="text-xs mt-2 text-gray-600">Nu vei pierde produsele din coș.</p>
+                <div class="mt-8 grid grid-cols-1 gap-7 lg:grid-cols-[1fr_340px] lg:items-start">
+
+                    {{-- Items --}}
+                    <div class="space-y-5">
+                        @foreach ($cartItems as $item)
+                            @php $isCustom = $item->length || $item->height || $item->manufactoring_type_id; @endphp
+                            <div class="rounded-[16px] border border-[#171411]/10 bg-white p-5" wire:key="cart-{{ $item->id }}">
+                                <div class="flex flex-col gap-4 sm:flex-row">
+                                    {{-- Image + info --}}
+                                    <div class="flex items-start gap-4 sm:w-2/5">
+                                        <img src="{{ $item->product->images[0] ?? asset('storage/images/placeholder-images.webp') }}"
+                                             alt="{{ $item->product->name }}" class="h-20 w-20 flex-shrink-0 rounded-[10px] object-cover" />
+                                        <div>
+                                            <a href="{{ route('product.show', ['slug' => $item->product->slug]) }}"
+                                               class="font-display text-base font-semibold leading-tight text-[#171411] hover:text-[#8c6529]">
+                                                {{ $item->product->name }}
+                                            </a>
+                                            @if ($isCustom)
+                                                <ul class="mt-2 space-y-0.5 text-[12px] text-[#5f594f]">
+                                                    <li>Lățime: <span class="text-[#171411]">{{ $item->length }} m</span> · Înălțime: <span class="text-[#171411]">{{ $item->height }} m</span></li>
+                                                    <li>Bucăți: <span class="text-[#171411]">{{ $item->pieces }}</span></li>
+                                                    <li>Manoperă: <span class="text-[#171411]">{{ optional($item->manufactoringType)->name }}</span></li>
+                                                </ul>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    {{-- Update form + total + delete --}}
+                                    <div class="flex flex-1 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                                        <div class="min-w-0">
+                                            @if ($isCustom)
+                                                @include('cart.custom-update-form', ['item' => $item, 'manufactoringTypes' => $manufactoringTypes])
+                                            @else
+                                                @include('cart.standard-update-form', ['item' => $item])
+                                            @endif
+                                        </div>
+
+                                        <div class="flex items-center justify-between gap-4 sm:flex-col sm:items-end">
+                                            <p class="font-display text-lg font-semibold text-[#171411]">{{ number_format($item->lineTotal(), 2) }} lei</p>
+                                            <form action="{{ route('cart.remove', $item->id) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="inline-flex items-center gap-1.5 text-[12px] font-medium text-[#5f594f] transition-colors hover:text-red-600">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 18 6M6 6l12 12"/></svg>
+                                                    Șterge
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    {{-- Summary (sticky) --}}
+                    <aside class="lg:sticky lg:top-28">
+                        <div class="rounded-[16px] border border-[#171411]/10 bg-white p-6">
+                            <h2 class="font-display text-lg font-semibold text-[#171411]">Sumar comandă</h2>
+                            <div class="mt-5 space-y-3 border-b border-[#171411]/10 pb-5 text-sm">
+                                <div class="flex justify-between text-[#5f594f]"><span>Subtotal</span><span class="text-[#171411]">{{ number_format($calculatedSubtotal, 2) }} lei</span></div>
+                                <div class="flex justify-between text-[#5f594f]"><span>Transport</span><span class="text-[#171411]">{{ $calculatedShipping == 0 ? 'Gratuit' : number_format($calculatedShipping, 2) . ' lei' }}</span></div>
+                            </div>
+                            <div class="flex items-baseline justify-between pt-5">
+                                <span class="text-sm font-semibold uppercase tracking-[0.08em] text-[#171411]">Total</span>
+                                <span class="font-display text-2xl font-semibold text-[#171411]">{{ number_format($calculatedTotal, 2) }} lei</span>
+                            </div>
+
+                            <div class="mt-6">
+                                @auth
+                                    <a href="{{ route('checkout.index') }}"
+                                       class="flex min-h-[50px] w-full items-center justify-center rounded-md bg-[#171411] text-[13px] font-semibold uppercase tracking-[0.1em] text-[#FCFAF7] transition-colors hover:bg-[#B58A43]">
+                                        Continuă spre checkout
+                                    </a>
+                                @else
+                                    <a href="{{ route('login') }}"
+                                       onclick="event.preventDefault(); document.getElementById('transfer-cart-form').submit();"
+                                       class="flex min-h-[50px] w-full items-center justify-center rounded-md bg-[#171411] px-4 text-center text-[12px] font-semibold uppercase tracking-[0.08em] text-[#FCFAF7] transition-colors hover:bg-[#B58A43]">
+                                        Loghează-te pentru a finaliza
+                                    </a>
+                                    <form id="transfer-cart-form" action="{{ route('set.cart.transfer') }}" method="POST" class="hidden">@csrf</form>
+                                    <p class="mt-3 text-center text-[11px] text-[#5f594f]">Nu vei pierde produsele din coș.</p>
+                                @endauth
+                            </div>
+
+                            <p class="mt-5 flex items-center justify-center gap-2 text-[11px] text-[#5f594f]">
+                                <i class="fa-solid fa-truck text-[#B58A43]"></i> Transport gratuit peste 500 lei
+                            </p>
+                        </div>
+                    </aside>
+                </div>
             @endif
         </div>
     </div>
