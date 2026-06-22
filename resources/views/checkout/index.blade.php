@@ -496,31 +496,13 @@
             <h2 class="text-lg font-semibold mb-4">Metode de plată</h2>
 
             <div class="space-y-4 mb-2" id="payment-options">
-                <!-- Online Payment -->
+                {{-- LANSARE: DOAR ramburs (plata la livrare). Plata Online (card) și Transferul Bancar
+                     sunt ASCUNSE până la integrarea unui gateway de plată real — codul lor e păstrat
+                     comentat mai jos pentru reactivare. NU s-a atins logica de creare comandă. --}}
+
+                <!-- Cash on Delivery (ramburs) — singura metodă activă -->
                 <label class="flex items-start space-x-3 cursor-pointer">
-                    <input type="radio" name="payment_method" value="online" class="hidden peer" checked>
-
-                    <div class="w-5 h-5 border-2 rounded-full flex justify-center items-center
-                        peer-checked:bg-black peer-checked:border-black border-gray-400">
-                        <div class="w-2.5 h-2.5 rounded-full
-                            bg-transparent peer-checked:bg-white"></div>
-                    </div>
-
-                    <div class="flex flex-col">
-                        <div class="flex items-center space-x-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" />
-                            </svg>
-                            <h3 class="font-medium peer-checked:font-extrabold peer-checked:text-black">Plată Online</h3>
-                        </div>
-                        <p class="text-sm mt-1 peer-checked:font-bold text-gray-600">Plătește rapid și sigur folosind cardul tău bancar.</p>
-                        <span class="text-xs text-gray-500">Vei fi redirecționat pe o altă pagină pentru plată.</span>
-                    </div>
-                </label>
-
-                <!-- Cash on Delivery -->
-                <label class="flex items-start space-x-3 cursor-pointer">
-                    <input type="radio" name="payment_method" value="courier" class="hidden peer">
+                    <input type="radio" name="payment_method" value="courier" class="hidden peer" checked>
 
                     <div class="w-5 h-5 border-2 rounded-full flex justify-center items-center
                         peer-checked:bg-black peer-checked:border-black border-gray-400">
@@ -533,34 +515,23 @@
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
                             </svg>
-                            <h3 class="font-medium peer-checked:font-extrabold peer-checked:text-black">Plată la livrare</h3>
+                            <h3 class="font-medium peer-checked:font-extrabold peer-checked:text-black">Plată la livrare (ramburs)</h3>
                         </div>
-                        <p class="text-sm mt-1 text-gray-600 peer-checked:font-bold">Plătește direct curierului în momentul livrării.</p>
+                        <p class="text-sm mt-1 text-gray-600 peer-checked:font-bold">Plătești direct curierului în momentul livrării.</p>
                         <span class="text-xs text-gray-500">AWB + factură proformă vor fi trimise pe email.</span>
                     </div>
                 </label>
 
-                <!-- Bank Transfer -->
-                <label class="flex items-start space-x-3 cursor-pointer">
-                    <input type="radio" name="payment_method" value="bank_transfer" class="hidden peer">
-
-                    <div class="w-5 h-5 border-2 rounded-full flex justify-center items-center
-                        peer-checked:bg-black peer-checked:border-black border-gray-400">
-                        <div class="w-2.5 h-2.5 rounded-full
-                            bg-transparent peer-checked:bg-white"></div>
-                    </div>
-
-                    <div class="flex flex-col">
-                        <div class="flex items-center space-x-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75Z" />
-                            </svg>
-                            <h3 class="font-medium peer-checked:font-extrabold peer-checked:text-black">Transfer Bancar</h3>
-                        </div>
-                        <p class="text-sm mt-1 text-gray-600 peer-checked:font-bold">Detaliile de plată vor fi afișate după confirmare.</p>
-                        <span class="text-xs text-gray-500">Verifică emailul pentru factură și IBAN.</span>
-                    </div>
+                {{-- ASCUNSE până la integrarea gateway-ului de plată (NU șterge — se reactivează):
+                <label class="flex items-start space-x-3 cursor-pointer"> <!-- Plată Online (card) -->
+                    <input type="radio" name="payment_method" value="online" class="hidden peer">
+                    ... card online — reactivează după integrare Netopia/Stripe ...
                 </label>
+                <label class="flex items-start space-x-3 cursor-pointer"> <!-- Transfer Bancar -->
+                    <input type="radio" name="payment_method" value="bank_transfer" class="hidden peer">
+                    ... transfer bancar — reactivează când se confirmă fluxul ...
+                </label>
+                --}}
             </div>
         </div>
 
