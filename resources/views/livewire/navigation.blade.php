@@ -1,9 +1,8 @@
 @php
     // Pages that render a full-bleed dark hero behind the nav: the live homepage
-    // ("/" → home-old video hero) and the redesign preview ("/home-preview").
-    // On these the nav floats transparent (cream text) and turns solid ivory on scroll.
-    // Everywhere else it is a solid ivory bar with dark text (readable, no hero behind).
-    $onHero = request()->routeIs('home') || request()->routeIs('home.preview');
+    // Homepage has a full-bleed hero behind the nav: float transparent (cream text),
+    // turn solid ivory on scroll. Everywhere else: solid ivory bar with dark text.
+    $onHero = request()->routeIs('home');
     $activeSlug = request()->route('slug');
 @endphp
 

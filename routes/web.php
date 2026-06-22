@@ -79,9 +79,6 @@ Route::prefix('utilities')->middleware(['auth', CheckRole::class . ':admin,emplo
 Route::middleware(['web'])->group(function () {
     // Home and About
     Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
-    // Always renders the new homepage regardless of HOMEPAGE_VERSION, so the
-    // redesign can be previewed while the old version stays live for visitors.
-    Route::get('/home-preview', [\App\Http\Controllers\HomeController::class, 'preview'])->name('home.preview');
     Route::get('/despre-noi', [\App\Http\Controllers\HomeController::class, 'about'])->name('about');
     Route::get('/politica-livrare', [\App\Http\Controllers\HomeController::class, 'politicaLivrare'])->name('politica-livrare');
     Route::get('/politica-retur', [\App\Http\Controllers\HomeController::class, 'politicaRetur'])->name('politica-retur');

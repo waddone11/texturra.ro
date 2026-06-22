@@ -15,19 +15,8 @@ class HomeController extends Controller
 {
     public function index()
     {
-        // Render the configured homepage version: 'old' (live) or 'new' (redesign).
-        // Default is 'old' so visitors are unaffected until HOMEPAGE_VERSION=new.
-        $view = strtolower((string) config('homepage.version')) === 'new' ? 'home-new' : 'home-old';
-
-        return view($view, $this->homeData());
-    }
-
-    /**
-     * Always render the new homepage, regardless of HOMEPAGE_VERSION.
-     * Lets us preview the redesign while the old version stays live for visitors.
-     */
-    public function preview()
-    {
+        // The 2026 redesign is the homepage. (The HOMEPAGE_VERSION old/new switch was
+        // removed once the redesign shipped; home-old.blade.php is kept only as a backup.)
         return view('home-new', $this->homeData());
     }
 
