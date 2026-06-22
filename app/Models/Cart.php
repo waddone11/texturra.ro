@@ -30,6 +30,19 @@ class Cart extends Model
     public const IDENTITY_KEYS = ['product_id', 'length', 'height', 'manufactoring_type_id', 'pieces'];
 
     /**
+     * Total for this cart line — single source of truth (controller + view).
+     * Custom curtains: `price` is the per-panel total → × pieces.
+     * Standard products: per-unit `price` → × quantity.
+     * (Mirrors the prior view-side calc exactly; result unchanged.)
+     */
+    public function lineTotal(): float
+    {
+        $isCustom = $this->length || $this->height || $this->manufactoring_type_id;
+
+        return (float) (($isCustom ? $this->pieces : $this->quantity) * $this->price);
+    }
+
+    /**
      * Merge a guest session's cart into the authenticated user's cart.
      *
      * Identity = product_id + length + height + manufactoring_type_id + pieces.

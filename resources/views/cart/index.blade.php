@@ -67,11 +67,7 @@
                                     <div class="text-left md:text-right">
                                         <p class="text-xs text-gray-500">Total</p>
                                         <p class="text-sm font-bold">
-                                            @if ($isCustom)
-                                                {{ number_format($item->price * $item->pieces, 2) }} lei
-                                            @else
-                                                {{ number_format($item->quantity * $item->price, 2) }} lei
-                                            @endif
+                                            {{ number_format($item->lineTotal(), 2) }} lei
                                         </p>
                                     </div>
 
@@ -104,11 +100,7 @@
 
             <!-- Summary -->
             @php
-                $calculatedSubtotal = $cartItems->sum(function ($item) {
-                    return ($item->length || $item->height || $item->manufactoring_type_id)
-                        ? $item->pieces * $item->price
-                        : $item->quantity * $item->price;
-                });
+                $calculatedSubtotal = $cartItems->sum(fn ($item) => $item->lineTotal());
 
                 $calculatedShipping = ($calculatedSubtotal > config('app.free_shipping_min'))
                     ? 0

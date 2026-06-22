@@ -22,9 +22,8 @@ class CartController extends Controller
             ->with('product')
             ->get();
 
-        $subtotal = $cartItems->sum(function ($item) {
-            return $item->quantity * $item->price;
-        });
+        // Single source of truth: Cart::lineTotal() (custom→pieces×price, standard→quantity×price).
+        $subtotal = $cartItems->sum(fn ($item) => $item->lineTotal());
 
         $shipping = ($subtotal > config('app.free_shipping_min')) ? 0 : config('app.shipping_cost');
         $total = $subtotal + $shipping;
