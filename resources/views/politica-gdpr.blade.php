@@ -30,7 +30,7 @@
         </ul>
         <p>
             <strong>Plângeri și contact</strong><br/>
-            În cazul în care considerați că drepturile dumneavoastră sunt încălcate, vă încurajăm să ne contactați la <a href="mailto:gdpr@example.com">gdpr@example.com</a>. De asemenea, aveți dreptul de a depune o plângere la Autoritatea Națională de Supraveghere a Prelucrării Datelor cu Caracter Personal.
+            În cazul în care considerați că drepturile dumneavoastră sunt încălcate, vă încurajăm să ne contactați la <a href="mailto:contact@texturra.ro">contact@texturra.ro</a>. De asemenea, aveți dreptul de a depune o plângere la Autoritatea Națională de Supraveghere a Prelucrării Datelor cu Caracter Personal.
         </p>
     </x-static-page>
 @endsection

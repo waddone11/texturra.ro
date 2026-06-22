@@ -14,10 +14,12 @@
             <strong>Produse Exceptate de la Retur</strong><br/>
             Conform legislației în vigoare, există anumite categorii de produse care nu pot fi returnate:
         </p>
+        {{-- TODO review uman (juridic): formularea excepției pentru produse personalizate/la comandă
+             se bazează pe excepțiile din OUG 34/2014 pentru bunuri confecționate după specificațiile
+             clientului; confirmați cu consilierul juridic înainte de lansare. --}}
         <p>
-            Produse comestibile, de bacanie sau produse alimentare care au fost desfăcute, parțial consumate sau care nu mai sunt în ambalajul original sigilat.
-            Produse care, prin natura lor, pot deteriora sănătatea sau siguranța consumatorilor dacă sunt returnate (de exemplu, alimente, cosmetice sau produse de igienă personală desfăcute).
-            Produse personalizate la cererea clientului.
+            Produse confecționate la comandă, pe dimensiunile și specificațiile solicitate de client (perdele și draperii croite la măsură) — fiind produse personalizate, acestea sunt exceptate de la dreptul de retur, conform excepțiilor prevăzute de OUG 34/2014 pentru bunurile realizate după cerințele consumatorului.
+            Produse care au fost utilizate, spălate, croite sau modificate de către client, ori cărora le lipsește ambalajul original.
         </p>
         <p>
             <strong>Pași pentru Returnare</strong><br/>
