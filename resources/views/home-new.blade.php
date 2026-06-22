@@ -549,6 +549,51 @@
         </div>
     </section>
 
+    {{-- Inspirație (section 8): links to REAL categories. The mockup's 'Perne decorative' /
+         'Plaiduri & Pături' / 'Decorațiuni' are NOT real DB categories (Accesorii = inele/ciucuri/
+         rejansă), so those cards link to the closest real category (Lenjerii de pat); the two rug
+         cards map exactly to covoare-moderne / covoare-clasice. Images optimized to WebP. --}}
+    @php
+        $inspiration = [
+            ['label' => 'Covoare moderne',   'sub' => 'Texturi contemporane',   'slug' => 'covoare-moderne', 'img' => 'inspiration-modern-rug'],
+            ['label' => 'Covoare clasice',   'sub' => 'Eleganță atemporală',    'slug' => 'covoare-clasice', 'img' => 'inspiration-classic-rug'],
+            ['label' => 'Perne decorative',  'sub' => 'Accente pentru living',   'slug' => 'lenjerii-de-pat', 'img' => 'inspiration-pillows'],
+            ['label' => 'Pături & plaiduri', 'sub' => 'Confort pentru dormitor', 'slug' => 'lenjerii-de-pat', 'img' => 'inspiration-throws'],
+        ];
+    @endphp
+    <section aria-label="Inspirație pentru casă" class="w-full bg-[#FCFAF7] font-dm">
+        <div class="mx-auto max-w-[1180px] px-5 py-16 sm:px-8 md:py-24">
+            <div class="mb-12 text-center">
+                <p class="mb-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#B28D4E]">Inspirație</p>
+                <h2 class="font-display text-3xl font-semibold leading-tight text-[#171411] md:text-[40px]">
+                    Inspirație pentru casa ta
+                </h2>
+                <p class="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-[#171411]/60">
+                    Completează atmosfera cu textile și covoare care dau caracter fiecărei camere.
+                </p>
+            </div>
+            <div class="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
+                @foreach ($inspiration as $item)
+                    <a href="{{ route('products.category', ['slug' => $item['slug']]) }}" class="group block">
+                        <div class="relative aspect-[3/4] overflow-hidden rounded-[14px]">
+                            <img src="{{ asset('storage/images/homepage/'.$item['img'].'.webp') }}"
+                                 alt="{{ $item['label'] }}" loading="lazy"
+                                 class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"></div>
+                            <div class="absolute inset-x-0 bottom-0 p-4 text-left">
+                                <span class="block font-display text-lg font-semibold leading-tight text-white">{{ $item['label'] }}</span>
+                                <span class="mt-0.5 flex items-center gap-1 text-[11px] font-medium uppercase tracking-[0.1em] text-white/80">
+                                    {{ $item['sub'] }}
+                                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform group-hover:translate-x-0.5" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.before-after-slider').forEach(slider => {
