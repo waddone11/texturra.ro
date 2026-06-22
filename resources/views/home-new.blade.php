@@ -418,68 +418,42 @@
         </div>
     </section>
 
-    <!-- Parallax Section -->
-    <div class="relative bg-fixed bg-cover bg-center bg-no-repeat" style="background-image: url('{{ asset('storage/images/bg_map.png') }}');min-height: 500px;">
-        <!-- Dark overlay -->
-        <div class="absolute inset-0 bg-black bg-opacity-40"></div>
-
-        <!-- Content Container -->
-        <div class="relative z-10 flex flex-col items-center justify-center text-center text-white py-12 md:py-24">
-            <div class="max-w-7xl mx-auto w-full px-6 md:px-0">
-                <h2 class="text-3xl md:text-4xl font-bold text-center text-white mb-10">
-                    Găsește-ne în magazinele fizice
+    {{-- Showrooms (section 7): the 2 REAL Ploiești locations. Replaces the previous 3 cards
+         (which included a Blejoi/Lems entry). Maps links reuse the existing Google Maps SEARCH
+         URLs — user can swap for exact pin URLs. No opening hours were provided, so omitted.
+         Count (2) is consistent with the section-3 proof band. --}}
+    <section aria-label="Magazine fizice" class="w-full bg-[#FCFAF7] font-dm">
+        <div class="mx-auto max-w-[1180px] px-5 py-16 sm:px-8 md:py-24">
+            <div class="mb-12 text-center">
+                <p class="mb-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#B28D4E]">Showroom-uri</p>
+                <h2 class="font-display text-3xl font-semibold leading-tight text-[#171411] md:text-[40px]">
+                    Vino în showroom
                 </h2>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                    <!-- Location 1 -->
-                    <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center">
-                        <div class="w-16 h-16 mb-4 flex items-center justify-center bg-black text-white rounded-full">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 11c1.656 0 3-1.344 3-3s-1.344-3-3-3-3 1.344-3 3 1.344 3 3 3zm0 0c2.761 0 5 2.239 5 5 0 1.657-2.239 4-5 4s-5-2.343-5-4c0-2.761 2.239-5 5-5z" />
-                            </svg>
-                        </div>
-                        <h3 class="text-lg font-semibold text-gray-800 mb-2">George Coșbuc nr.13</h3>
-                        <p class="text-sm text-gray-600 mb-4">Zona Halelor Centrale, Ploiești</p>
-                        <a href="https://www.google.com/maps/search/?api=1&query=George+Cosbuc+13+Ploiesti" target="_blank"
-                           class="inline-block px-4 py-2 bg-black text-white text-sm font-semibold rounded hover:bg-gray-800 transition">
+                <p class="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-[#171411]/60">
+                    Te așteptăm în cele două showroom-uri din Ploiești — vezi, atinge și alege textilele potrivite, alături de consultanții noștri.
+                </p>
+            </div>
+            <div class="mx-auto grid max-w-3xl grid-cols-1 gap-6 sm:grid-cols-2">
+                @foreach ([
+                    ['name' => 'George Coșbuc nr. 13', 'addr' => 'Zona Halelor Centrale, Ploiești', 'maps' => 'https://www.google.com/maps/search/?api=1&query=George+Cosbuc+13+Ploiesti'],
+                    ['name' => 'Omnia Winmark, Etaj 2', 'addr' => 'Ploiești — magazin în centrul comercial', 'maps' => 'https://www.google.com/maps/search/?api=1&query=Omnia+Winmark+Ploiesti'],
+                ] as $shop)
+                    <div class="flex flex-col rounded-[16px] border border-[#171411]/10 bg-white p-7 shadow-sm transition-shadow hover:shadow-md">
+                        <span class="mb-5 grid h-12 w-12 place-items-center rounded-full bg-[#171411] text-[#FCFAF7]">
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                        </span>
+                        <h3 class="font-display text-xl font-semibold text-[#171411]">{{ $shop['name'] }}</h3>
+                        <p class="mt-2 text-sm leading-relaxed text-[#171411]/60">{{ $shop['addr'] }}</p>
+                        <a href="{{ $shop['maps'] }}" target="_blank" rel="noopener"
+                           class="mt-6 inline-flex w-fit items-center gap-2 border-b border-[#171411]/30 pb-1 text-[12px] font-semibold uppercase tracking-[0.12em] text-[#171411] transition-colors hover:border-[#B28D4E] hover:text-[#B28D4E]">
                             Vezi pe Google Maps
+                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg>
                         </a>
                     </div>
-
-                    <!-- Location 2 -->
-                    <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center">
-                        <div class="w-16 h-16 mb-4 flex items-center justify-center bg-black text-white rounded-full">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9l9 6 9-6-9-6-9 6z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 15l9 6 9-6" />
-                            </svg>
-                        </div>
-                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Omnia Winmark, Etaj 2</h3>
-                        <p class="text-sm text-gray-600 mb-4">Ploiești – Magazin în centrul comercial</p>
-                        <a href="https://www.google.com/maps/search/?api=1&query=Omnia+Winmark+Ploiesti" target="_blank"
-                           class="inline-block px-4 py-2 bg-black text-white text-sm font-semibold rounded hover:bg-gray-800 transition">
-                            Vezi pe Google Maps
-                        </a>
-                    </div>
-
-                    <!-- Location 3 -->
-                    <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center">
-                        <div class="w-16 h-16 mb-4 flex items-center justify-center bg-black text-white rounded-full">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-                            </svg>
-                        </div>
-                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Magazin Lems, Etaj 1</h3>
-                        <p class="text-sm text-gray-600 mb-4">Blejoi – în incinta showroom-ului Lems</p>
-                        <a href="https://www.google.com/maps/search/?api=1&query=Magazin+Lems+Blejoi" target="_blank"
-                           class="inline-block px-4 py-2 bg-black text-white text-sm font-semibold rounded hover:bg-gray-800 transition">
-                            Vezi pe Google Maps
-                        </a>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
-    </div>
+    </section>
 
 
 
