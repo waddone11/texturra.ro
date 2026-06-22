@@ -33,7 +33,7 @@
         </p>
         <p>
             <strong>Contact</strong><br/>
-            Pentru orice întrebări sau solicitări legate de politica noastră de confidențialitate, ne puteți contacta la <a href="mailto:support@example.com">support@example.com</a>.
+            Pentru orice întrebări sau solicitări legate de politica noastră de confidențialitate, ne puteți contacta la <a href="mailto:contact@texturra.ro">contact@texturra.ro</a>.
         </p>
     </x-static-page>
 @endsection
