@@ -1,12 +1,10 @@
 @extends('layouts.base')
 
 @section('content')
-    <div class="max-w-7xl mx-auto py-12 px-3 md:px-0">
-        <h1>Termeni și Condiții</h1>
+    <x-static-page title="Termeni și Condiții" eyebrow="Legal">
         <p>
             Vă mulțumim că ați ales să utilizați serviciile noastre. Acești termeni și condiții reglementează utilizarea site-ului nostru și plasarea comenzilor online.
         </p>
-        <br/>
         <p>
             <strong>Utilizarea site-ului</strong><br/>
             Accesarea și utilizarea acestui site implică acceptarea termenilor și condițiilor specificate aici. Ne rezervăm dreptul de a actualiza termenii și condițiile fără notificare prealabilă.
@@ -33,5 +31,5 @@
             <strong>Legislație aplicabilă</strong><br/>
             Acești termeni și condiții sunt guvernați de legislația din România. Orice dispută va fi soluționată pe cale amiabilă, iar în caz de eșec, prin instanțele competente.
         </p>
-    </div>
+    </x-static-page>
 @endsection

@@ -1,12 +1,10 @@
 @extends('layouts.base')
 
 @section('content')
-    <div class="max-w-7xl mx-auto py-12 px-3 md:px-0">
-        <h1>Politica de Retur</h1>
+    <x-static-page title="Politica de Retur" eyebrow="Politici">
         <p>
             Pentru a asigura satisfacția clienților noștri, vă oferim posibilitatea de a returna produsele achiziționate în termen de 30 de zile calendaristice de la primirea acestora, în conformitate cu prevederile legale privind protecția consumatorului (OUG 34/2014).
         </p>
-        <br/>
         <p>
             <strong>Condiții Generale pentru Returnare</strong><br/>
             Produsele trebuie returnate în ambalajul original, împreună cu toate accesoriile și documentele aferente (factură, certificat de garanție etc.).
@@ -35,8 +33,9 @@
         <p>
             <strong>Aspecte Legale</strong><br/>
             Conform OUG 34/2014, consumatorii au dreptul de a se retrage din contractul de vânzare la distanță fără a invoca un motiv, în termen de 14 zile calendaristice. Totuși, noi extindem acest termen la 30 de zile pentru a vă oferi o experiență mai bună.
+        </p>
         <p>
             Pentru orice întrebări suplimentare legate de politica de retur, vă rugăm să ne contactați. Ne dorim să asigurăm o experiență de cumpărare plăcută și transparentă pentru toți clienții noștri!
         </p>
-    </div>
+    </x-static-page>
 @endsection
