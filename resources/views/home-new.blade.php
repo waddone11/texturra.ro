@@ -466,7 +466,7 @@
         $paletteListingSlug = optional($topCategories->first())->slug;
     @endphp
     <section aria-label="Paletar de culori" class="w-full border-y border-[#171411]/[0.08] bg-[#FCFAF7] font-dm">
-        <div class="mx-auto max-w-[1180px] px-5 py-12 sm:px-8 md:py-16">
+        <div class="mx-auto max-w-[1440px] px-[clamp(20px,4.2vw,76px)] py-12 md:py-16">
             <div class="flex flex-col gap-7 md:flex-row md:items-center md:gap-9">
                 <div class="md:w-[180px] md:shrink-0">
                     <h2 class="font-display text-2xl font-semibold leading-none text-[#171411]">Descoperă culorile</h2>
