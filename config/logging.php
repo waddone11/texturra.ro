@@ -65,6 +65,14 @@ return [
             'replace_placeholders' => true,
         ],
 
+        // Audit trail for the /commands deploy helper (command + IP + timestamp).
+        'commands' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/commands.log'),
+            'level' => 'info',
+            'replace_placeholders' => true,
+        ],
+
         'daily' => [
             'driver' => 'daily',
             'path' => storage_path('logs/laravel.log'),

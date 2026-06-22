@@ -188,3 +188,27 @@ Route::middleware(['auth', 'verified', 'web'])->group(function () {
 Route::get('/quotes/{quote}/pdf', [\App\Http\Controllers\QuoteController::class, 'pdf'])
     ->middleware(['auth', CheckRole::class . ':admin,employee'])
     ->name('quote.pdf');
+
+// ------------------------------------------------------
+// Deploy helper: /commands (cPanel without terminal).
+// STRICT whitelist of idempotent, non-destructive artisan commands. Gated by a secret
+// (VerifySecretKey → 404 without it). NO migrate / migrate:fresh / seed / queue routes.
+// ------------------------------------------------------
+Route::prefix('commands')
+    // NOTE: withoutMiddleware([StartSession, ...]) was tried but breaks Laravel's error
+    // rendering ("Session store not set on request" → 500 instead of 404). These are GET
+    // routes (CSRF-exempt), so the standard web group is fine; the secret gate + throttle
+    // provide the protection.
+    ->middleware([\App\Http\Middleware\VerifySecretKey::class, 'throttle:' . config('commands.rate_limit', 30) . ',1'])
+    ->group(function () {
+        Route::get('/', [\App\Http\Controllers\CommandController::class, 'index'])->name('commands.index');
+        Route::get('/clear-cache', [\App\Http\Controllers\CommandController::class, 'clearCache']);
+        Route::get('/config-clear', [\App\Http\Controllers\CommandController::class, 'configClear']);
+        Route::get('/route-clear', [\App\Http\Controllers\CommandController::class, 'routeClear']);
+        Route::get('/view-clear', [\App\Http\Controllers\CommandController::class, 'viewClear']);
+        Route::get('/optimize-clear', [\App\Http\Controllers\CommandController::class, 'optimizeClear']);
+        Route::get('/optimize', [\App\Http\Controllers\CommandController::class, 'optimize']);
+        Route::get('/create-storage-link', [\App\Http\Controllers\CommandController::class, 'createStorageLink']);
+        Route::get('/migrate-status', [\App\Http\Controllers\CommandController::class, 'migrateStatus']);
+        Route::get('/about', [\App\Http\Controllers\CommandController::class, 'about']);
+    });
