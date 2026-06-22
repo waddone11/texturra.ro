@@ -67,6 +67,52 @@
     {{-- Hero-specific CSS (gradients, height var) lives in resources/css/app.css
          under "Homepage redesign 2026" — keeps @media out of Blade parsing. --}}
 
+    {{-- ============================================================
+         CATEGORY DOCK — redesign 2026 (section 2).
+         Floating unified bar overlapping the hero (-49px). Real
+         top-level categories from the DB, cohesive line-art icons.
+         Desktop: single row; mobile: 3-col grid (2 rows for 6 items).
+    ============================================================ --}}
+    @php
+        // Cohesive inline line-art icon set (uniform 24x24, currentColor) keyed by
+        // the real top-level category names. Falls back to a generic grid glyph.
+        $dockIcons = [
+            'Perdele'         => '<path d="M3 3h18"/><path d="M5 3v13a3 3 0 0 0 3 3"/><path d="M9.5 3v18"/><path d="M14.5 3v18"/><path d="M19 3v13a3 3 0 0 1-3 3"/>',
+            'Draperii'        => '<path d="M3 3h18"/><path d="M5.2 3C4.6 9 4.4 15 5.6 21"/><path d="M9.1 3C8.8 9 8.8 15 9.3 21"/><path d="M12 3v18"/><path d="M14.9 3c.3 6 .3 12-.2 18"/><path d="M18.8 3c.6 6 .8 12-.4 18"/>',
+            'Lenjerii de pat' => '<path d="M3 18v-4.5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2V18"/><path d="M3 18v2M21 18v2"/><path d="M3 15h18"/><path d="M6.5 11.5V9.2A1.7 1.7 0 0 1 8.2 7.5h3.1a1.7 1.7 0 0 1 1.7 1.7v2.3"/>',
+            'Covoare'         => '<path d="M5 7h14v10H5z"/><path d="M8 10h8v4H8z"/><path d="M7 5v2M11 5v2M15 5v2"/><path d="M7 17v2M11 17v2M15 17v2"/>',
+            'Accesorii'       => '<circle cx="12" cy="4.5" r="1.8"/><path d="M12 6.3v3.2"/><path d="M8 9.5h8l-1.1 3.3a3 3 0 0 1-5.8 0z"/><path d="M9.5 13v5.5M12 13v6.5M14.5 13v5.5"/>',
+            'Galerii & Sine'  => '<path d="M2.5 8h19"/><circle cx="2.5" cy="8" r="1.4"/><circle cx="21.5" cy="8" r="1.4"/><circle cx="8" cy="11" r="2.2"/><circle cx="12" cy="11" r="2.2"/><circle cx="16" cy="11" r="2.2"/>',
+        ];
+        $dockIconDefault = '<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 9h16M9 4v16"/>';
+    @endphp
+
+    <section aria-label="Categorii de produse" class="relative z-[3] font-dm">
+        <div class="mx-auto max-w-[1180px] px-5 sm:px-8">
+            <nav class="hp-dock -mt-7 grid grid-cols-3 overflow-hidden rounded-[18px] border border-[#dad0c4]/90
+                        bg-white/[0.96] shadow-[0_15px_45px_rgba(43,32,19,0.12)] backdrop-blur-md
+                        md:-mt-[49px] md:grid-cols-6 md:rounded-[24px]">
+                @foreach ($topCategories as $cat)
+                    <a href="{{ route('products.category', ['slug' => $cat->slug]) }}"
+                       class="hp-dock__item group grid min-h-[96px] place-items-center gap-2.5 px-2 py-5
+                              text-center transition-colors duration-200 hover:bg-[#f8f2ea] md:min-h-[118px]">
+                        <span class="grid h-[38px] w-[38px] place-items-center rounded-full border border-[#ded4c7]
+                                     text-[#463f36] transition-colors duration-200
+                                     group-hover:border-[#B28D4E] group-hover:text-[#B28D4E]">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                                 stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                {!! $dockIcons[$cat->name] ?? $dockIconDefault !!}
+                            </svg>
+                        </span>
+                        <span class="text-[11px] font-bold uppercase leading-[1.22] tracking-wide text-[#171411]">
+                            {{ $cat->name }}
+                        </span>
+                    </a>
+                @endforeach
+            </nav>
+        </div>
+    </section>
+
     @php
         // Map each parent category name to its corresponding icon URL.
         $categoryIcons = [
