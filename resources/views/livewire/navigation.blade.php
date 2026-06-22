@@ -1,205 +1,181 @@
-<div class="">
-    <nav x-data="{ open: false }"
-         class="{{ request()->routeIs('home') ? 'bg-transparent absolute top-0 left-0 w-full z-50' : 'bg-nav relative' }}">
+@php
+    // Pages that render a full-bleed dark hero behind the nav: the live homepage
+    // ("/" → home-old video hero) and the redesign preview ("/home-preview").
+    // On these the nav floats transparent (cream text) and turns solid ivory on scroll.
+    // Everywhere else it is a solid ivory bar with dark text (readable, no hero behind).
+    $onHero = request()->routeIs('home') || request()->routeIs('home.preview');
+    $activeSlug = request()->route('slug');
+@endphp
 
-        <!-- Primary Navigation Menu -->
-        <div class="max-w-7xl mx-auto mt-0 md:mt-4 md:mt-0 md:px-4 sm:px-6 lg:px-0 {{ request()->routeIs('home') ? 'bg-transparent': 'bg-white'}} md:mt-12 rounded-t md:border-0">
-            <div class="flex justify-between items-end h-16 md:h-32">
-                <!-- Left Block: Navigation Links -->
-                <div class="sm:flex-1 flex justify-start h-16 md:h-32">
-                    <div class="hidden sm:flex space-x-4 uppercase items-center">
-                        <x-nav-link :href="route('home')" :active="request()->routeIs('home')" class="{{ request()->routeIs('home') ? 'bg-white rounded-2xl': ''}}">
-                            Home
-                        </x-nav-link>
-                        <x-nav-link
-                            href="javascript:void(0);"
-                            class="text-black uppercase font-bold cursor-pointer flex items-center {{ request()->routeIs('home') ? 'bg-white rounded-2xl': ''}}"
-                            @click="open = !open"
-                            :active="request()->routeIs('products.category') || request()->routeIs('product.show')"
-
-                        >
-                            Produse
-                            <!-- Arrow Icons -->
-                            <svg
-                                x-show="!open"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke-width="2"
-                                stroke="currentColor"
-                                x-cloak
-                                class="ml-2 h-4 w-4 transition-transform duration-300"
-                            >
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                            </svg>
-                            <svg
-                                x-show="open"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke-width="2"
-                                stroke="currentColor"
-                                x-cloak
-                                class="ml-2 h-4 w-4 transition-transform duration-300"
-                            >
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
-                            </svg>
-                        </x-nav-link>
-                        <x-nav-link
-                            :href="route('about')"
-                            :active="request()->routeIs('about')"
-                            class="text-black {{ request()->routeIs('home') ? 'bg-white rounded-2xl': ''}}">
-                            Despre noi
-                        </x-nav-link>
-                    </div>
+<div>
+    <nav
+        x-data="{ open: false, scrolled: false }"
+        x-init="scrolled = (window.pageYOffset || document.documentElement.scrollTop) > 90"
+        @scroll.window="scrolled = (window.pageYOffset || document.documentElement.scrollTop) > 90"
+        @if ($onHero)
+            class="fixed inset-x-0 top-0 z-50 font-dm backdrop-blur-md transition-colors duration-300"
+            :class="scrolled ? 'bg-[#FCFAF7]/85 text-[#171411] shadow-[0_1px_0_rgba(23,20,17,0.08)]' : 'bg-black/10 text-[#FCFAF7]'"
+        @else
+            class="relative z-50 font-dm border-b border-[#171411]/10 bg-[#FCFAF7]/90 text-[#171411] backdrop-blur-md"
+        @endif
+    >
+        @if ($onHero)
+            <!-- Readability scrim behind the transparent nav; fades out once the bar turns solid on scroll -->
+            <div class="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-black/45 to-transparent transition-opacity duration-300"
+                 :class="scrolled ? 'opacity-0' : 'opacity-100'"></div>
+        @endif
+        <!-- Utility bar (thin dark strip) -->
+        <div class="relative z-10 hidden md:block bg-[#171411] text-[#FCFAF7]/90">
+            <div class="mx-auto flex h-9 max-w-7xl items-center justify-between gap-4 px-4 text-[11px] tracking-[0.06em] lg:px-8">
+                <div class="flex items-center gap-6">
+                    <span><i class="fa-solid fa-truck mr-2 text-[#B28D4E]"></i>Transport gratuit peste 500 lei</span>
+                    <span><i class="fa-solid fa-scissors mr-2 text-[#B28D4E]"></i>Mostre în 24–48h</span>
+                    <span class="hidden lg:inline"><i class="fa-solid fa-comments mr-2 text-[#B28D4E]"></i>Consultanță gratuită</span>
                 </div>
+                <a href="{{ route('about') }}" class="flex items-center gap-2 transition-colors hover:text-[#B28D4E]">
+                    <i class="fa-solid fa-location-dot text-[#B28D4E]"></i>
+                    Showroom-uri Ploiești
+                </a>
+            </div>
+        </div>
 
-                <!-- Center Block: Logo -->
-                <div class="sm:flex-1 flex justify-center h-16 md:h-32 items-center px-0 py-0 md:p-0">
-                    <a href="{{ route('home') }}">
-                        <x-application-logo class="block h-auto w-auto fill-current text-black" />
+        <!-- Main row -->
+        <div class="relative z-10 mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 md:h-20 lg:px-8">
+            <!-- Left: real logo (white over hero, dark on solid pages) -->
+            <div class="flex flex-1 items-center">
+                <a href="{{ route('home') }}" aria-label="TEXTURRA — acasă">
+                    @if ($onHero)
+                        {{-- White logo while transparent over the hero; dark logo once the bar turns solid on scroll --}}
+                        <img src="{{ asset('storage/images/logo_alb.svg') }}" alt="TEXTURRA"
+                             class="h-11 w-auto md:h-14" x-show="!scrolled" />
+                        <img src="{{ asset('storage/images/logo_negru.svg') }}" alt="TEXTURRA"
+                             class="h-11 w-auto md:h-14" x-show="scrolled" x-cloak />
+                    @else
+                        <img src="{{ asset('storage/images/logo_negru.svg') }}" alt="TEXTURRA"
+                             class="h-11 w-auto md:h-14" />
+                    @endif
+                </a>
+            </div>
+
+            <!-- Center: category menu (desktop) -->
+            <div class="hidden items-center justify-center gap-x-6 text-[12.5px] uppercase tracking-[0.12em] lg:flex">
+                @foreach ($topCategories as $cat)
+                    <a href="{{ route('products.category', ['slug' => $cat->slug]) }}"
+                       class="py-2 transition-colors hover:text-[#B28D4E] {{ $activeSlug === $cat->slug ? 'text-[#B28D4E]' : '' }}">
+                        {{ $cat->name }}
+                    </a>
+                @endforeach
+                <a href="{{ route('about') }}"
+                   class="py-2 transition-colors hover:text-[#B28D4E] {{ request()->routeIs('about') ? 'text-[#B28D4E]' : '' }}">
+                    Despre noi
+                </a>
+            </div>
+
+            <!-- Right: actions -->
+            <div class="flex flex-1 items-center justify-end gap-4 md:gap-5">
+                <!-- Search -->
+                <button type="button" @click="$dispatch('open-search-modal')"
+                        class="transition-colors hover:text-[#B28D4E]" aria-label="Caută">
+                    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+                </button>
+
+                <!-- Account -->
+                @auth
+                    <x-dropdown align="right" width="48" contentClasses="bg-white text-sm">
+                        <x-slot name="trigger">
+                            <button class="transition-colors hover:text-[#B28D4E]" aria-label="Contul meu">
+                                <i class="fa-regular fa-user fa-lg"></i>
+                            </button>
+                        </x-slot>
+                        <x-slot name="content">
+                            <div class="border-b border-gray-100 px-4 py-2 text-xs text-gray-500">{{ auth()->user()->name }}</div>
+                            @can('admin')
+                                <x-dropdown-link :href="route('filament.admin.pages.dashboard')" class="text-[#171411] hover:text-[#B28D4E]">
+                                    Admin dashboard
+                                </x-dropdown-link>
+                            @endcan
+                            @can('client')
+                                <x-dropdown-link :href="route('account.index')" class="text-[#171411] hover:text-[#B28D4E]">
+                                    Contul meu
+                                </x-dropdown-link>
+                            @endcan
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="w-full text-start">
+                                    <x-dropdown-link class="text-[#171411] hover:text-[#B28D4E]">
+                                        Logout
+                                    </x-dropdown-link>
+                                </button>
+                            </form>
+                        </x-slot>
+                    </x-dropdown>
+                @else
+                    <a href="{{ route('login') }}" class="transition-colors hover:text-[#B28D4E]" aria-label="Autentificare">
+                        <i class="fa-regular fa-user fa-lg"></i>
+                    </a>
+                @endauth
+
+                <!-- Favorites (Livewire — logic preserved) -->
+                <livewire:favorites-count />
+
+                <!-- Cart (Livewire — logic preserved) -->
+                <livewire:cart-widget-menu />
+
+                <!-- Mobile menu toggle -->
+                <button @click="open = !open" class="transition-colors hover:text-[#B28D4E] lg:hidden" aria-label="Meniu">
+                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path x-show="!open" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        <path x-show="open" x-cloak stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile panel -->
+        <div x-show="open" x-cloak x-transition.origin.top
+             @click.away="open = false"
+             class="border-t border-[#171411]/10 bg-[#FCFAF7] text-[#171411] lg:hidden">
+            <div class="mx-auto max-w-7xl px-4 py-4">
+                <p class="px-1 pb-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#B28D4E]">Categorii</p>
+                <div class="flex flex-col">
+                    @foreach ($topCategories as $cat)
+                        <a href="{{ route('products.category', ['slug' => $cat->slug]) }}"
+                           class="border-b border-[#171411]/5 py-3 text-sm uppercase tracking-[0.08em] hover:text-[#B28D4E]">
+                            {{ $cat->name }}
+                        </a>
+                    @endforeach
+                    <a href="{{ route('about') }}"
+                       class="border-b border-[#171411]/5 py-3 text-sm uppercase tracking-[0.08em] hover:text-[#B28D4E]">
+                        Despre noi
                     </a>
                 </div>
 
-                <!-- Right Block: Mobile Menu Button -->
-                <span class="flex-1 flex justify-end h-16 md:h-32 items-top md:items-center md:pr-8 relative -top-1 md:top-0">
-
-                    <livewire:favorites-count />
-
-                    <livewire:cart-widget-menu />
-
-                    <!-- Mobile Menu Button -->
+                <div class="mt-4 flex flex-col gap-2 text-sm">
                     @auth
-                        <x-dropdown align="right" width="48" class="hidden sm:flex" contentClasses="bg-white text-sm">
-                            <x-slot name="trigger">
-                                <button class="inline-flex items-center px-1 md:px-3 py-1 md:py-2 border border-black text-black text-xs font-extrabold rounded-md bg-transparent hover:bg-gray-200 focus:outline-none transition ease-in-out duration-150 mt-5 md:mt-0">
-                                    <div>
-                                        <span class="hidden md:block">{{ auth()->user()->name }}</span>
-                                        <span class="md:hidden">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 14.25c3.038 0 5.5-2.462 5.5-5.5S15.038 3.25 12 3.25 6.5 5.712 6.5 8.75s2.462 5.5 5.5 5.5ZM4.75 20.25a7.25 7.25 0 0 1 14.5 0"/>
-                                            </svg>
-                                        </span>
-                                    </div>
-                                    <div class="ml-1">
-                                        <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a 1 1 0 01-1.414 0l-4-4a 1 1 0 010-1.414z" clip-rule="evenodd" />
-                                        </svg>
-                                    </div>
-                                </button>
-                            </x-slot>
-                            <x-slot name="content">
-                                @can('admin')
-                                    <x-dropdown-link :href="route('filament.admin.pages.dashboard')" class="text-black hover:text-gray-700">
-                                        Admin dashboard
-                                    </x-dropdown-link>
-                                @endcan
-                                @can('client')
-                                    <x-dropdown-link :href="route('account.index')" class="text-black hover:text-gray-700">
-                                        My Account
-                                    </x-dropdown-link>
-                                @endcan
-
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button type="submit" class="w-full text-start text-black">
-                                        <x-dropdown-link class="text-black hover:text-gray-700">
-                                            Logout
-                                        </x-dropdown-link>
-                                    </button>
-                                </form>
-                            </x-slot>
-                        </x-dropdown>
+                        @can('admin')
+                            <a href="{{ route('filament.admin.pages.dashboard') }}" class="py-1 hover:text-[#B28D4E]">Admin dashboard</a>
+                        @endcan
+                        @can('client')
+                            <a href="{{ route('account.index') }}" class="py-1 hover:text-[#B28D4E]">Contul meu</a>
+                        @endcan
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="py-1 text-start hover:text-[#B28D4E]">Logout</button>
+                        </form>
                     @else
-
-                        <x-nav-link
-                            :href="route('login')"
-                            :active="request()->routeIs('login')"
-                            class="hidden md:block text-black {{ request()->routeIs('home') ? 'bg-white rounded-2xl': ''}} mr-3">
-                            LOGIN
-                        </x-nav-link>
-
-                        <x-nav-link
-                            :href="route('register')"
-                            :active="request()->routeIs('register')"
-                            class="hidden md:block  text-black {{ request()->routeIs('home') ? 'bg-white rounded-2xl': ''}} mr-3">
-                            CONT NOU
-                        </x-nav-link>
+                        <a href="{{ route('login') }}" class="py-1 hover:text-[#B28D4E]">Autentificare</a>
+                        <a href="{{ route('register') }}" class="py-1 hover:text-[#B28D4E]">Cont nou</a>
                     @endauth
+                </div>
 
-                    <div class="sm:hidden flex items-center relative top-1 md:top-3">
-                        <button @click="open = !open" class="inline-flex items-center justify-center p-2 rounded-md text-black hover:text-black focus:outline-none transition">
-                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path x-show="!open" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-                                <path x-show="open" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
-                    </div>
-            </div>
-        </div>
-        <!-- Categories and Subcategories -->
-        <div class="absolute w-full z-50"
-             x-show="open"
-             x-transition
-             @click.away="open = false"
-             x-cloak
-        >
-            <div class="max-w-7xl mx-auto py-2 px-2 md:py-8 md:px-8 md:mt-4 bg-white md:shadow-xl md:rounded-xl z-100 overflow-auto">
-                <!-- Display parent categories in a grid of 3 columns -->
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-1 md:gap-3">
-                    @php
-                        // Map each parent category name to its corresponding icon URL.
-                        $categoryIcons = [
-                            'Perdele' => asset('storage/images/icons/perdele.png'),
-                            'Draperii' => asset('storage/images/icons/draperii.png'),
-                            'Covoare' => asset('storage/images/icons/covoare.png'),
-                            'Lenjerii de pat' => asset('storage/images/icons/lenjerii.png'),
-                            'Accesorii' => asset('storage/images/icons/accesorii.png'),
-                            'Galerii & Sine' => asset('storage/images/icons/sine.png'),
-
-
-                        ];
-                        $defaultIcon = asset('storage/images/icons/default.png');
-                    @endphp
-                    @foreach ($topCategories as $topCategory)
-
-                        <div class="flex flex-col md:flex-row md:items-start md:space-x-4 space-y-2 md:space-y-0 md:p-1 text-center md:text-left">
-                            <!-- Icon -->
-                            <div class="flex justify-center md:items-start">
-                                <img
-                                    src="{{ $categoryIcons[$topCategory->name] ?? $defaultIcon }}"
-                                    alt="{{ $topCategory->name }}"
-{{--                                    class="w-20 p-1 object-contain mx-auto transition-transform duration-300 group-hover:scale-110 bg-gray-50 rounded-full shadow-md border border-gray-200"--}}
-                                    class="object-contain w-16 h-16 md:w-16 md:h-16"--}}
-                                />
-                            </div>
-
-                            <!-- Category Name & Subcategories -->
-                            <div class="flex flex-col items-center md:items-start">
-                                <h3 class="text-sm font-bold uppercase mt-2">
-                                    <a href="{{ route('products.category', ['slug' => $topCategory->slug]) }}"
-                                       class="hover:underline text-black">
-                                        {{ $topCategory->name }}
-                                    </a>
-                                </h3>
-
-{{--                                @if (!empty($subcategories[$topCategory->id]))--}}
-{{--                                    <ul class="mt-1 space-y-0.5">--}}
-{{--                                        @foreach ($subcategories[$topCategory->id] as $child)--}}
-{{--                                            <li class="text-xs text-gray-700 hover:underline">--}}
-{{--                                                <a href="{{ route('products.category', ['slug' => $child['slug']]) }}">--}}
-{{--                                                    {{ $child['name'] }}--}}
-{{--                                                </a>--}}
-{{--                                            </li>--}}
-{{--                                        @endforeach--}}
-{{--                                    </ul>--}}
-{{--                                @endif--}}
-                            </div>
-                        </div>
-                    @endforeach
+                <div class="mt-4 border-t border-[#171411]/10 pt-3 text-[11px] tracking-[0.05em] text-[#171411]/70">
+                    <i class="fa-solid fa-location-dot mr-2 text-[#B28D4E]"></i>Showroom-uri Ploiești ·
+                    <i class="fa-solid fa-truck mx-2 text-[#B28D4E]"></i>Transport gratuit peste 500 lei
                 </div>
             </div>
         </div>
-
     </nav>
+
+    <!-- Product search modal (listens for the open-search-modal event dispatched above) -->
+    <livewire:search-modal />
 </div>
