@@ -492,51 +492,48 @@
         </div>
     </section>
 
-    {{-- Confecție la comandă (section 6): premium custom-made curtains/drapes + consultation.
-         3 points adapted to CONFIRMED services (consultanță, măsurători, confecție manuală);
-         the mockup's "atelier propriu"/"montaj profesional" are unverified, so omitted.
-         CTA → real store phone (no booking page/form exists). Image optimized to WebP (1.97MB → 20KB). --}}
+    {{-- Confecție la comandă (section 6, REDO): implemented EXACTLY from the design package
+         (texturra-homepage-redesign/index.html #la-comanda): 38/62 banner card, eyebrow,
+         ✦ service points in circular badges, circular quality-seal over the image, dark button.
+         3 points: kept package VISUAL but adapted LABELS to CONFIRMED services — package's
+         "Confecție în atelier propriu" / "Montaj profesional" are UNVERIFIED, so replaced with
+         confirmed ones. CTA → real store phone (no booking page exists). --}}
     <section aria-label="Confecție la comandă" class="w-full bg-[#FCFAF7] font-dm">
-        <div class="mx-auto grid max-w-[1180px] grid-cols-1 items-stretch overflow-hidden md:my-8 md:grid-cols-2 md:rounded-[20px] md:shadow-[0_20px_60px_rgba(43,32,19,0.10)]">
-            <!-- Text -->
-            <div class="order-2 flex flex-col justify-center bg-white px-6 py-12 sm:px-10 md:order-1 md:px-12 md:py-16">
-                <span class="mb-5 inline-flex w-fit items-center gap-2 rounded-full border border-[#B28D4E]/40 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#B28D4E]">
-                    <span class="h-1.5 w-1.5 rounded-full bg-[#B28D4E]"></span> Confecție premium la comandă
-                </span>
-                <h2 class="font-display text-3xl font-semibold leading-[1.1] text-[#171411] md:text-[40px]">
-                    Perdele și draperii<br>la comandă
-                </h2>
-                <p class="mt-5 max-w-md text-[15px] leading-relaxed text-[#171411]/70">
-                    Alegi materialul, dimensiunile exacte și tipul de rejansă, iar noi croim soluția perfectă pentru spațiul tău. Fiecare comandă este realizată manual, special pentru tine.
-                </p>
-                <ul class="mt-7 space-y-3.5">
-                    @foreach ([
-                        ['t' => 'Consultanță personalizată', 'd' => 'Te ghidăm în alegerea materialului și a stilului potrivit.'],
-                        ['t' => 'Măsurători & dimensiuni exacte', 'd' => 'Croim pe dimensiunile ferestrei tale, fără compromisuri.'],
-                        ['t' => 'Confecție manuală premium', 'd' => 'Finisaje îngrijite, realizate manual pentru fiecare comandă.'],
-                    ] as $point)
-                        <li class="flex items-start gap-3">
-                            <span class="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-[#B28D4E]/[0.12] text-[#B28D4E]">
-                                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-                            </span>
-                            <span>
-                                <span class="block text-sm font-semibold text-[#171411]">{{ $point['t'] }}</span>
-                                <span class="block text-[13px] leading-snug text-[#171411]/60">{{ $point['d'] }}</span>
-                            </span>
-                        </li>
-                    @endforeach
-                </ul>
-                <a href="tel:{{ config('app.store_owner.phone') }}"
-                   class="mt-9 inline-flex w-fit items-center gap-2 rounded-md bg-[#171411] px-7 py-3.5 text-[13px] font-semibold uppercase tracking-[0.1em] text-[#FCFAF7] transition-colors hover:bg-[#B28D4E]">
-                    Programează o consultație
-                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                </a>
-            </div>
-            <!-- Image -->
-            <div class="order-1 min-h-[260px] md:order-2 md:min-h-[540px]">
-                <img src="{{ asset('storage/images/homepage/custom-curtains.webp') }}"
-                     alt="Confecție perdele la comandă — finisaje manuale"
-                     class="h-full w-full object-cover" loading="lazy" />
+        <div class="px-4 py-12 sm:px-6 md:py-20">
+            <div class="mx-auto grid max-w-[1180px] grid-cols-1 items-stretch overflow-hidden rounded-[20px] border border-[#e7ded3] bg-[#f6f0e7] md:min-h-[398px] md:grid-cols-[38%_62%] md:shadow-[0_20px_60px_rgba(43,32,19,0.10)]">
+                {{-- Text panel (38%) --}}
+                <div class="flex items-center p-8 sm:p-10 md:p-[clamp(35px,4vw,65px)]">
+                    <div>
+                        <p class="mb-3 text-[11px] font-bold uppercase tracking-[0.16em] text-[#936f35]">Realizate pentru tine</p>
+                        <h2 class="font-display text-[clamp(29px,2.55vw,45px)] font-semibold leading-[1.04] tracking-[-0.035em] text-[#171411]">
+                            Perdele și draperii la comandă
+                        </h2>
+                        <p class="my-[18px] max-w-[610px] text-[14px] leading-[1.65] text-[#70675e]">
+                            Consultanță personalizată, măsurători exacte și confecții premium pentru un rezultat impecabil în fiecare cameră.
+                        </p>
+                        <div class="mb-[30px] flex flex-wrap gap-[14px]">
+                            @foreach (['Materiale premium', 'Consultanță personalizată', 'Confecție la comandă'] as $pt)
+                                <span class="flex items-center gap-[7px] text-[11px] text-[#62584d]">
+                                    <span class="grid h-6 w-6 place-items-center rounded-full border border-[#dbcdbb] text-[13px] leading-none text-[#936f35]">✦</span>
+                                    {{ $pt }}
+                                </span>
+                            @endforeach
+                        </div>
+                        <a href="tel:{{ config('app.store_owner.phone') }}"
+                           class="inline-flex min-h-[48px] items-center justify-center gap-[11px] rounded-[4px] border border-[#171411] bg-[#171411] px-5 text-[12px] font-bold uppercase tracking-[0.035em] text-white transition-colors hover:border-[#936f35] hover:bg-[#936f35]">
+                            Programează consultație <span aria-hidden="true">→</span>
+                        </a>
+                    </div>
+                </div>
+                {{-- Image panel (62%) with circular quality seal --}}
+                <div class="relative min-h-[270px] overflow-hidden md:min-h-[300px]">
+                    <img src="{{ asset('storage/images/homepage/custom-curtains.webp') }}"
+                         alt="Consultant care ajustează o perdea din material natural"
+                         class="h-full w-full object-cover object-center" loading="lazy" />
+                    <span class="absolute right-[30px] top-7 grid h-[103px] w-[103px] place-items-center rounded-full border border-[#9d7231]/60 bg-[#fef9f1]/90 text-center text-[10px] font-extrabold uppercase leading-[1.3] tracking-[0.075em] text-[#936f35]">
+                        Confecție<br>premium<br>la comandă
+                    </span>
+                </div>
             </div>
         </div>
     </section>
