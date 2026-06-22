@@ -79,10 +79,25 @@ class HomeController extends Controller
 
         $colorGroups = ColorGroup::orderBy('name')->get();
 
+        // Section 4 (homepage redesign): the newest ACTIVE products for the "Noutăți" band.
+        // Replaces the GPT-invented "collections" with real, latest catalogue entries.
+        $newestProducts = Product::with(['category', 'colors', 'materials'])
+            ->where('status', 1)
+            ->orderByDesc('id')
+            ->take(4)
+            ->get();
+
+        $newestProducts->each(function ($product) {
+            $product->colors_with_css = $product->colors
+                ->map(fn ($color) => ['name' => $color->name, 'css' => $color->cod_css])
+                ->values();
+        });
+
         return [
             'products' => $products,
             'topCategories' => $topCategories,
             'colorGroups' => $colorGroups,
+            'newestProducts' => $newestProducts,
         ];
     }
 

@@ -360,152 +360,63 @@
         </div>
     </div>
 
-    <div class="max-w-7xl mx-auto py-4 md:py-12 px-6 md:px-0 bg-white">
-        <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
-            Explorează Selecția Noastră de Textile pentru Casă
-        </h2>
-        <p class="text-sm md:text-base text-gray-600 mb-2 md:mb-8">
-            Fie că îți dorești perdele elegante, draperii funcționale sau lenjerii de pat confortabile, colecția <strong>texturra.ro</strong> este creată pentru a aduce rafinament și stil în locuința ta. Punem accent pe calitate, design modern și prețuri corecte — totul pentru ca tu să transformi fiecare cameră într-un spațiu primitor și personalizat.
-        </p>
+    {{-- Noutăți (section 4): newest REAL products. Replaces the GPT-invented "collections"
+         (Colecția Diafan / sons-of-zeus / Pure Serenity) with real, latest catalogue items. --}}
+    <section aria-label="Cele mai noi produse" class="w-full bg-[#FCFAF7] font-dm">
+        <div class="mx-auto max-w-[1180px] px-5 py-16 sm:px-8 md:py-24">
+            <div class="mb-10 flex items-end justify-between gap-4">
+                <div>
+                    <p class="mb-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#B28D4E]">Noutăți</p>
+                    <h2 class="font-display text-3xl font-semibold leading-tight text-[#171411] md:text-[40px]">
+                        Cele mai noi produse
+                    </h2>
+                </div>
+                @php
+                    $viewAllSlug = optional(optional($newestProducts->first())->category)->slug
+                        ?? optional($topCategories->first())->slug;
+                @endphp
+                @if ($viewAllSlug)
+                    <a href="{{ route('products.category', ['slug' => $viewAllSlug]) }}"
+                       class="shrink-0 border-b border-[#171411]/30 pb-1 text-[12px] font-semibold uppercase tracking-[0.14em] text-[#171411] transition-colors hover:border-[#B28D4E] hover:text-[#B28D4E]">
+                        Vezi toate &rarr;
+                    </a>
+                @endif
+            </div>
 
-        <div class="flex flex-wrap md:flex-nowrap">
-
-            <!-- Main Content (4/5) -->
-            <main class="w-full md:w-5/5 px-0 md:px-2 md:px-0">
-                <div class="">
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 mt-8">
-                        @forelse ($products as $product)
-                            @if ($loop->index === 1)
-                                <!-- TEXT BLOCK instead of second product -->
-                                <div class="p-6 rounded-2xl flex flex-col justify-top items-start border border-black">
-                                    <h1 class="text-2xl font-extrabold mb-2">Colecția Diafan – Vară 2025</h1>
-                                    <p class="text-sm text-gray-700 mb-4">Inspirată de fluiditatea aerului și lumina verii, această colecție aduce un omagiu eleganței discrete. Țesături vaporoase, transparențe delicate și accente naturale care transformă orice spațiu într-un sanctuar al rafinamentului. .</p>
-{{--                                    <img src="{{ asset('storage/images/motive.png') }}" alt="Lookbook 1" class="rounded-2xl mb-4">--}}
-                                    <x-simple-link href="/colectie/sons-of-zeus" class="text-xl uppercase font-bold underline text-center ">Vezi colecția completă</x-simple-link>
-                                </div>
-                            @elseif ($loop->index === 6)
-                                <!-- VIDEO BLOCK instead of 3th product -->
-                                <div class="overflow-hidden relative rounded-2xl border border-black">
-                                    <video autoplay muted loop playsinline class="w-full h-auto object-cover rounded-2xl">
-                                        <source src="{{ asset('storage/videos/teaser.mp4') }}" type="video/mp4">
-                                        Your browser does not support the video tag.
-                                    </video>
-
-                                    <!-- Overlay Text -->
-                                    <div class="absolute inset-x-0 top-0 p-4 bg-linear-to-t from-transparent to-black/80 text-white">
-                                        <h2 class="text-lg sm:text-xl font-bold">Lumina verii. Textură diafană.</h2>
-                                        <p class="text-sm sm:text-base mt-1">Lasă razele să danseze prin perdelele noii colecții.
-                                            Urmărește clipul nostru exclusiv – delicatețea prinde viață în mișcare.</p>
-                                    </div>
-                                </div>
-
-                            @elseif ($loop->index === 8)
-                                <!-- VIDEO BLOCK instead of 3th product -->
-                                <div class="overflow-hidden relative rounded-2xl">
-                                    <video autoplay muted loop playsinline class="w-full h-auto object-cover rounded-2xl">
-                                        <source src="{{ asset('storage/videos/teaser3.MP4') }}" type="video/mp4">
-                                        Your browser does not support the video tag.
-                                    </video>
-
-                                    <!-- Overlay Text -->
-                                    <div class="absolute inset-x-0 top-0 p-4 bg-linear-to-t from-transparent to-black/80 text-white">
-                                        <h2 class="text-lg sm:text-xl font-bold">Vibrația verii în mișcare</h2>
-                                        <p class="text-sm sm:text-base mt-1">Urmărește colecția prinde viață în clipul nostru exclusiv.</p>
-                                    </div>
-                                </div>
-                            @else
-                                <!-- PRODUCT CARD -->
-                                <div wire:key="product-{{ $product->id }}" class="">
-                                    <div class="bg-white overflow-hidden">
-                                        <!-- Product Image -->
-                                        <div class="overflow-hidden">
-                                            <div class="w-full relative">
-                                                <livewire:favorites-button :product-id="$product->id" wire:key="favorites-{{ $product->id }}" />
-                                                <div id="swiper-{{ $product->id }}" class="swiper-container">
-                                                    <div class="swiper-wrapper">
-                                                        @foreach($product->detail_images ?? $product->images as $image)
-                                                            <div class="swiper-slide shadow-lg">
-                                                                <a href="{{ route('product.show', ['slug' => $product->slug]) }}">
-                                                                    <img src="{{ asset($image) }}"
-                                                                         alt="{{ $product->name }}"
-                                                                         class="w-full h-auto object-cover p-0 rounded-2xl bg-white" />
-                                                                </a>
-                                                            </div>
-                                                        @endforeach
-                                                    </div>
-                                                    <div class="swiper-pagination"></div>
-                                                </div>
-                                                <script>
-                                                    document.addEventListener('DOMContentLoaded', function () {
-                                                        new Swiper('#swiper-{{ $product->id }}', {
-                                                            slidesPerView: 1,
-                                                            spaceBetween: 10,
-                                                            pagination: {
-                                                                el: '.swiper-pagination',
-                                                                clickable: true,
-                                                            },
-                                                        });
-                                                    });
-                                                </script>
-                                            </div>
-                                        </div>
-
-                                        <!-- Product Details -->
-                                        <div class="p-2">
-                                            <a href="{{ route('product.show', ['slug' => $product->slug]) }}"
-                                               class="text-sm uppercase hover:underline leading-5 font-bold line-clamp-3 h-16">
-                                                {{ strip_tags($product->name) }}
-                                            </a>
-                                            <div class="text-xs mt-2">
-                                                <!-- Display Material and Color (from clean pivots) -->
-                                                <div class="text-xs mt-4 space-y-1">
-                                                    @if ($product->materials->isNotEmpty())
-                                                        <div>
-                                                            <span class="font-semibold text-gray-700">Material:</span>
-                                                            {{ $product->materials->pluck('name')->implode(', ') }}
-                                                        </div>
-                                                    @endif
-
-                                                    @if (!empty($product->colors_with_css))
-                                                            <div class="flex flex-wrap items-center text-xs text-gray-700">
-                                                                <span class="font-semibold mr-2">Culoare:</span>
-                                                                @foreach ($product->colors_with_css as $color)
-                                                                    <span class="flex items-center mr-4 mb-2 pt-2">
-                                                                        <span class="w-5 h-5 rounded-full border border-gray-300 mr-1"
-                                                                              style="background-color: {{ $color['css'] }}"></span>
-                                                                        <span>{{ $color['name'] }}</span>
-                                                                    </span>
-                                                                @endforeach
-                                                            </div>
-
-                                                        @endif
-                                                </div>
-                                            </div>
-
-                                            <div class="flex items-center justify-between mt-4">
-                                                <p class="text-xs sm:text-lg font-extrabold text-gray-800">
-                                                    {{ number_format($product->price(), 2) }} lei / m <br/>
-                                                </p>
-                                                <x-simple-link href="{{ route('product.show', ['slug' => $product->slug]) }}"
-                                                               class="text-xs text-right simpleLink font-extrabold">
-                                                    Vezi produsul
-                                                </x-simple-link>
-                                            </div>
-                                        </div>
-                                    </div>
+            <div class="grid grid-cols-2 gap-x-5 gap-y-10 md:grid-cols-4 md:gap-x-7">
+                @foreach ($newestProducts as $product)
+                    <article class="group" wire:key="newest-{{ $product->id }}">
+                        <div class="relative overflow-hidden rounded-[14px] bg-white">
+                            <livewire:favorites-button :product-id="$product->id" wire:key="newest-fav-{{ $product->id }}" />
+                            <span class="absolute left-3 top-3 z-[2] rounded-full bg-[#171411] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-[#FCFAF7]">Nou</span>
+                            <a href="{{ route('product.show', ['slug' => $product->slug]) }}" class="block aspect-[3/4] overflow-hidden">
+                                <img src="{{ asset(($product->images[0]) ?? 'storage/images/placeholder-images.webp') }}"
+                                     alt="{{ strip_tags($product->name) }}" loading="lazy"
+                                     class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                            </a>
+                        </div>
+                        <div class="mt-4">
+                            <a href="{{ route('product.show', ['slug' => $product->slug]) }}"
+                               class="line-clamp-2 text-[13px] font-semibold uppercase leading-snug tracking-wide text-[#171411] hover:text-[#B28D4E]">
+                                {{ strip_tags($product->name) }}
+                            </a>
+                            @if (!empty($product->colors_with_css) && count($product->colors_with_css))
+                                <div class="mt-2.5 flex flex-wrap items-center gap-1.5">
+                                    @foreach ($product->colors_with_css->take(6) as $color)
+                                        <span class="h-4 w-4 rounded-full border border-[#171411]/15"
+                                              style="background-color: {{ $color['css'] }}" title="{{ $color['name'] }}"></span>
+                                    @endforeach
                                 </div>
                             @endif
-                        @empty
-                            <p class="col-span-full text-center text-gray-500">No products found in this category.</p>
-                        @endforelse
-                    </div>
-
-
-                </div>
-            </main>
+                            <p class="mt-3 font-display text-lg font-semibold text-[#171411]">
+                                {{ number_format($product->price(), 2) }} <span class="text-sm font-normal text-[#171411]/60">lei / m</span>
+                            </p>
+                        </div>
+                    </article>
+                @endforeach
+            </div>
         </div>
-    </div>
+    </section>
 
     <!-- Parallax Section -->
     <div class="relative bg-fixed bg-cover bg-center bg-no-repeat" style="background-image: url('{{ asset('storage/images/bg_map.png') }}');min-height: 500px;">
