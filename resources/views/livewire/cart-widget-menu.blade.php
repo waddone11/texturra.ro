@@ -1,16 +1,16 @@
-<div>
-    <a href="{{ route('cart.index') }}" class="relative top-4 md:top-0 mr-4 md:mr-4">
-        <i class="fa-solid fa-cart-shopping fa-lg text-black-400 mr-4 pt-2 md:pt-0 mt-3 md:mt-0"></i>
-        <span class="absolute -top-3 -right-1 bg-red-600 text-white text-xs font-bold rounded-full px-2 py-1">
-            {{ $cartCount }}
-        </span>
+<div class="inline-flex">
+    <a href="{{ route('cart.index') }}" class="relative inline-flex items-center transition-colors hover:text-[#B28D4E]" aria-label="Coș">
+        <i class="fa-solid fa-cart-shopping fa-lg"></i>
+        @if ($cartCount > 0)
+            <span class="absolute -right-2.5 -top-2 inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[#B28D4E] px-1 text-[10px] font-semibold leading-none text-white">{{ $cartCount }}</span>
+        @endif
     </a>
-</div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        window.addEventListener('cartUpdated', () => {
-            Livewire.emit('cartUpdated');
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            window.addEventListener('cartUpdated', () => {
+                Livewire.emit('cartUpdated');
+            });
         });
-    });
-</script>
+    </script>
+</div>
