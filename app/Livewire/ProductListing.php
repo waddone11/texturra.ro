@@ -283,9 +283,17 @@ class ProductListing extends Component
                 ->values();
         });
 
+        // Per-category banner by slug convention (images/categories/{slug}.webp),
+        // falling back to the generic listing hero for categories without a banner.
+        $bannerRel = 'images/categories/' . $this->category->slug . '.webp';
+        $categoryBanner = file_exists(public_path('storage/' . $bannerRel))
+            ? asset('storage/' . $bannerRel)
+            : asset('storage/images/homepage/listing-hero.webp');
+
         return view('livewire.product-listing', [
             'products' => $products,
             'childCategories' => $this->childCategories,
+            'categoryBanner' => $categoryBanner,
         ]);
     }
 
