@@ -95,7 +95,7 @@
                             <td class="stat" style="padding-right:20px;">{!! $icon('stat-box', 15) !!} <span class="snum">500.000+</span><div class="slbl">Produse vândute</div></td>
                             <td class="stat" style="padding-right:20px;">{!! $icon('stat-headset', 15) !!} <span class="snum">10+</span><div class="slbl">Consultanți specializați</div></td>
                             <td class="stat" style="padding-right:20px;">{!! $icon('stat-handshake', 15) !!} <span class="snum">120+</span><div class="slbl">Parteneri comerciali</div></td>
-                            <td class="stat">{!! $icon('stat-store', 15) !!} <span class="snum">3</span><div class="slbl">Magazine fizice</div></td>
+                            <td class="stat">{!! $icon('stat-store', 15) !!} <span class="snum">2</span><div class="slbl">Magazine fizice</div></td>
                         </tr>
                     </table>
                 </td>

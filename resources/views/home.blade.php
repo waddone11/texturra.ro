@@ -221,7 +221,7 @@
 
                 <!-- Magazine fizice -->
                 <div>
-                    <span class="block text-4xl md:text-5xl font-extrabold">3</span>
+                    <span class="block text-4xl md:text-5xl font-extrabold">2</span>
                     <span class="block text-sm md:text-base uppercase tracking-wide">Magazine fizice</span>
                 </div>
             </div>
