@@ -1,519 +1,296 @@
 @extends('layouts.base')
 
 @section('content')
-    <div class="max-w-7xl mx-auto py-0 md:py-12 md:py-12 px-0 md:pt-8">
-        <div class="flex flex-col lg:flex-row gap-4 md:gap-8 py-0 md:py-8">
-            <!-- Galerie imagini -->
-            <div class="lg:w-2/5 block md:hidden relative">
-                <div id="swiper-{{ $product->id }}" class="swiper-container overflow-hidden relative">
-                    <div class="swiper-wrapper">
-                        @foreach($product->images as $image)
-                            <div class="swiper-slide relative">
-                                <img
-                                    src="{{ asset($image) }}"
-                                    alt="{{ $product->name }}"
-                                    class="w-full h-108 object-cover p-0 bg-white"
-                                />
+    {{-- Product page redesigned from texturra-product-page-redesign package.
+         ⚠️ MONEY ZONE UNTOUCHED: the configurator (price calc + add-to-cart) is the
+         @include('products.product-form-custom' / 'product-form-standard') partials — kept
+         byte-identical. Only the SHELL around them was restyled. Old shell: detail-old.blade.php. --}}
+    <div class="mx-auto w-full max-w-[1320px] px-4 font-dm text-[#171411] md:px-8">
 
-                                <button onclick="openZoomGallery()" class="absolute top-4 h-10 w-10 left-4 bg-white text-black p-2 rounded-full z-20">
-                                    <i class="fa fa-search-plus"></i>
-                                </button>
-                            </div>
-                        @endforeach
-                    </div>
+        {{-- ===== PRODUCT ===== --}}
+        <section class="grid grid-cols-1 items-start gap-8 py-6 md:py-10 lg:grid-cols-[48%_52%] lg:gap-12" aria-label="Detaliu produs">
 
-                    <!-- Pagination -->
-                    <div class="swiper-pagination bottom-4! absolute left-0 w-full z-20"></div>
-                </div>
-
-                <script>
-                    document.addEventListener('DOMContentLoaded', function () {
-                        new Swiper('#swiper-{{ $product->id }}', {
-                            slidesPerView: 1,
-                            spaceBetween: 10,
-                            pagination: {
-                                el: '#swiper-{{ $product->id }} .swiper-pagination',
-                                clickable: true,
-                            },
-                        });
-                    });
-                </script>
-            </div>
-
-            <div class="lg:w-2/5 hidden md:block">
-                <!-- Main Image -->
-                <div class="mb-4 relative">
-
-                    <button onclick="openZoomGallery()" class="absolute top-4 h-10 w-10 left-4 bg-white text-black p-2 rounded-full z-10">
+            {{-- Media --}}
+            <div class="lg:sticky lg:top-28">
+                <div class="relative overflow-hidden rounded-[18px] bg-[#e9e4da] shadow-[0_20px_50px_rgba(33,25,18,0.08)]">
+                    <button type="button" onclick="openZoomGallery()" aria-label="Mărește imaginea"
+                            class="absolute left-4 top-4 z-10 grid h-11 w-11 place-items-center rounded-full bg-[#fffdf9] text-[#171411] shadow-[0_8px_21px_rgba(22,17,12,0.12)]">
                         <i class="fa fa-search-plus"></i>
                     </button>
-
-                    <img id="mainImage"
-                         src="{{ $product->images[0] ?? '/placeholder-image.png' }}"
-                         alt="{{ $product->name }}"
-                         class="w-full h-auto rounded-2xl"
-                    />
+                    <img id="mainImage" src="{{ $product->images[0] ?? asset('storage/images/placeholder-images.webp') }}"
+                         alt="{{ strip_tags($product->name) }}" class="aspect-square w-full object-cover" />
                 </div>
-                <!-- Thumbnail Images -->
-                <div class="flex flex-wrap gap-2 px-2 mt-12 md:mt-0 pt-4 md:pt-0 md:px-0 flex items-center">
-                    @foreach ($product->images as $key => $image)
-                        <img src="{{ $image }}"
-                             alt="{{ $product->name }}"
-                             class="thumbnail w-16 h-16 object-contain rounded-2xl shadow-2xl cursor-pointer"
-                             data-src="{{ $image }}"
-                             onclick="updateMainImage(this)"
-                        />
+                <div class="mt-4 flex flex-wrap gap-2.5">
+                    @foreach ($product->images as $image)
+                        <button type="button" onclick="updateMainImage(this)" data-src="{{ $image }}"
+                                class="thumbnail h-[76px] w-[76px] overflow-hidden rounded-[10px] border border-[#e4ddd4] bg-[#fffdf9] p-[3px] transition hover:border-[#ad7c32]">
+                            <img src="{{ $image }}" alt="" class="h-full w-full rounded-[7px] object-cover" />
+                        </button>
                     @endforeach
-                </div>
-
-                <div class="w-full mt-4 p-4 border border-black rounded-lg text-xs font-bold text-left text-black bg-gray-50">
-                    <div class="w-full">
-                        <h4 class="text-lg font-semibold mb-2">INFO PRODUS</h4>
-                        <p class="mb-4 text-gray-700">
-                            Este o perdea ușoară și semi-transparentă și permite luminii naturale să pătrundă delicat în încăpere.
-                        </p>
-
-                        <ul class="space-y-3">
-                            <li class="flex items-start gap-3">
-                                <img src="https://perdeledraperiimoderne.ro/public/images/temperatura-spalare.png" alt="Spalare 30°C" class="w-6 h-6 mt-1">
-                                <span class="pt-2"><strong>1. Se spală la 30°C</strong></span>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <img src="https://perdeledraperiimoderne.ro/public/images/centrifugare.png" alt="Centrifugare" class="w-6 h-6 mt-1">
-                                <span class="pt-2"><strong>2. Nu se folosesc înălbitori chimici și stoarcere la maxim 600 de turații;</strong></span>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <img src="https://perdeledraperiimoderne.ro/public/images/calcare.png" alt="Calcare" class="w-6 h-6 mt-1">
-                                <span class="pt-2"><strong>3. Se calcă la temperatură normală cu abur;</strong></span>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <img src="https://perdeledraperiimoderne.ro/public/images/spalare.png" alt="Prespalare" class="w-6 h-6 mt-1">
-                                <span class="pt-2"><strong>4. Înainte de prima utilizare, vă recomandăm prespălarea produselor.</strong></span>
-                            </li>
-                        </ul>
-                    </div>
-
                 </div>
             </div>
 
-            <!-- Detalii produs -->
-            <div class="lg:w-3/5 px-4 md:px-2 pt-2 md:pt-0">
-                <div class="w-full">
-                    <h1 class="text-xl md:text-3xl font-bold text-gray-800">{{ $product->name }}</h1>
+            {{-- Info --}}
+            <div>
+                <div class="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4">
+                    <div>
+                        <p class="text-[11px] font-extrabold uppercase tracking-[0.09em] text-[#ad7c32]">{{ $product->category->name ?? 'TEXTURRA' }}</p>
+                        <h1 class="mt-2 font-display text-3xl font-medium leading-[1.0] tracking-[-0.02em] text-[#171411] md:text-[42px]">
+                            {{ $product->name }}
+                        </h1>
+                    </div>
+                    <div class="flex flex-col items-end gap-2">
+                        <div class="text-right font-display text-2xl md:text-[30px]">
+                            {{ number_format($product->price(), 2) }} lei
+                            <small class="mt-1 block text-[11px] font-normal tracking-[0.04em] text-[#736b63]">TVA inclus / metru</small>
+                        </div>
+                        <livewire:favorites-button :product-id="$product->id" wire:key="fav-detail-{{ $product->id }}" />
+                    </div>
                 </div>
 
-                <div class="w-full text-2xl font-extrabold text-right hidden md:block">
-                    {{ number_format($product->price(), 2) }} lei
+                {{-- Meta --}}
+                <div class="mt-4 flex flex-wrap gap-x-[18px] gap-y-1.5 border-b border-[#e4ddd4] pb-4 text-[13px] text-[#736b63]">
+                    <span>Cod: <b class="font-bold text-[#171411]">TXT-{{ $product->id }}</b></span>
+                    @if ($product->materials->isNotEmpty())
+                        <span>Material: <b class="font-bold text-[#171411]">{{ $product->materials->pluck('name')->unique()->implode(', ') }}</b></span>
+                    @endif
+                    @if ($product->colors->isNotEmpty())
+                        <span>Culoare: <b class="font-bold text-[#171411]">{{ $product->colors->pluck('name')->unique()->implode(', ') }}</b></span>
+                    @endif
                 </div>
-                <!-- Brand -->
-                <p class="text-sm text-gray-500 md:mt-2 md:mt-0 mb-1 md:mb-2">Categorie: <span class="font-semibold text-black">{{ $product->category->name ?? 'N/A' }}</span></p>
-                <p class="text-sm text-gray-500 mb-1 md:mb-2">Cod produs: <span class="font-semibold text-black">TXT-{{ $product->id }}</span></p>
-                @php
-                    // Color/material from the product_color + product_material pivots.
-                    // Same shape: each value carries a ->value.
-                    $attributes = collect([
-                        'Material' => $product->materials->map(fn($m) => (object) ['value' => $m->name]),
-                        'Culoare' => $product->colors->map(fn($c) => (object) ['value' => $c->name]),
-                    ])->filter(fn($v) => $v->isNotEmpty());
-                @endphp
 
-                @if($attributes->isNotEmpty())
-
-                    @foreach ($attributes as $label => $values)
-                        <p class="text-sm text-gray-500 mb-1 md:mb-2">{{ $label }}: <span class="font-semibold text-black">{{ $values->pluck('value')->unique()->implode(', ') }}</span></p>
-                    @endforeach
+                {{-- Color swatches (display of this product's colours) --}}
+                @if ($product->colors->isNotEmpty())
+                    <div class="mt-5">
+                        <p class="mb-2 text-[12px] font-bold">Culoare</p>
+                        <div class="flex flex-wrap gap-2.5" role="group" aria-label="Culoare produs">
+                            @foreach ($product->colors as $color)
+                                <span class="h-[23px] w-[23px] rounded-full shadow-[inset_0_0_0_1px_rgba(0,0,0,0.12)] {{ $loop->first ? 'outline outline-2 outline-offset-[3px] outline-[#ad7c32]' : '' }}"
+                                      style="background-color: {{ $color->cod_css }}" title="{{ $color->name }}"></span>
+                            @endforeach
+                        </div>
+                    </div>
                 @endif
 
-
+                {{-- Discount badge (display only) --}}
                 @php
                     $originalPrice = $product->price ?? 0;
                     $discountedPrice = $product->price();
                     $discountPercentage = $originalPrice > 0 ? round((($originalPrice - $discountedPrice) / $originalPrice) * 100) : 0;
                 @endphp
                 @if($originalPrice > $discountedPrice)
-                    <div class="w-full h-6 py-1 bg-black px-2 text-sm font-extrabold text-white flex items-center space-x-2 mt-4 mb-4 hidden md:block">
-                        <span>Discount:</span>
-                        <span class="text-red-600">-{{ $discountPercentage }}%</span>
-                        <span class="line-through opacity-60"> PRET VECHI {{ number_format($originalPrice, 2) }} lei</span>
-                        <span class="text-yellow-400">Pret nou: {{ number_format($discountedPrice, 2) }} lei</span>
+                    <div class="mt-4 inline-flex items-center gap-2 rounded-md bg-[#171411] px-3 py-1.5 text-sm font-extrabold text-white">
+                        <span class="text-red-400">−{{ $discountPercentage }}%</span>
+                        <span class="text-white/60 line-through">{{ number_format($originalPrice, 2) }} lei</span>
+                        <span class="text-[#e6c478]">{{ number_format($discountedPrice, 2) }} lei</span>
                     </div>
                 @endif
 
-                <!-- Buton adaugare în coș -->
-                <div class="flex flex-col gap-4 rounded-2xl mt-4 md:mt-0">
-
-                    <!-- Dynamic Form -->
+                {{-- ===== CONFIGURATOR — MONEY ZONE, INCLUDED VERBATIM (NOT MODIFIED) ===== --}}
+                <div class="mt-6">
                     @if($product->type === 'custom')
                         @include('products.product-form-custom', ['product' => $product])
                     @else
                         @include('products.product-form-standard', ['product' => $product])
                     @endif
-
                 </div>
 
-                {{-- Același model, alte dimensiuni (produse-frați). Pur afișare/navigare —
-                     nu atinge coșul, prețul sau configuratorul. --}}
+                {{-- Siblings — same model, other dimensions --}}
                 @php $siblings = $product->siblings()->get(); @endphp
                 @if ($siblings->isNotEmpty())
-                    <div class="mt-6 border-t pt-4">
-                        <h3 class="text-base font-bold mb-3">Același model, alte dimensiuni</h3>
+                    <div class="mt-7 border-t border-[#e4ddd4] pt-5">
+                        <h3 class="mb-3 text-base font-bold">Același model, alte dimensiuni</h3>
                         <div class="flex flex-col gap-2">
                             @foreach ($siblings as $sibling)
                                 @php $sibImg = is_array($sibling->images) ? ($sibling->images[0] ?? null) : null; @endphp
                                 <a href="{{ route('product.show', ['slug' => $sibling->slug]) }}"
-                                   class="flex items-center gap-3 p-2 rounded-lg border border-gray-200 hover:border-black transition">
+                                   class="flex items-center gap-3 rounded-[10px] border border-[#e4ddd4] p-2 transition hover:border-[#ad7c32]">
                                     @if ($sibImg)
-                                        <img src="{{ $sibImg }}" alt="{{ strip_tags($sibling->name) }}"
-                                             class="w-12 h-12 object-cover rounded flex-shrink-0">
+                                        <img src="{{ $sibImg }}" alt="{{ strip_tags($sibling->name) }}" class="h-12 w-12 flex-shrink-0 rounded object-cover">
                                     @endif
-                                    <div class="flex-1 min-w-0">
-                                        <div class="text-sm font-medium truncate">{{ strip_tags($sibling->name) }}</div>
+                                    <div class="min-w-0 flex-1">
+                                        <div class="truncate text-sm font-medium">{{ strip_tags($sibling->name) }}</div>
                                         @if ($sibling->height)
-                                            <div class="text-xs text-gray-500">Înălțime: {{ $sibling->height }} m</div>
+                                            <div class="text-xs text-[#736b63]">Înălțime: {{ $sibling->height }} m</div>
                                         @endif
                                     </div>
-                                    <div class="text-sm font-semibold whitespace-nowrap">
-                                        {{ number_format($sibling->price(), 2) }} lei
-                                    </div>
+                                    <div class="whitespace-nowrap text-sm font-semibold">{{ number_format($sibling->price(), 2) }} lei</div>
                                 </a>
                             @endforeach
                         </div>
                     </div>
                 @endif
-
-                <!-- Size Guide Modal -->
-                <div id="sizeGuideModal"
-                     class="fixed inset-y-0 right-0 w-full md:w-1/3 lg:w-1/4 bg-white shadow-lg transform translate-x-full transition-transform duration-300 overflow-y-auto z-50">
-
-                    <!-- Header -->
-                    <div class="flex justify-between items-center p-4 border-b">
-                        <h2 class="text-lg font-bold">Tabel Mărimi</h2>
-                        <button onclick="closeSizeGuide()" class="text-gray-600 hover:text-black">
-                            ✕
-                        </button>
-                    </div>
-
-                    <!-- Content -->
-                    <div id="sizeGuideContent" class="p-4 text-sm">
-                        <p>Încărcare...</p>
-                    </div>
-                </div>
-
-                <!-- Backdrop -->
-                <div id="sizeGuideBackdrop" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40 transition-opacity" onclick="closeSizeGuide()"></div>
             </div>
-        </div>
+        </section>
 
-        <div class="mt-4 md:mt-12 px-4 md:px-0">
-            <h2 class="text-xl font-bold mb-4">Detalii produs</h2>
-            <div class="border border-black rounded-lg overflow-hidden">
-                <!-- Specificații -->
-                <div x-data="{ open: true }" class="border-b">
-                    <button
-                        @click="open = !open"
-                        :class="{ 'bg-black text-white': open }"
-                        class="w-full px-4 py-3 text-left flex justify-between items-center text-black"
-                    >
-                        <span class="font-bold text-sm">Specificații</span>
-                        <span x-show="!open">+</span>
-                        <span x-show="open">-</span>
-                    </button>
-                    <div x-show="open" class="px-0 py-2 text-black">
-                        <div class="mt-2">
-                            <div class="rounded-lg overflow-hidden">
-                                @forelse ($characteristicsWithLabels as $characteristic)
-                                    <div class="border-b px-4 py-2 flex justify-between items-center text-xs">
-                                        <span class="text-gray-600 font-semibold">{{ $characteristic['label'] }}</span>
-                                        <span class="text-gray-800">{{ $characteristic['value'] }}</span>
-                                    </div>
-                                @empty
-                                    <div class="text-gray-500 px-4 py-2">
-                                        @php
-                                            $attributes = collect([
-                                                'Material' => $product->materials->map(fn($m) => (object) ['value' => $m->name]),
-                                                'Culoare' => $product->colors->map(fn($c) => (object) ['value' => $c->name]),
-                                            ])->filter(fn($v) => $v->isNotEmpty());
-                                        @endphp
-
-                                        @if($attributes->isNotEmpty())
-                                            <table class="w-full text-sm border border-gray-300 mb-4">
-
-                                                <tbody>
-                                                @foreach ($attributes as $label => $values)
-                                                    <tr class="border-t text-xs text-gray-800">
-                                                        <td class="px-4 py-2 font-semibold w-1/3">{{ $label }}</td>
-                                                        <td class="px-4 py-2">
-                                                            {{ $values->pluck('value')->unique()->implode(', ') }}
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                                </tbody>
-                                            </table>
-                                        @endif
-
-                                        {!! html_entity_decode($product->description) !!}
-                                    </div>
-                                @endforelse
-                            </div>
-                        </div>
+        {{-- ===== TRUST BAND ===== --}}
+        <section class="mb-12 grid grid-cols-2 overflow-hidden rounded-[12px] border border-[#e4ddd4] bg-[#fffdf9] md:grid-cols-4" aria-label="Beneficii TEXTURRA">
+            @foreach ([
+                ['i' => 'fa-vials',        't' => 'Mostre gratuite',  's' => 'vezi și simte materialele'],
+                ['i' => 'fa-truck',        't' => 'Transport gratuit', 's' => 'la comenzi peste 500 lei'],
+                ['i' => 'fa-rotate-left',  't' => 'Retur 14 zile',     's' => 'garanția satisfacției'],
+                ['i' => 'fa-lock',         't' => 'Plată securizată',  's' => 'card sau ramburs'],
+            ] as $b)
+                <div class="flex min-h-[70px] items-center gap-3 border-b border-[#e4ddd4] px-4 py-3 md:border-b-0 md:border-r [&:last-child]:border-r-0 max-md:[&:nth-child(odd)]:border-r">
+                    <i class="fa-solid {{ $b['i'] }} text-[1.1rem] text-[#8c5e1b]"></i>
+                    <div>
+                        <strong class="block text-[11px] uppercase tracking-wide">{{ $b['t'] }}</strong>
+                        <span class="text-[11px] text-[#736b63]">{{ $b['s'] }}</span>
                     </div>
                 </div>
+            @endforeach
+        </section>
 
-                <!-- Garanție -->
-                <div x-data="{ open: false }" class="border-b">
-                    <button
-                        @click="open = !open"
-                        :class="{ 'bg-black text-white': open }"
-                        class="w-full px-4 py-3 text-left flex justify-between items-center text-black"
-                    >
-                        <span class="font-bold text-sm">Garanție</span>
-                        <span x-show="!open">+</span>
-                        <span x-show="open">-</span>
-                    </button>
-                    <div x-show="open" class="px-4 py-4 text-black">
-                        <p class="text-xs">{{ $product->warranty ?? 'Nu există informații despre garanție.' }}</p>
-                    </div>
-                </div>
-
-                <!-- Transport -->
-                <div x-data="{ open: false }" class="border-b">
-                    <button
-                        @click="open = !open"
-                        :class="{ 'bg-black text-white': open }"
-                        class="w-full px-4 py-3 text-left flex justify-between items-center text-black"
-                    >
-                        <span class="font-bold text-sm">Transport</span>
-                        <span x-show="!open">+</span>
-                        <span x-show="open">-</span>
-                    </button>
-                    <div x-show="open" class="px-4 py-4 text-black">
-                        <p class="text-xs">Detaliile transportului vor fi disponibile la checkout.</p>
-                    </div>
-                </div>
-
-                <!-- Retur -->
-                <div x-data="{ open: false }">
-                    <button
-                        @click="open = !open"
-                        :class="{ 'bg-black text-white': open }"
-                        class="w-full px-4 py-3 text-left flex justify-between items-center text-black"
-                    >
-                        <span class="font-bold text-sm">Retur</span>
-                        <span x-show="!open">+</span>
-                        <span x-show="open">-</span>
-                    </button>
-                    <div x-show="open" class="px-4 py-4 text-black">
-                        <p class="text-xs">Returul este acceptat în termen de 30 de zile de la achiziție.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Secțiunea S-ar putea să îți placă -->
-        <div class="mt-12 px-4 md:px-0">
-            <h2 class="text-2xl font-bold mb-4">S-ar putea să îți placă</h2>
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
-                @foreach ($product->category->products->take(5) as $relatedProduct)
-                    @if ($relatedProduct->id !== $product->id)
-                        <div wire:key="product-{{ $relatedProduct->id }}" class="">
-                            <div class="bg-white overflow-hidden">
-                                <!-- Product Image -->
-                                <div class="overflow-hidden">
-                                    <div class="w-full relative">
-                                        <livewire:favorites-button :product-id="$relatedProduct->id" wire:key="favorites-{{ $relatedProduct->id }}" />
-                                        <div id="swiper-{{ $relatedProduct->id }}" class="swiper-container">
-                                            <div class="swiper-wrapper">
-                                                @foreach($relatedProduct->detail_images ?? $relatedProduct->images as $image)
-                                                    <div class="swiper-slide shadow-lg">
-                                                        <a href="{{ route('product.show', ['slug' => $relatedProduct->slug]) }}">
-                                                            <img src="{{ asset($image) }}"
-                                                                 alt="{{ $relatedProduct->name }}"
-                                                                 class="w-full h-auto object-cover p-0 rounded-2xl bg-white" />
-                                                        </a>
-                                                    </div>
-                                                @endforeach
-                                            </div>
-                                            <div class="swiper-pagination"></div>
-                                        </div>
-                                        <script>
-                                            document.addEventListener('DOMContentLoaded', function () {
-                                                new Swiper('#swiper-{{ $relatedProduct->id }}', {
-                                                    slidesPerView: 1,
-                                                    spaceBetween: 10,
-                                                    pagination: {
-                                                        el: '.swiper-pagination',
-                                                        clickable: true,
-                                                    },
-                                                });
-                                            });
-                                        </script>
-                                    </div>
-                                </div>
-
-                                <!-- Product Details -->
-                                <div class="p-2">
-                                    <a href="{{ route('product.show', ['slug' => $relatedProduct->slug]) }}"
-                                       class="text-sm uppercase hover:underline leading-5 font-bold line-clamp-3 h-16">
-                                        {{ strip_tags($relatedProduct->name) }}
-                                    </a>
-                                    <div class="text-xs mt-2">
-                                        @php
-                                            $attributes = collect([
-                                                'Material' => $product->materials->map(fn($m) => (object) ['value' => $m->name]),
-                                                'Culoare' => $product->colors->map(fn($c) => (object) ['value' => $c->name]),
-                                            ])->filter(fn($v) => $v->isNotEmpty());
-                                        @endphp
-
-                                            <!-- Display Material and Color -->
-                                        <div class="text-xs mt-4 space-y-1">
-                                            @if ($attributes->has('Material'))
-                                                <div>
-                                                    <span class="font-semibold text-gray-700">Material:</span>
-                                                    {{ $attributes['Material']->pluck('value')->implode(', ') }}
-                                                </div>
-                                            @endif
-
-                                            @if (!empty($product->colors_with_css))
-                                                <div class="flex flex-wrap items-center text-xs text-gray-700">
-                                                    <span class="font-semibold mr-2">Culoare:</span>
-                                                    @foreach ($product->colors_with_css as $color)
-                                                        <span class="flex items-center mr-4 mb-2 pt-2">
-                                                                        <span class="w-5 h-5 rounded-full border border-gray-300 mr-1"
-                                                                              style="background-color: {{ $color['css'] }}"></span>
-                                                                        <span>{{ $color['name'] }}</span>
-                                                                    </span>
-                                                    @endforeach
-                                                </div>
-
-                                            @endif
-                                        </div>
-                                    </div>
-
-                                    <div class="flex items-center justify-between mt-4">
-                                        <p class="text-xs sm:text-sm font-extrabold text-gray-800">
-                                            {{ number_format($relatedProduct->price(), 2) }} lei / m <br/>
-                                        </p>
-                                        <x-simple-link href="{{ route('product.show', ['slug' => $relatedProduct->slug]) }}"
-                                                       class="text-xs text-right simpleLink font-extrabold">
-                                            Vezi produsul
-                                        </x-simple-link>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
+        {{-- ===== DETAILS TABS ===== --}}
+        <section class="mb-14" x-data="{ tab: 'spec' }" id="details">
+            <div class="flex flex-wrap gap-1 border-b border-[#e4ddd4]">
+                @foreach ([['spec','Specificații'],['desc','Descriere'],['transport','Transport'],['retur','Retur'],['ingrijire','Întreținere']] as [$k,$label])
+                    <button type="button" @click="tab='{{ $k }}'"
+                            :class="tab==='{{ $k }}' ? 'border-[#ad7c32] text-[#171411]' : 'border-transparent text-[#736b63]'"
+                            class="border-b-2 px-4 py-3 text-[13px] font-semibold transition-colors hover:text-[#171411]">{{ $label }}</button>
                 @endforeach
             </div>
-        </div>
 
-        <div id="zoomGalleryPanel"
-             class="fixed inset-0 bg-white z-50 transform translate-x-full transition-transform duration-300 overflow-hidden">
-            <div class="flex h-full">
-                <!-- Thumbnails -->
-                <div class="w-16 md:w-20 p-2 overflow-y-auto border-r border-gray-200 bg-white">
-                    <div class="flex flex-col gap-2">
-                        @foreach($product->images as $img)
-                            <img src="{{ asset($img) }}"
-                                 data-large="{{ asset($img) }}"
-                                 onclick="changeZoomGalleryImage(this)"
-                                 class="w-full h-16 object-cover rounded border cursor-pointer hover:ring-2 zoom-thumb"/>
-                        @endforeach
-                    </div>
+            <div class="pt-6 text-sm leading-relaxed text-[#3a342e]">
+                {{-- Specificații --}}
+                <div x-show="tab==='spec'" x-cloak>
+                    <h2 class="mb-4 font-display text-2xl font-medium">Specificații</h2>
+                    <table class="w-full max-w-2xl text-sm">
+                        <tbody>
+                        @forelse ($characteristicsWithLabels as $characteristic)
+                            <tr class="border-b border-[#e4ddd4]">
+                                <th class="py-2.5 pr-4 text-left font-semibold text-[#736b63]">{{ $characteristic['label'] }}</th>
+                                <td class="py-2.5 text-[#171411]">{{ $characteristic['value'] }}</td>
+                            </tr>
+                        @empty
+                            @if ($product->materials->isNotEmpty())
+                                <tr class="border-b border-[#e4ddd4]"><th class="py-2.5 pr-4 text-left font-semibold text-[#736b63]">Material</th><td class="py-2.5">{{ $product->materials->pluck('name')->unique()->implode(', ') }}</td></tr>
+                            @endif
+                            @if ($product->colors->isNotEmpty())
+                                <tr class="border-b border-[#e4ddd4]"><th class="py-2.5 pr-4 text-left font-semibold text-[#736b63]">Culoare</th><td class="py-2.5">{{ $product->colors->pluck('name')->unique()->implode(', ') }}</td></tr>
+                            @endif
+                        @endforelse
+                        </tbody>
+                    </table>
                 </div>
 
-                <!-- Main Viewer -->
-                <div class="flex-1 flex flex-col items-center justify-center relative">
-                    <!-- Make this z-50 and ensure it's visible -->
-                    <button onclick="closeZoomGallery()"
-                            class="absolute top-4 right-4 text-md text-black z-50 bg-white rounded-full h-10 w-10 px-2 py-0.5 shadow-lg hover:bg-black hover:text-white transition">
-                        ✕
-                    </button>
-                    <div id="zoomImageWrapper"
-                         class="max-h-screen w-auto overflow-hidden transition-all duration-300">
-                        <img id="zoomGalleryImage"
-                             src="{{ asset($product->images[0]) }}"
-                             alt="Zoomed {{ $product->name }}"
-                             class="object-contain transition-transform duration-300 ease-in-out"
-                             style="transform: scale(1); cursor: zoom-in;"/>
-                    </div>
+                {{-- Descriere --}}
+                <div x-show="tab==='desc'" x-cloak class="prose-sm max-w-3xl">
+                    {!! html_entity_decode($product->description ?: 'Descrierea acestui produs va fi disponibilă în curând.') !!}
+                </div>
+
+                {{-- Transport --}}
+                <div x-show="tab==='transport'" x-cloak class="max-w-3xl">
+                    <p>Transport gratuit la comenzile de peste 500 lei. Livrare în 24–48h pentru produsele din stoc; pentru confecția la comandă, termenul se comunică la finalizarea comenzii. Detaliile complete sunt disponibile la checkout.</p>
+                </div>
+
+                {{-- Retur --}}
+                <div x-show="tab==='retur'" x-cloak class="max-w-3xl">
+                    <p>{{ $product->warranty ?: 'Returul este acceptat în termen de 14 zile de la livrare, în condițiile politicii de retur. Produsele confecționate la comandă (pe dimensiuni custom) pot fi excluse de la retur.' }}</p>
+                </div>
+
+                {{-- Întreținere --}}
+                <div x-show="tab==='ingrijire'" x-cloak class="max-w-3xl">
+                    <ul class="space-y-2.5">
+                        <li>Se spală la 30°C.</li>
+                        <li>Nu se folosesc înălbitori chimici; stoarcere la maxim 600 de turații.</li>
+                        <li>Se calcă la temperatură normală, cu abur.</li>
+                        <li>Înainte de prima utilizare, recomandăm prespălarea produsului.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        {{-- ===== RELATED ===== --}}
+        <section class="mb-14">
+            <div class="mb-6 flex items-end justify-between gap-4">
+                <h2 class="font-display text-2xl font-medium md:text-3xl">S-ar putea să îți placă</h2>
+                @if($product->category)
+                    <a href="{{ route('products.category', ['slug' => $product->category->slug]) }}"
+                       class="shrink-0 border-b border-[#171411]/30 pb-1 text-[12px] font-semibold uppercase tracking-[0.12em] transition-colors hover:border-[#ad7c32] hover:text-[#8c5e1b]">
+                        Vezi toate →
+                    </a>
+                @endif
+            </div>
+            <div class="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-5">
+                @foreach ($product->category->products->where('id', '!=', $product->id)->take(5) as $relatedProduct)
+                    <article wire:key="related-{{ $relatedProduct->id }}" class="group relative overflow-hidden rounded-[12px] border border-[#ece5dc] bg-[#fffdf9] transition hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(33,25,14,0.07)]">
+                        <div class="absolute right-2.5 top-2.5 z-[2]">
+                            <livewire:favorites-button :product-id="$relatedProduct->id" wire:key="related-fav-{{ $relatedProduct->id }}" />
+                        </div>
+                        <a href="{{ route('product.show', ['slug' => $relatedProduct->slug]) }}" class="block aspect-[4/4.55] overflow-hidden bg-[#eee]">
+                            <img src="{{ asset(($relatedProduct->images[0]) ?? 'storage/images/placeholder-images.webp') }}"
+                                 alt="{{ strip_tags($relatedProduct->name) }}" loading="lazy"
+                                 class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.045]" />
+                        </a>
+                        <div class="p-[13px]">
+                            <a href="{{ route('product.show', ['slug' => $relatedProduct->slug]) }}"
+                               class="line-clamp-2 font-display text-[15px] font-medium leading-[1.15] text-[#171411] hover:text-[#8c5e1b]">
+                                {{ strip_tags($relatedProduct->name) }}
+                            </a>
+                            <p class="mt-2 text-[14px] font-bold text-[#2e2923]">{{ number_format($relatedProduct->price(), 2) }} <small class="text-[10px] font-medium text-[#7c7165]">lei / m</small></p>
+                        </div>
+                    </article>
+                @endforeach
+            </div>
+        </section>
+    </div>
+
+    {{-- ===== ZOOM GALLERY (preserved) ===== --}}
+    <div id="zoomGalleryPanel" class="fixed inset-0 z-50 translate-x-full transform overflow-hidden bg-white transition-transform duration-300">
+        <div class="flex h-full">
+            <div class="w-16 overflow-y-auto border-r border-gray-200 bg-white p-2 md:w-20">
+                <div class="flex flex-col gap-2">
+                    @foreach($product->images as $img)
+                        <img src="{{ asset($img) }}" data-large="{{ asset($img) }}" onclick="changeZoomGalleryImage(this)"
+                             class="zoom-thumb h-16 w-full cursor-pointer rounded border object-cover hover:ring-2"/>
+                    @endforeach
+                </div>
+            </div>
+            <div class="relative flex flex-1 flex-col items-center justify-center">
+                <button onclick="closeZoomGallery()" class="absolute right-4 top-4 z-50 h-10 w-10 rounded-full bg-white px-2 py-0.5 text-md text-black shadow-lg transition hover:bg-black hover:text-white">✕</button>
+                <div id="zoomImageWrapper" class="max-h-screen w-auto overflow-hidden transition-all duration-300">
+                    <img id="zoomGalleryImage" src="{{ asset($product->images[0] ?? '') }}" alt="Zoom {{ strip_tags($product->name) }}"
+                         class="object-contain transition-transform duration-300 ease-in-out" style="transform: scale(1); cursor: zoom-in;"/>
                 </div>
             </div>
         </div>
-
-        <div id="zoomGalleryBackdrop" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40 transition-opacity"
-             onclick="closeZoomGallery()"></div>
     </div>
+    <div id="zoomGalleryBackdrop" class="fixed inset-0 z-40 hidden bg-black bg-opacity-50 transition-opacity" onclick="closeZoomGallery()"></div>
 
     <script>
+        function updateMainImage(el) { document.getElementById("mainImage").src = el.getAttribute("data-src"); }
         let zoomedIn = false;
-
         function openZoomGallery() {
             document.getElementById('zoomGalleryPanel').classList.remove('translate-x-full');
             document.getElementById('zoomGalleryBackdrop').classList.remove('hidden');
             zoomedIn = false;
-            document.getElementById('zoomGalleryImage').style.transform = 'scale(1)';
-            document.getElementById('zoomGalleryImage').style.cursor = 'zoom-in';
+            const z = document.getElementById('zoomGalleryImage'); z.style.transform = 'scale(1)'; z.style.cursor = 'zoom-in';
         }
-
         function closeZoomGallery() {
             document.getElementById('zoomGalleryPanel').classList.add('translate-x-full');
             document.getElementById('zoomGalleryBackdrop').classList.add('hidden');
         }
-
         function changeZoomGalleryImage(thumb) {
             const image = document.getElementById('zoomGalleryImage');
-            const newSrc = thumb.getAttribute('data-large');
-            image.src = newSrc;
-            image.style.transform = 'scale(1)';
-            zoomedIn = false;
-            image.style.cursor = 'zoom-in';
+            image.src = thumb.getAttribute('data-large'); image.style.transform = 'scale(1)'; zoomedIn = false; image.style.cursor = 'zoom-in';
         }
-
         document.addEventListener('DOMContentLoaded', function () {
             const zoomImage = document.getElementById('zoomGalleryImage');
             const wrapper = document.getElementById('zoomImageWrapper');
-
+            if (!zoomImage) return;
             zoomImage.addEventListener('click', () => {
                 zoomedIn = !zoomedIn;
-
                 if (zoomedIn) {
-                    // Expand wrapper and enable scrolling
                     wrapper.classList.remove('max-h-screen', 'w-auto', 'overflow-hidden');
                     wrapper.classList.add('w-full', 'h-full', 'overflow-scroll');
-
-                    // Zoom in
-                    zoomImage.style.transform = 'scale(2)';
-                    zoomImage.style.cursor = 'zoom-out';
+                    zoomImage.style.transform = 'scale(2)'; zoomImage.style.cursor = 'zoom-out';
                 } else {
-                    // Reset wrapper
                     wrapper.classList.remove('w-full', 'h-full', 'overflow-scroll');
                     wrapper.classList.add('max-h-screen', 'w-auto', 'overflow-hidden');
-
-                    // Zoom out
-                    zoomImage.style.transform = 'scale(1)';
-                    zoomImage.style.cursor = 'zoom-in';
+                    zoomImage.style.transform = 'scale(1)'; zoomImage.style.cursor = 'zoom-in';
                 }
             });
         });
     </script>
-
-    <script>
-        function updateMainImage(selectedImage) {
-            // Update the main image
-            document.getElementById("mainImage").src = selectedImage.getAttribute("data-src");
-
-            // Remove border from all thumbnails
-            // document.querySelectorAll(".thumbnail").forEach(img => {
-            //     img.classList.remove("border-4", "border-black");
-            // });
-            //
-            // // Add border to the selected thumbnail
-            // selectedImage.classList.add("border-4", "border-black");
-        }
-    </script>
-
-
-
-
-
 @endsection
