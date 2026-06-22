@@ -14,7 +14,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('cartUpdated', () => {
-            Livewire.emit('cartUpdated');
+            Livewire.dispatch('cartUpdated');
         });
     });
 </script>

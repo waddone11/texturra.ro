@@ -28,8 +28,10 @@ class CartWidget extends Component
             $cart = Cart::where('session_id', session()->getId())->get();
         }
 
-        // Update the cart count
-        $this->cartCount = $cart->sum('quantity');
+        // Badge count: standard lines use `quantity`, custom lines (perdele la comandă)
+        // store NULL quantity but carry `pieces` — count those so a custom-only cart
+        // is not shown as empty. Counting only; price/cart-line logic is untouched.
+        $this->cartCount = $cart->sum(fn ($item) => $item->quantity ?? $item->pieces ?? 1);
     }
 
     public function render()
