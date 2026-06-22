@@ -526,61 +526,52 @@
         </div>
     </section>
 
-    <section class="w-full bg-white border-t border-black pt-12 pb-4 mb-12">
-        <div class="max-w-7xl mx-auto px-6 md:px-0 md:py-16">
-
-            <!-- CURTAIN BLOCK -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 items-start mb-24">
-                <!-- TEXT BLOCK -->
-                <div class="col-span-1 flex flex-col">
-                    <h1 class="text-3xl md:text-4xl font-bold mb-4 leading-tight">Perdele, draperii <br/> la comandă</h1>
-                    <p class="text-base md:text-lg mb-6">
-                        Alege materialul preferat, dimensiunile exacte, tipul de rejansă și creează soluția perfectă pentru spațiul tău.
-                        Produsele noastre sunt realizate manual, special pentru tine.
-                    </p>
-                    <a href="{{ route('products.category', ['slug' => 'perdele']) }}"
-                       class="bg-black text-white font-semibold px-6 py-3 rounded-md hover:bg-gray-800 transition w-fit">
-                        Configurează perdeaua ta
-                    </a>
-                </div>
-
-                <!-- BEFORE/AFTER SLIDER -->
-                <div class="col-span-2 relative w-full h-[400px] md:h-[500px] overflow-hidden border border-black rounded-lg">
-                    <div class="relative w-full h-full before-after-slider">
-                        <img src="{{ asset('storage/images/tex_3.png') }}" class="absolute top-0 left-0 w-full h-full object-cover z-10 after-img" />
-                        <img src="{{ asset('storage/images/tex_2.png') }}" class="absolute top-0 left-0 w-full h-full object-cover z-20 before-img" />
-                        <div class="handle z-30"></div>
-                    </div>
-                </div>
+    {{-- Confecție la comandă (section 6): premium custom-made curtains/drapes + consultation.
+         3 points adapted to CONFIRMED services (consultanță, măsurători, confecție manuală);
+         the mockup's "atelier propriu"/"montaj profesional" are unverified, so omitted.
+         CTA → real store phone (no booking page/form exists). Image optimized to WebP (1.97MB → 20KB). --}}
+    <section aria-label="Confecție la comandă" class="w-full bg-[#FCFAF7] font-dm">
+        <div class="mx-auto grid max-w-[1180px] grid-cols-1 items-stretch overflow-hidden md:my-8 md:grid-cols-2 md:rounded-[20px] md:shadow-[0_20px_60px_rgba(43,32,19,0.10)]">
+            <!-- Text -->
+            <div class="order-2 flex flex-col justify-center bg-white px-6 py-12 sm:px-10 md:order-1 md:px-12 md:py-16">
+                <span class="mb-5 inline-flex w-fit items-center gap-2 rounded-full border border-[#B28D4E]/40 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#B28D4E]">
+                    <span class="h-1.5 w-1.5 rounded-full bg-[#B28D4E]"></span> Confecție premium la comandă
+                </span>
+                <h2 class="font-display text-3xl font-semibold leading-[1.1] text-[#171411] md:text-[40px]">
+                    Perdele și draperii<br>la comandă
+                </h2>
+                <p class="mt-5 max-w-md text-[15px] leading-relaxed text-[#171411]/70">
+                    Alegi materialul, dimensiunile exacte și tipul de rejansă, iar noi croim soluția perfectă pentru spațiul tău. Fiecare comandă este realizată manual, special pentru tine.
+                </p>
+                <ul class="mt-7 space-y-3.5">
+                    @foreach ([
+                        ['t' => 'Consultanță personalizată', 'd' => 'Te ghidăm în alegerea materialului și a stilului potrivit.'],
+                        ['t' => 'Măsurători & dimensiuni exacte', 'd' => 'Croim pe dimensiunile ferestrei tale, fără compromisuri.'],
+                        ['t' => 'Confecție manuală premium', 'd' => 'Finisaje îngrijite, realizate manual pentru fiecare comandă.'],
+                    ] as $point)
+                        <li class="flex items-start gap-3">
+                            <span class="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-[#B28D4E]/[0.12] text-[#B28D4E]">
+                                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                            </span>
+                            <span>
+                                <span class="block text-sm font-semibold text-[#171411]">{{ $point['t'] }}</span>
+                                <span class="block text-[13px] leading-snug text-[#171411]/60">{{ $point['d'] }}</span>
+                            </span>
+                        </li>
+                    @endforeach
+                </ul>
+                <a href="tel:{{ config('app.store_owner.phone') }}"
+                   class="mt-9 inline-flex w-fit items-center gap-2 rounded-md bg-[#171411] px-7 py-3.5 text-[13px] font-semibold uppercase tracking-[0.1em] text-[#FCFAF7] transition-colors hover:bg-[#B28D4E]">
+                    Programează o consultație
+                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                </a>
             </div>
-
-            <!-- RUG BLOCK -->
-            <div class="flex flex-col-reverse md:grid md:grid-cols-3 gap-12 items-start mt-0 md:mt-8">
-
-
-
-            <!-- BEFORE/AFTER SLIDER -->
-                <div class="col-span-2 relative w-full h-[400px] md:h-[500px] overflow-hidden border border-black rounded-lg">
-                    <div class="relative w-full h-full before-after-slider">
-                        <img src="{{ asset('storage/images/rug_after.png') }}" class="absolute top-0 left-0 w-full h-full object-cover z-10 after-img" />
-                        <img src="{{ asset('storage/images/rug_before.png') }}" class="absolute top-0 left-0 w-full h-full object-cover z-20 before-img" />
-                        <div class="handle z-30"></div>
-                    </div>
-                </div>
-
-                <!-- TEXT BLOCK -->
-                <div class="col-span-1 flex flex-col">
-                    <h1 class="text-3xl md:text-4xl font-bold mb-4 leading-tight">Covoare elegante <br/> pentru orice spațiu</h1>
-                    <p class="text-base md:text-lg mb-6">
-                        Completează atmosfera cu un covor care se potrivește perfect. Alege textura, dimensiunea și modelul potrivit pentru dormitor, living sau birou.
-                    </p>
-                    <a href="{{ route('products.category', ['slug' => 'covoare']) }}"
-                       class="bg-black text-white font-semibold px-6 py-3 rounded-md hover:bg-gray-800 transition w-fit">
-                        Vezi colecția de covoare
-                    </a>
-                </div>
+            <!-- Image -->
+            <div class="order-1 min-h-[260px] md:order-2 md:min-h-[540px]">
+                <img src="{{ asset('storage/images/homepage/custom-curtains.webp') }}"
+                     alt="Confecție perdele la comandă — finisaje manuale"
+                     class="h-full w-full object-cover" loading="lazy" />
             </div>
-
         </div>
     </section>
 
