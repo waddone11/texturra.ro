@@ -77,7 +77,9 @@ class HomeController extends Controller
             $products = $products->merge($someProds);
         }
 
-        $colorGroups = ColorGroup::orderBy('name')->get();
+        // Eager-load each group's colors so the palette selector (section 5) can use the
+        // first color's cod_css as a guaranteed swatch fallback behind the .avif texture.
+        $colorGroups = ColorGroup::with('colors')->orderBy('name')->get();
 
         // Section 4 (homepage redesign): the newest ACTIVE products for the "Noutăți" band.
         // Replaces the GPT-invented "collections" with real, latest catalogue entries.
