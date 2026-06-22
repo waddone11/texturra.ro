@@ -45,4 +45,20 @@
   }
 }
 
+/* Category dock — thin separators between items (not per-item cards).
+   Mobile = 3 cols / 2 rows; desktop (md, >=768px) = 6 cols / 1 row.
+   Outer borders are clipped by the bar's overflow:hidden + radius. */
+.hp-dock__item {
+  border-right: 1px solid rgba(43,32,19,.10);
+  border-bottom: 1px solid rgba(43,32,19,.10);
+}
+.hp-dock__item:nth-child(3n) { border-right: 0; }   /* last col, mobile */
+.hp-dock__item:nth-child(n+4) { border-bottom: 0; } /* last row, mobile (items 4-6) */
+
+@media (min-width: 768px) {
+  .hp-dock__item { border-bottom: 0; }
+  .hp-dock__item:nth-child(3n) { border-right: 1px solid rgba(43,32,19,.10); } /* restore */
+  .hp-dock__item:nth-child(6n) { border-right: 0; }   /* last col, desktop */
+}
+
 
