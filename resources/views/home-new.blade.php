@@ -2,69 +2,70 @@
 
 @section('content')
 
-    <div class="relative w-full h-[90vh] pt-16 md:pt-32 overflow-hidden"
-         x-data="{ playing: false, progress: 0, finished: false }"
-         x-init="
-        const video = $refs.introVideo;
-        video.addEventListener('loadedmetadata', () => {
-            video.currentTime = 2;
-        });
-        video.addEventListener('play', () => { playing = true });
-        video.addEventListener('pause', () => { playing = false });
-        video.addEventListener('ended', () => { finished = true });
-        video.addEventListener('timeupdate', () => {
-            progress = (video.currentTime / video.duration) * 100;
-        });
-     ">
+    {{-- ============================================================
+         HERO — redesign 2026 (editorial-luxury, full-bleed photo).
+         Replaces the old autoplay-video hero. CTAs use real routes:
+         primary → first top-level category, secondary → consultanță.
+    ============================================================ --}}
+    @php
+        $heroCategory = $topCategories->first();
+    @endphp
+    <section class="hp-hero relative isolate w-full overflow-hidden bg-[#2d271f] font-dm"
+             aria-labelledby="hero-title">
 
-    <!-- Background Image shown before/after video -->
-{{--        <div x-show="!playing && finished" x-transition--}}
-{{--             class="absolute inset-0 w-full h-full bg-cover bg-center z-0"--}}
-{{--             style="background-image: url('{{ asset('storage/images/video_bg.png') }}');">--}}
-{{--        </div>--}}
+        {{-- Full-bleed background photo (WebP + JPG fallback, optimized) --}}
+        <picture>
+            <source srcset="{{ asset('storage/images/homepage/hero-living-room.webp') }}" type="image/webp">
+            <img src="{{ asset('storage/images/homepage/hero-living-room.jpg') }}"
+                 alt="Living luminos cu perdele și draperii în tonuri calde"
+                 class="absolute inset-0 h-full w-full object-cover object-center"
+                 fetchpriority="high" decoding="async">
+        </picture>
 
-        <!-- Video background -->
-        <video
-            x-ref="introVideo"
-            class="absolute inset-0 w-full h-full object-cover z-0"
-            autoplay
-            muted
-            playsinline
-            @canplay="$refs.introVideo.play()"
-{{--            poster="{{ asset('storage/images/video_bg.png') }}"--}}
-        >
-            <source src="{{ asset('storage/videos/video_short.mp4') }}" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
+        {{-- Readability gradients: dense on the left for storytelling, photo stays clean on the right --}}
+        <div class="hp-hero__shade absolute inset-0 z-[1]"></div>
+        <div class="hp-hero__shade-b absolute inset-x-0 bottom-0 z-[1] h-[30%]"></div>
 
-        <!-- Teal overlay -->
-        <div class="absolute inset-0 bg-[#000000]/15 md:bg-[#000000]/15 z-10"></div>
-
-        <!-- CTA -->
-        <div class="absolute inset-0 z-20 pointer-events-none">
-            <div class="relative w-full h-full">
-                <div class="max-w-7xl mx-auto h-full flex items-center justify-start px-4 md:p-0">
-                    <div class="pointer-events-auto md:bg-white backdrop-blur-sm md:backdrop-blur-md md:shadow-xl rounded-xl p-6 md:p-8 max-w-md md:mt-32">
-                        <p class="text-xs uppercase tracking-wide text-white font-bold md:text-black mb-2">Noutate</p>
-                        <h2 class="text-2xl md:text-3xl font-bold textColor mb-4 leading-tight">Descoperă noua colecție</h2>
-                        <p class="text-sm text-white md:text-gray-600 mb-6">
-                            Înfrumusețează-ți casa cu textile premium, perdele elegante și draperii moderne.
-                            Colecția noastră este creată pentru a aduce rafinament, confort și stil fiecărui colț al locuinței tale.
-                        </p>
-                        <a href="#"
-                           class="inline-block bg-black text-white text-sm font-semibold px-5 py-2 rounded-md transition">
-                            CUMPĂRĂ ACUM
-                        </a>
-                    </div>
+        {{-- Content, anchored to the lower-left half --}}
+        <div class="relative z-[2] mx-auto flex min-h-[var(--hp-hero-h)] max-w-[1440px] items-end
+                    px-5 pb-16 pt-36 sm:px-8 md:px-[76px] md:pb-24 md:pt-48">
+            <div class="w-full max-w-[548px] text-white">
+                <p class="mb-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#ead8b8]">
+                    Textile care transformă
+                </p>
+                <h1 id="hero-title"
+                    class="font-display text-4xl font-semibold leading-[1.05] sm:text-5xl md:text-[56px]">
+                    Eleganță pentru fiecare spațiu
+                </h1>
+                <p class="mt-6 mb-8 max-w-[500px] text-[15px] leading-[1.62] text-white/[0.86] md:text-[17px]">
+                    Descoperă perdele, draperii și textile premium, create pentru confort și
+                    rafinament în fiecare cameră.
+                </p>
+                <div class="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:gap-[18px]">
+                    <a href="{{ $heroCategory ? route('products.category', ['slug' => $heroCategory->slug]) : '#' }}"
+                       class="inline-flex items-center justify-center gap-2 rounded-[10px] bg-white px-7 py-3.5
+                              text-sm font-semibold text-[#171411] transition hover:bg-[#f1ece4]">
+                        Descoperă produsele <span aria-hidden="true">→</span>
+                    </a>
+                    <a href="{{ route('about') }}"
+                       class="inline-flex items-center justify-center gap-2 self-start text-sm font-medium
+                              text-white underline decoration-white/40 underline-offset-[6px]
+                              transition hover:decoration-white sm:self-auto">
+                        Programează o consultație <span aria-hidden="true">↗</span>
+                    </a>
                 </div>
             </div>
         </div>
 
-        <!-- Progress Bar -->
-        <div class="absolute bottom-0 left-0 w-full h-0.5 z-30 bg-white/30">
-            <div class="h-full bg-black transition-all duration-75" :style="'width: ' + progress + '%'"></div>
+        {{-- Scroll hint (desktop only) --}}
+        <div class="absolute bottom-7 right-5 z-[2] hidden items-center gap-3 text-[11px] text-white/[0.78]
+                    md:right-[76px] md:flex">
+            <span class="block h-px w-10 bg-white/50"></span>
+            <span>Explorează mai jos</span>
         </div>
-    </div>
+    </section>
+    {{-- Hero-specific CSS (gradients, height var) lives in resources/css/app.css
+         under "Homepage redesign 2026" — keeps @media out of Blade parsing. --}}
 
     @php
         // Map each parent category name to its corresponding icon URL.

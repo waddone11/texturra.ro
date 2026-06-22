@@ -34,3 +34,6 @@ yarn-error.log
 
 # AI redesign mockup package (source/reference only — large binary PNGs, kept on disk)
 /texturra-homepage-redesign/
+
+# Playwright MCP screenshot/console artifacts (local verification only)
+/.playwright-mcp/
