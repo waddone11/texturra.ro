@@ -113,6 +113,43 @@
         </div>
     </section>
 
+    {{-- Proof band (section 3): real, user-confirmed trust statistics. Static (no animated counters), editorial. --}}
+    @php
+        // Line-art icons (Lucide-style, 24×24, stroke currentColor) matching the dock's visual language.
+        $proofStats = [
+            ['num' => '11+',      'label' => 'Ani de experiență',       'icon' => '<circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>'],
+            ['num' => '500.000+', 'label' => 'Produse vândute',         'icon' => '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>'],
+            ['num' => '10+',      'label' => 'Consultanți specializați', 'icon' => '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>'],
+            ['num' => '120+',     'label' => 'Parteneri comerciali',     'icon' => '<rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>'],
+            ['num' => '2',        'label' => 'Magazine fizice',          'icon' => '<path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/>'],
+        ];
+    @endphp
+
+    <section aria-label="De ce TEXTURRA" class="w-full bg-[#FCFAF7] font-dm">
+        <div class="mx-auto max-w-[1180px] px-5 py-14 sm:px-8 md:py-20">
+            <div class="grid grid-cols-2 gap-y-12 md:grid-cols-5 md:gap-y-0">
+                @foreach ($proofStats as $i => $stat)
+                    <div class="flex flex-col items-center px-2 text-center
+                                {{ $loop->last ? 'col-span-2 md:col-span-1' : '' }}
+                                {{ $i > 0 ? 'md:border-l md:border-[#171411]/10' : '' }}">
+                        <span class="mb-3 text-[#B28D4E]">
+                            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor"
+                                 stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                {!! $stat['icon'] !!}
+                            </svg>
+                        </span>
+                        <span class="font-display text-[32px] font-semibold leading-none text-[#171411] md:text-[38px]">
+                            {{ $stat['num'] }}
+                        </span>
+                        <span class="mt-2.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#171411]/55">
+                            {{ $stat['label'] }}
+                        </span>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
     @php
         // Map each parent category name to its corresponding icon URL.
         $categoryIcons = [
